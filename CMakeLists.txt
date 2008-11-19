@@ -3,7 +3,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 PROJECT(QtOgreDemo)
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
-FIND_PACKAGE(OGRE REQUIRED) #Ogre is needed by almost everything
+FIND_PACKAGE(OGRE 1.6 REQUIRED) #Ogre is needed by almost everything
 
 ADD_SUBDIRECTORY(QtOgre)
 ADD_SUBDIRECTORY(Demo)

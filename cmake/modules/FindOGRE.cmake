@@ -6,7 +6,7 @@
 #  OGRE_LIB_DIR, the location of the libraries
 #  OGRE_FOUND, If false, do not try to use OGRE
 #
-# Copyright © 2007, Matt Williams
+# Copyright © 2008, Matt Williams
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
@@ -33,13 +33,36 @@ IF (WIN32) #Windows
 		SET(OGRE_LIBRARIES debug OgreMain_d optimized OgreMain)
 	ENDIF (OGRESOURCE)
 ELSE (WIN32) #Unix
-	CMAKE_MINIMUM_REQUIRED(VERSION 2.4.7 FATAL_ERROR)
+	CMAKE_MINIMUM_REQUIRED(VERSION 2.6.0 FATAL_ERROR) #Needed for VERSION stuff
 	FIND_PACKAGE(PkgConfig)
-	PKG_SEARCH_MODULE(OGRE OGRE)
+	
+	PKG_SEARCH_MODULE(OGRE OGRE) #OGRE_VERSION is set here
 	SET(OGRE_INCLUDE_DIR ${OGRE_INCLUDE_DIRS})
 	SET(OGRE_LIB_DIR ${OGRE_LIBDIR})
 	SET(OGRE_LIBRARIES ${OGRE_LIBRARIES} CACHE STRING "")
 ENDIF (WIN32)
+
+#Version checking
+IF(DEFINED OGRE_FIND_VERSION AND DEFINED OGRE_VERSION)
+	IF(${OGRE_VERSION} VERSION_EQUAL ${OGRE_FIND_VERSION})
+		#Exact match
+		SET(OGRE_VERSION_EXACT TRUE)
+		SET(OGRE_VERSION_COMPATIBLE TRUE)
+	ELSEIF(${OGRE_VERSION} VERSION_GREATER ${OGRE_FIND_VERSION})
+		#Installed version is greater than requested
+		SET(OGRE_VERSION_EXACT FALSE)
+		SET(OGRE_VERSION_COMPATIBLE TRUE)
+	ELSE(${OGRE_VERSION} VERSION_EQUAL ${OGRE_FIND_VERSION})
+		#Installed version isn't a high enough version
+		SET(OGRE_VERSION_EXACT FALSE)
+		SET(OGRE_VERSION_COMPATIBLE FALSE)
+	ENDIF(${OGRE_VERSION} VERSION_EQUAL ${OGRE_FIND_VERSION})
+ELSE(DEFINED OGRE_FIND_VERSION AND DEFINED OGRE_VERSION)
+	#It may well be that we fail to determine what version we have (this is particularly hard on Windows)
+	#This is not an error, so we allow the build to continue. Alternatively, the user may not have specified
+	#which version of Ogre they require. This is also fine (or at least it's their problem!).
+	SET(OGRE_VERSION_COMPATIBLE TRUE)
+ENDIF(DEFINED OGRE_FIND_VERSION AND DEFINED OGRE_VERSION)
 
 #Do some preparation
 SEPARATE_ARGUMENTS(OGRE_INCLUDE_DIR)
@@ -51,7 +74,14 @@ SET(OGRE_LIB_DIR ${OGRE_LIB_DIR} CACHE PATH "")
 
 IF (OGRE_INCLUDE_DIR AND OGRE_LIBRARIES)
 	SET(OGRE_FOUND TRUE)
+ELSE(OGRE_INCLUDE_DIR AND OGRE_LIBRARIES)
+	SET(OGRE_FOUND FALSE)
 ENDIF (OGRE_INCLUDE_DIR AND OGRE_LIBRARIES)
+
+IF(NOT OGRE_VERSION_COMPATIBLE)
+	MESSAGE(STATUS "  Could not find a compatible version of OGRE. Needs ${OGRE_FIND_VERSION} but found ${OGRE_VERSION}")
+	SET(OGRE_FOUND FALSE)
+ENDIF(NOT OGRE_VERSION_COMPATIBLE)
 
 IF (OGRE_FOUND)
 	IF (NOT OGRE_FIND_QUIETLY)
