@@ -129,7 +129,7 @@ namespace QtOgre
 		//Until then, we just pass the settings on the the MainWindow and GameLogic
 		if(!mOgreWidget->applySettings(mSettingsDialog->mSettings))
 		{
-			showWarningMessageBox("Unable to apply desired settings to the window.\nPlease consult the log for details");
+			showWarningMessageBox("Unable to apply desired settings to the window.\nPlease consult the system log for details");
 		}
 
 		/*if(mGameLogic != 0)
@@ -159,7 +159,7 @@ namespace QtOgre
 		mLogManager->setForceProcessEvents(true);
 		initialiseOgre();
 		Ogre::NameValuePairList ogreWindowParams;
-		ogreWindowParams["FSAA"] = "8";
+		//ogreWindowParams["FSAA"] = "8";
 		mOgreWidget->initialise(&ogreWindowParams);
 		mGameLogic->initialise();
 		mLogManager->setForceProcessEvents(false);

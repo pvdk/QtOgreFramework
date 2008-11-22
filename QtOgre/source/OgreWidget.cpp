@@ -124,7 +124,7 @@ namespace QtOgre
 		QStringList windowModes = settings->value("Graphics/WindowModes").toStringList();
 		int selectedWindowMode = settings->value("Graphics/SelectedWindowMode", 0).toInt();
 
-		if(windowModes.size() > selectedWindowMode) //Make sure it's a valid index.
+		if((windowModes.size() > selectedWindowMode) && (selectedWindowMode != -1)) //Make sure it's a valid index.
 		{
 			resolution = windowModes.at(selectedWindowMode);
 			if(resolution.compare("FullScreen", Qt::CaseInsensitive) == 0)
