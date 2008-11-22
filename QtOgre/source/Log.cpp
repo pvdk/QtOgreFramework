@@ -1,13 +1,15 @@
 #include "Log.h"
 
+#include <QDir>
 #include <QHeaderView>
 #include <QTime>
 
 namespace QtOgre
 {
-	Log::Log(QWidget* parent)
+	Log::Log(const QString& name, QWidget* parent)
 	:QWidget(parent)
 	,mForceProcessEvents(false)
+	,mName(name)
 	{
 		setupUi(this);
 
@@ -38,20 +40,37 @@ namespace QtOgre
 		warningIcon = QIcon(QPixmap(QString::fromUtf8(":/images/icons/dialog-warning.png")));
 		errorIcon = QIcon(QPixmap(QString::fromUtf8(":/images/icons/dialog-error.png")));
 
+		//Currently we hard-code the colours for the various log levels
 		backgroundColor.setRgb(0, 0, 0);
 		debugColor.setRgb(255, 255, 255);
 		infoColor.setRgb(64, 64, 255);
 		warningColor.setRgb(255, 255, 64);
 		errorColor.setRgb(255,64,64);
 
+		//Set the widgets background to the colour we chose above.
 		QPalette palette = logTable->palette();
 		palette.setColor(QPalette::Active, QPalette::Base, backgroundColor);
 		palette.setColor(QPalette::Inactive, QPalette::Base, backgroundColor);
 		logTable->setPalette(palette);
 
+		//Initial set up of which log levels are displayed
 		computeVisibleMessageTypes();
 
-		QAbstractItemModel* model = logTable->model();
+		//Create a file to write this log to disk.
+		QDir::current().mkdir("logs");
+		QString filename;
+		QTextStream(&filename) << "logs/" << mName << ".xml";
+		mFile = new QFile(filename, this);
+		mFile->open(QFile::WriteOnly | QFile::Truncate | QFile::Text | QIODevice::Unbuffered);
+		mTextStream.setDevice(mFile);
+
+		//Write the opening XML to the log file.
+		mTextStream << "<Log>" << endl;
+	}
+
+	Log::~Log()
+	{
+		mTextStream << "</Log>" << endl;
 	}
 
 	void Log::on_clearFilterButton_clicked()
@@ -91,14 +110,16 @@ namespace QtOgre
 
 	void Log::logMessage(const QString& message, LogLevel logLevel)
 	{
+		QString currentTimeAsString = QTime::currentTime().toString("hh:mm:ss");
 		QTableWidgetItem* iconItem = new QTableWidgetItem(logLevel);
-		QTableWidgetItem* timeItem = new QTableWidgetItem(QTime::currentTime().toString("hh:mm:ss") + " -");
-		QTableWidgetItem *messageItem = new QTableWidgetItem(message);
+		QTableWidgetItem* timeItem = new QTableWidgetItem(currentTimeAsString + " -");
+		QTableWidgetItem* messageItem = new QTableWidgetItem(message);
 
 		iconItem->setBackgroundColor(backgroundColor);
 		timeItem->setBackgroundColor(backgroundColor);
 		messageItem->setBackgroundColor(backgroundColor);
 
+		QString logLevelAsString;
 		messageItem->setForeground(QBrush(debugColor));
 		switch(logLevel)
 		{
@@ -106,21 +127,25 @@ namespace QtOgre
 			iconItem->setIcon(debugIcon);
 			timeItem->setForeground(QBrush(debugColor));			
 			messageItem->setForeground(QBrush(debugColor));
+			logLevelAsString = "Debug"; //Used for the file written to disk
 			break;
 		case LL_INFO:
 			iconItem->setIcon(infoIcon);
 			timeItem->setForeground(QBrush(infoColor));			
 			messageItem->setForeground(QBrush(infoColor));
+			logLevelAsString = "Info"; //Used for the file written to disk
 			break;
 		case LL_WARNING:
 			iconItem->setIcon(warningIcon);
 			timeItem->setForeground(QBrush(warningColor));
 			messageItem->setForeground(QBrush(warningColor));
+			logLevelAsString = "Warning"; //Used for the file written to disk
 			break;
 		case LL_ERROR:
 			iconItem->setIcon(errorIcon);
 			timeItem->setForeground(QBrush(errorColor));
 			messageItem->setForeground(QBrush(errorColor));
+			logLevelAsString = "Error"; //Used for the file written to disk
 			break;
 		}
 
@@ -149,6 +174,9 @@ namespace QtOgre
 		{
 			qApp->processEvents();
 		}
+
+		//Log to the file as well
+		mTextStream << "  <Entry LogLevel=\"" << logLevelAsString << "\" Time=\"" << currentTimeAsString << "\" Message=\"" << message << "\"/>" << endl;
 	}
 
 	void Log::filterMessages(void)

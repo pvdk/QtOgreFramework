@@ -84,8 +84,16 @@ namespace QtOgre
 
 	Application::~Application()
 	{
+		if(mOgreWidget)
+		{
+			delete mOgreWidget;
+			mOgreWidget = 0;
+		}
 		if (mRoot)
+		{
             delete mRoot;
+			mRoot = 0;
+		}
 	}
 
 	bool Application::isOpenGLAvailable(void)
@@ -97,11 +105,6 @@ namespace QtOgre
 	{
 		return mDirect3D9RenderSystem != 0;
 	}
-
-	/*LogManager* Application::logManager(void)
-	{
-		return mLogManager;
-	}*/
 
 	unsigned int Application::frameCount(void)
 	{
@@ -200,6 +203,7 @@ namespace QtOgre
 	{
 		mUpdateTimer->stop();
 		mGameLogic->shutdown();
+		mInternalOgreLog->removeListener(this);
 		this->exit(0);
 	}
 

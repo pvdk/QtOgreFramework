@@ -15,7 +15,7 @@ namespace QtOgre
 
 	Log* LogManager::createLog(const QString& name)
 	{
-		Log* mLog = new Log;
+		Log* mLog = new Log(name, this);
 		mLogs.insert(name, mLog);
 		mLogTabs->addTab(mLog, name);
 		return mLog;

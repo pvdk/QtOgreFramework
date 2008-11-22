@@ -3,6 +3,9 @@
 
 #include "../ui_Log.h"
 
+#include <QFile>
+#include <QTextStream>
+
 namespace QtOgre
 {
 	enum LogLevel
@@ -21,7 +24,8 @@ namespace QtOgre
 		Q_OBJECT
 
 	public:
-		Log(QWidget *parent = 0);
+		Log(const QString& name, QWidget *parent = 0);
+		~Log();
 
 		void logMessage(const QString& message, LogLevel logLevel);
 
@@ -66,6 +70,11 @@ namespace QtOgre
 
 		//Controls whether we force the processing of event on log updates
 		bool mForceProcessEvents;
+
+		//For writing the log to disk.
+		QString mName;
+		QFile* mFile;
+		QTextStream mTextStream;
 	};
 }
 
