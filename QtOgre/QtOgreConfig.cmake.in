@@ -1,0 +1,23 @@
+# Find QtOgre includes and library
+#
+# This module defines
+#  QtOgre_INCLUDE_DIRS
+#  QtOgre_LIBRARIES, the libraries to link against to use OGRE.
+#  QtOgre_LIBRARY_DIRS, the location of the libraries
+#  OGRE_FOUND, If false, do not try to use OGRE
+#
+# Copyright © 2008, Matt Williams
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+
+include(FindPackageMessage)
+
+set(PREFIX "@CMAKE_INSTALL_PREFIX@")
+set(QtOgre_LIBRARY_DIRS "${PREFIX}/lib")
+set(QtOgre_INCLUDE_DIRS "${PREFIX}/include/QtOgre" "${PREFIX}/include")
+set(QtOgre_LIBRARIES "QtOgre")
+
+message(STATUS "Found QtOgre Framework")
+message(STATUS "  libraries : '${QtOgre_LIBRARIES}' from ${QtOgre_LIBRARY_DIRS}")
+message(STATUS "  includes  : ${QtOgre_INCLUDE_DIRS}")
