@@ -56,6 +56,13 @@ namespace QtOgre
 		//Initialise the resources.
 		initQtResources();
 
+		mUpdateTimer = new QTimer;
+		QObject::connect(mUpdateTimer, SIGNAL(timeout()), this, SLOT(update()));
+		//On the test system, a value of one here gives a high frame rate and still allows
+		//event prcessing to take place. A value of 0 doubles the frame rate but the mouse
+		//becomes jumpy. This property should probably be configurable.
+		mUpdateTimer->setInterval(1);
+
 		//Load the settings file. If it doesn't exist it is created.
 		mSettings = new QSettings("settings.ini", QSettings::IniFormat);
 
@@ -179,12 +186,7 @@ namespace QtOgre
 
 		mLogManager->move(mainWidget()->geometry().left() + 10, mainWidget()->geometry().top() + mainWidget()->geometry().height() - mLogManager->frameGeometry().height() - 10);
 
-		mUpdateTimer = new QTimer;
-		QObject::connect(mUpdateTimer, SIGNAL(timeout()), this, SLOT(update()));
-		//On the test system, a value of one here gives a high frame rate and still allows
-		//event prcessing to take place. A value of 0 doubles the frame rate but the mouse
-		//becomes jumpy. This property should probably be configurable.
-		mUpdateTimer->start(1);
+		mUpdateTimer->start();
 	}
 
 	void Application::update(void)
@@ -424,5 +426,15 @@ namespace QtOgre
 	QSettings* Application::settings(void)
 	{
 		return mSettings;
+	}
+
+	void Application::setUpdateInterval(int intervalInMilliseconds)
+	{
+		/*if(mUpdateTimer->isActive())
+		{
+			mUpdateTimer->stop();
+		}
+		mUpdateTimer->start(intervalInMilliseconds);*/
+		mUpdateTimer->setInterval(intervalInMilliseconds);
 	}
 }

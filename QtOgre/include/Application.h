@@ -47,6 +47,10 @@ namespace QtOgre
 		///Return the log used by the QtOgre framework.
 		Log* _systemLog(void);
 
+		//Setters
+		///Sets the period between sucessive update.
+		void setUpdateInterval(int intervalInMilliseconds);
+
 		//Testers
 		///Determine whether the OpenGL render system is available.
 		bool isOpenGLAvailable(void);
