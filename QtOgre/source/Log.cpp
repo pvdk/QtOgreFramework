@@ -1,6 +1,5 @@
 #include "Log.h"
 
-#include <QDir>
 #include <QHeaderView>
 #include <QTime>
 
@@ -57,22 +56,20 @@ namespace QtOgre
 		computeVisibleMessageTypes();
 
 		//Create a file to write this log to disk.
-		QDir::current().mkdir("logs");
 		QString filename;
 		QTextStream(&filename) << "logs/" << mName << ".html";
 		mFile = new QFile(filename, this);
 		mFile->open(QFile::WriteOnly | QFile::Truncate | QFile::Text | QIODevice::Unbuffered);
 		mTextStream.setDevice(mFile);
 
-		//Write the opening XML to the log file.
-		//mTextStream << "<Log>" << endl;
+		//Write the opening HTML to the log file.
 		writeHTMLHeader();
 	}
 
 	Log::~Log()
 	{
+		//Write the closing HTML to the log file.
 		writeHTMLTail();
-		//mTextStream << "</Log>" << endl;
 	}
 
 	void Log::on_clearFilterButton_clicked()
@@ -112,73 +109,13 @@ namespace QtOgre
 
 	void Log::logMessage(const QString& message, LogLevel logLevel)
 	{
+		//We only get the time once, to avoid it being slightly different between
+		//the time it is printed to the screen and the time it is written to the file
 		QString currentTimeAsString = QTime::currentTime().toString("hh:mm:ss");
-		QTableWidgetItem* iconItem = new QTableWidgetItem(logLevel);
-		QTableWidgetItem* timeItem = new QTableWidgetItem(currentTimeAsString + " -");
-		QTableWidgetItem* messageItem = new QTableWidgetItem(message);
-
-		iconItem->setBackgroundColor(backgroundColor);
-		timeItem->setBackgroundColor(backgroundColor);
-		messageItem->setBackgroundColor(backgroundColor);
-
-		QString logLevelAsString;
-		messageItem->setForeground(QBrush(debugColor));
-		switch(logLevel)
-		{
-		case LL_DEBUG:
-			iconItem->setIcon(debugIcon);
-			timeItem->setForeground(QBrush(debugColor));			
-			messageItem->setForeground(QBrush(debugColor));
-			logLevelAsString = "Debug"; //Used for the file written to disk
-			break;
-		case LL_INFO:
-			iconItem->setIcon(infoIcon);
-			timeItem->setForeground(QBrush(infoColor));			
-			messageItem->setForeground(QBrush(infoColor));
-			logLevelAsString = "Info"; //Used for the file written to disk
-			break;
-		case LL_WARNING:
-			iconItem->setIcon(warningIcon);
-			timeItem->setForeground(QBrush(warningColor));
-			messageItem->setForeground(QBrush(warningColor));
-			logLevelAsString = "Warning"; //Used for the file written to disk
-			break;
-		case LL_ERROR:
-			iconItem->setIcon(errorIcon);
-			timeItem->setForeground(QBrush(errorColor));
-			messageItem->setForeground(QBrush(errorColor));
-			logLevelAsString = "Error"; //Used for the file written to disk
-			break;
-		}
-
-		//Create and insert the row
-		//TODO - if this is slow we could insert 1000 rows for every 1000th log message...
-		int row = logTable->rowCount();
-		logTable->insertRow(row);	
-
-		//Set the size of the row
-		//logTable->setRowHeight(row, 20); is an alternative to the following
-		logTable->verticalHeader()->setResizeMode(row, QHeaderView::Fixed);
-		logTable->verticalHeader()->resizeSection(row, 20); 
-
-		//Add the items
-		logTable->setItem(row, 0, iconItem);
-		logTable->setItem(row, 1, timeItem);
-		logTable->setItem(row, 2, messageItem);
-
-		//Set the visibility
-		setRowVisibility(row);
-
-		//Make the new message visible
-		logTable->scrollToBottom();
-
-		if(mForceProcessEvents)
-		{
-			qApp->processEvents();
-		}
-
+		
+		//Log to the screen
+		writeMessageToWidget(message, currentTimeAsString, logLevel);
 		//Log to the file as well
-		//mTextStream << "  <Entry LogLevel=\"" << logLevelAsString << "\" Time=\"" << currentTimeAsString << "\" Message=\"" << message << "\"/>" << endl;
 		writeMessageToHTML(message, currentTimeAsString, logLevel);
 	}
 
@@ -282,6 +219,68 @@ namespace QtOgre
 			<< "</table>" << endl
 			<< "</body>" << endl
 			<< "</html>" << endl;
+	}
 
+	void Log::writeMessageToWidget(const QString& message, const QString& timeStampAsString, LogLevel logLevel)
+	{
+		QTableWidgetItem* iconItem = new QTableWidgetItem(logLevel);
+		QTableWidgetItem* timeItem = new QTableWidgetItem(timeStampAsString + " - ");
+		QTableWidgetItem* messageItem = new QTableWidgetItem(message);
+
+		iconItem->setBackgroundColor(backgroundColor);
+		timeItem->setBackgroundColor(backgroundColor);
+		messageItem->setBackgroundColor(backgroundColor);
+
+		QString logLevelAsString;
+		messageItem->setForeground(QBrush(debugColor));
+		switch(logLevel)
+		{
+		case LL_DEBUG:
+			iconItem->setIcon(debugIcon);
+			timeItem->setForeground(QBrush(debugColor));			
+			messageItem->setForeground(QBrush(debugColor));
+			break;
+		case LL_INFO:
+			iconItem->setIcon(infoIcon);
+			timeItem->setForeground(QBrush(infoColor));			
+			messageItem->setForeground(QBrush(infoColor));
+			break;
+		case LL_WARNING:
+			iconItem->setIcon(warningIcon);
+			timeItem->setForeground(QBrush(warningColor));
+			messageItem->setForeground(QBrush(warningColor));
+			break;
+		case LL_ERROR:
+			iconItem->setIcon(errorIcon);
+			timeItem->setForeground(QBrush(errorColor));
+			messageItem->setForeground(QBrush(errorColor));
+			break;
+		}
+
+		//Create and insert the row
+		//TODO - if this is slow we could insert 1000 rows for every 1000th log message...
+		int row = logTable->rowCount();
+		logTable->insertRow(row);	
+
+		//Set the size of the row
+		//logTable->setRowHeight(row, 20); is an alternative to the following
+		logTable->verticalHeader()->setResizeMode(row, QHeaderView::Fixed);
+		logTable->verticalHeader()->resizeSection(row, 20); 
+
+		//Add the items
+		logTable->setItem(row, 0, iconItem);
+		logTable->setItem(row, 1, timeItem);
+		logTable->setItem(row, 2, messageItem);
+
+		//Set the visibility
+		setRowVisibility(row);
+
+		//Make the new message visible
+		logTable->scrollToBottom();
+
+		if(mForceProcessEvents)
+		{
+			qApp->processEvents();
+		}
 	}
 }

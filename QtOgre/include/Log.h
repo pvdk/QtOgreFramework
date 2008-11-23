@@ -57,6 +57,8 @@ namespace QtOgre
 		void writeMessageToHTML(const QString& message, const QString& timeStampAsString, LogLevel logLevel);
 		void writeHTMLTail(void);
 
+		void writeMessageToWidget(const QString& message, const QString& timeStampAsString, LogLevel logLevel);
+
 		//This is used as a bitfield to determine what message types are enabled
 		int mVisibleMessageTypes;
 
