@@ -59,18 +59,20 @@ namespace QtOgre
 		//Create a file to write this log to disk.
 		QDir::current().mkdir("logs");
 		QString filename;
-		QTextStream(&filename) << "logs/" << mName << ".xml";
+		QTextStream(&filename) << "logs/" << mName << ".html";
 		mFile = new QFile(filename, this);
 		mFile->open(QFile::WriteOnly | QFile::Truncate | QFile::Text | QIODevice::Unbuffered);
 		mTextStream.setDevice(mFile);
 
 		//Write the opening XML to the log file.
-		mTextStream << "<Log>" << endl;
+		//mTextStream << "<Log>" << endl;
+		writeHTMLHeader();
 	}
 
 	Log::~Log()
 	{
-		mTextStream << "</Log>" << endl;
+		writeHTMLTail();
+		//mTextStream << "</Log>" << endl;
 	}
 
 	void Log::on_clearFilterButton_clicked()
@@ -176,7 +178,8 @@ namespace QtOgre
 		}
 
 		//Log to the file as well
-		mTextStream << "  <Entry LogLevel=\"" << logLevelAsString << "\" Time=\"" << currentTimeAsString << "\" Message=\"" << message << "\"/>" << endl;
+		//mTextStream << "  <Entry LogLevel=\"" << logLevelAsString << "\" Time=\"" << currentTimeAsString << "\" Message=\"" << message << "\"/>" << endl;
+		writeMessageToHTML(message, currentTimeAsString, logLevel);
 	}
 
 	void Log::filterMessages(void)
@@ -218,5 +221,67 @@ namespace QtOgre
 	void Log::setForceProcessEvents(bool forceProcessEvents)
 	{
 		mForceProcessEvents = forceProcessEvents;
+	}
+
+	void Log::writeHTMLHeader(void)
+	{
+		mTextStream
+			<< "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">" << endl
+			<< "<html>" << endl
+			<< "<head>" << endl
+			<< "<meta content=\"text/html; charset=ISO-8859-1\" http-equiv=\"content-type\">" << endl
+			<< "<title>Log File</title>" << endl
+			<< "</head>" << endl
+			<< "<body style=\"background-color: black; color: rgb(0, 0, 0);\">" << endl
+			<< "<table style=\"text-align: left; width: 100%;\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">" << endl
+			<< "<tbody>" << endl;
+	}
+
+	void Log::writeMessageToHTML(const QString& message, const QString& timeStampAsString, LogLevel logLevel)
+	{
+		QString colour;
+		QString icon;
+		switch(logLevel)
+		{
+		case LL_DEBUG:
+			colour = "white";
+			icon = "script-error.png";
+			break;
+		case LL_INFO:
+			colour = "blue";
+			icon = "dialog-information.png";
+			break;
+		case LL_WARNING:
+			colour = "yellow";
+			icon = "dialog-warning.png";
+			break;
+		case LL_ERROR:
+			colour = "red";
+			icon = "dialog-error.png";
+			break;
+		}
+
+		mTextStream 
+			<< "<tr>"
+			<< "<td style=\"text-align: center; width: 25px;\">"
+			<< "<img src=\"images/" << icon << "\">"
+			<< "</td>"
+			<< "<td style=\"width: 75px;\"><span style=\"color: " << colour << ";\">"
+			<< timeStampAsString << " - "
+			<< "</span></td>"
+			<< "<td><span style=\"color: " << colour << ";\">"
+			<< message
+			<< "</span></td></tr>" << endl;
+
+	}
+
+	void Log::writeHTMLTail(void)
+	{
+		mTextStream
+			<< "</tbody>" << endl
+			<< "</table>" << endl
+			<< "</body>" << endl
+			<< "</html>" << endl;
+
 	}
 }

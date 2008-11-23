@@ -52,6 +52,11 @@ namespace QtOgre
 		void filterMessages(void);
 		void setRowVisibility(int row);
 
+		//Private methods for writing HTML
+		void writeHTMLHeader(void);
+		void writeMessageToHTML(const QString& message, const QString& timeStampAsString, LogLevel logLevel);
+		void writeHTMLTail(void);
+
 		//This is used as a bitfield to determine what message types are enabled
 		int mVisibleMessageTypes;
 
