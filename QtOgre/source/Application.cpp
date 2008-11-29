@@ -262,6 +262,7 @@ namespace QtOgre
 		try
 		{
 			mRoot->loadPlugin("/usr/local/lib/OGRE/RenderSystem_GL");
+			//mRoot->loadPlugin("/usr/lib64/OGRE/RenderSystem_GL"); //Needed for Matt
 		}
 		catch(...)
 		{
