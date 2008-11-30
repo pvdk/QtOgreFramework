@@ -1,7 +1,7 @@
 #ifndef CHOOSEMESHWIDGET_H_
 #define CHOOSEMESHWIDGET_H_
 
-#include "../ui_ChooseMeshWidget.h"
+#include "ui_ChooseMeshWidget.h"
 
 #include "OgrePrerequisites.h"
 

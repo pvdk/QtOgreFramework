@@ -1,7 +1,7 @@
 #ifndef MAINMENU_H_
 #define MAINMENU_H_
 
-#include "../ui_MainMenu.h"
+#include "ui_MainMenu.h"
 
 #include "Application.h"
 
