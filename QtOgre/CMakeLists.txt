@@ -94,5 +94,7 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/QtOgreConfig.cmake ${CMAKE_CURRENT_BIN
 find_package(Doxygen)
 if(DOXYGEN_FOUND)
 	configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
+	configure_file(${CMAKE_CURRENT_SOURCE_DIR}/qt.tag ${CMAKE_CURRENT_BINARY_DIR}/qt.tag COPYONLY)
+	configure_file(${CMAKE_CURRENT_SOURCE_DIR}/ogre.tag ${CMAKE_CURRENT_BINARY_DIR}/ogre.tag COPYONLY)
 	add_custom_target(doc COMMAND ${DOXYGEN_EXECUTABLE} WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR} COMMENT "Building documentation" VERBATIM)
 endif()
