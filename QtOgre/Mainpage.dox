@@ -1,10 +1,32 @@
 /**
 \mainpage QtOgre Framework
 
-The QtOgre Framework documentation
+The QtOgre Framework documentation.
 
+\par
+There is an example of using the framework in the Demo directory of the source distribution.\n
+For a brief introduction, see the \ref tutorial.
+
+\par
 \author David Williams
 
 \namespace QtOgre
 \brief Main namespace
+*/
+
+/**
+\page tutorial Basic Tutorial
+
+Here is a basic tutorial introducing the key concepts in using the QtOgre Framework.
+
+\code
+#include <Application.h>
+#include "DemoGameLogic.h"
+
+int main(int argc, char *argv[])
+{
+	QtOgre::Application app(argc, argv, new MyGameLogic);
+	return app.exec(true);
+}
+\endcode
 */

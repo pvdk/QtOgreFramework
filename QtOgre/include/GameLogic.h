@@ -6,16 +6,37 @@
 namespace QtOgre
 {
 	class Application;
-
+	
+	/**
+	 * The game controller
+	 * 
+	 * You'll need to subclass this to enable control over the flow of your game.
+	 * 
+	 * Most likely, you'll want to override each of the functions in this class to provide the logic for the application. 
+	 * 
+	 * \author David Williams
+	 */
 	class GameLogic : public EventHandler
 	{
 		friend class Application; //So the application can set itself.
 	public:
+		/**
+		 * Creates an instance of the GameLogic class.
+		 */
 		GameLogic(void);
 		
 	public:
+		/**
+		 * Initialise the game logic
+		 */
 		virtual void initialise(void);
+		/**
+		 * Update the game
+		 */
 		virtual void update(void);
+		/**
+		 * Shut down the game
+		 */
 		virtual void shutdown(void);
 
 		virtual void onKeyPress(QKeyEvent* event);

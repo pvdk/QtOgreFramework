@@ -9,8 +9,13 @@ class QSettings;
 
 namespace QtOgre
 {
-	class InputEventHandler;
-
+	/**
+	 * Widget holding Ogre
+	 * 
+	 * This widget is used to hold and contain the Ogre RenderWindow
+	 * 
+	 * \author David Williams
+	 */
 	class OgreWidget : public QWidget
 	{
 		Q_OBJECT
