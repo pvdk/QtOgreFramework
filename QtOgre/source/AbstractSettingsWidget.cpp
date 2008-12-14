@@ -1,6 +1,7 @@
 #include "AbstractSettingsWidget.h"
 
 #include <QDialog>
+#include <QSettings>
 
 namespace QtOgre
 {

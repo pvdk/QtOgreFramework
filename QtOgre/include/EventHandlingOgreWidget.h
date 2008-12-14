@@ -6,8 +6,7 @@
 #include <OgreCommon.h>
 #include <OgrePrerequisites.h>
 
-#include <QSettings>
-#include <QWidget>
+class QWidget;
 
 namespace QtOgre
 {

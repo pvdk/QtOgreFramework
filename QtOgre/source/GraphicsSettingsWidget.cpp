@@ -2,6 +2,8 @@
 
 #include "Application.h"
 
+#include <QSettings>
+
 namespace QtOgre
 {
 	GraphicsSettingsWidget::GraphicsSettingsWidget(QWidget *parent)

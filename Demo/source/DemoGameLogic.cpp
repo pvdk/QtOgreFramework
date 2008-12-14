@@ -9,6 +9,10 @@
 #include <OgreResourceGroupManager.h>
 #include <OgreRoot.h>
 
+#include <QKeyEvent>
+#include <QMouseEvent>
+#include <QSettings>
+
 namespace QtOgre
 {
 	DemoGameLogic::DemoGameLogic(void)
@@ -33,6 +37,7 @@ namespace QtOgre
 		// Create the generic scene manager
 		mSceneManager = Ogre::Root::getSingleton().createSceneManager(Ogre::ST_GENERIC, "GenericSceneManager");
 
+		//Set up scene
 		mCamera = mSceneManager->createCamera("Cam");
 
 		mCamera->setPosition(10, 10, 10);
@@ -45,6 +50,7 @@ namespace QtOgre
 
 		mSceneManager->setAmbientLight( Ogre::ColourValue( 1, 1, 1 ) );
 
+		//Set up models
 		mJaiquaEntity = mSceneManager->createEntity( "Jaiqua", "jaiqua.mesh" );
 		mJaiquaNode = mSceneManager->getRootSceneNode()->createChildSceneNode( "JaiquaNode" );
 		mJaiquaNode->attachObject( mJaiquaEntity );
@@ -64,8 +70,10 @@ namespace QtOgre
 		mRobotEntity->getAnimationState("Walk")->setLoop(true);
 		mRobotEntity->getAnimationState("Walk")->setEnabled(true);
 
+		//Create the MainMenu
 		mMainMenu = new MainMenu(qApp, qApp->mainWidget());
 
+		//Create widget to choose between models
 		mChooseMeshWidget = new ChooseMeshWidget(mJaiquaEntity, mRobotEntity, qApp->mainWidget());
 		mChooseMeshWidget->setWindowOpacity(qApp->settings()->value("System/DefaultWindowOpacity", 1.0).toDouble());
 		mChooseMeshWidget->move(qApp->mainWidget()->geometry().left() + qApp->mainWidget()->geometry().width() - mChooseMeshWidget->frameGeometry().width() - 10, qApp->mainWidget()->geometry().top() + 10);

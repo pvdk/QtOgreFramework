@@ -4,8 +4,9 @@
 #include <OgreCommon.h>
 #include <OgrePrerequisites.h>
 
-#include <QSettings>
 #include <QWidget>
+
+class QSettings;
 
 namespace QtOgre
 {

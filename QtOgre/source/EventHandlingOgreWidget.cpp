@@ -8,6 +8,8 @@
 #include <OgreRoot.h>
 #include <OgreStringConverter.h>
 
+#include <QCloseEvent>
+
 #if defined(Q_WS_X11)
 #include <QX11Info>
 #endif

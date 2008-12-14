@@ -1,8 +1,9 @@
 #ifndef QTOGRE_ABSTRACTSETTINGSWIDGET_H_
 #define QTOGRE_ABSTRACTSETTINGSWIDGET_H_
 
-#include <QSettings>
 #include <QWidget>
+
+class QSettings;
 
 namespace QtOgre
 {
