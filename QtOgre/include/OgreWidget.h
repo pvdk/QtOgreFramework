@@ -2,7 +2,6 @@
 #define QTOGRE_OGREWIDGET_H_
 
 #include <OgreCommon.h>
-#include <OgrePrerequisites.h>
 
 #include <QWidget>
 

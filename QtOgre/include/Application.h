@@ -2,7 +2,6 @@
 #define QTOGRE_APPLICATION_H_
 
 #include <OgreLog.h>
-#include <OgrePrerequisites.h>
 
 #include <QApplication>
 

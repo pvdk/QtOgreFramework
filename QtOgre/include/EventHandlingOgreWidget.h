@@ -3,9 +3,6 @@
 
 #include "OgreWidget.h"
 
-#include <OgreCommon.h>
-#include <OgrePrerequisites.h>
-
 class QWidget;
 
 namespace QtOgre
