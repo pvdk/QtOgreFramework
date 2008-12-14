@@ -14,6 +14,7 @@
 #include <QDesktopWidget>
 #include <QMessageBox>
 #include <QTimer>
+#include <QSettings>
 
 //Q_INIT_RESOURCE cannot be called from within a namespace, so we provide 
 //this function. See the Q_INIT_RESOURCE documentation for an explanation.

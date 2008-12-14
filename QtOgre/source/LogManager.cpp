@@ -1,6 +1,7 @@
 #include "LogManager.h"
 
 #include <QDir>
+#include <QTabWidget>
 
 namespace QtOgre
 {

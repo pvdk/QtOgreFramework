@@ -3,11 +3,19 @@
 
 #include "Log.h"
 
-#include <QTabWidget>
 #include <QDialog>
+
+class QTabWidget;
 
 namespace QtOgre
 {
+	/**
+	 * Controls the logs
+	 * 
+	 * This class creates and manages the Logs
+	 * 
+	 * \author David Williams
+	 */
 	class LogManager : public QDialog
 	{
 		Q_OBJECT

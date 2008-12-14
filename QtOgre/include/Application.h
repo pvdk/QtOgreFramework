@@ -5,7 +5,8 @@
 #include <OgrePrerequisites.h>
 
 #include <QApplication>
-#include <QSettings>
+
+class QSettings;
 
 //This redefines qApp, causing it to return an Application pointer instead of a QApplication one.
 //This is useful, for example, to access the logging system. This is done in the same way that

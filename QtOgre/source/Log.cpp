@@ -2,6 +2,7 @@
 
 #include <QHeaderView>
 #include <QTime>
+#include <QFile>
 
 namespace QtOgre
 {

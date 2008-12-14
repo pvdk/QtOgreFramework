@@ -3,8 +3,9 @@
 
 #include "../ui_Log.h"
 
-#include <QFile>
 #include <QTextStream>
+
+class QFile;
 
 namespace QtOgre
 {
