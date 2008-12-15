@@ -36,4 +36,4 @@ namespace QtOgre
 	};
 }
 
-#endif /*QTOGRE_EVENTHANDLINGOGREWIDGET_H_*/ 
+#endif /*QTOGRE_EVENTHANDLINGOGREWIDGET_H_*/

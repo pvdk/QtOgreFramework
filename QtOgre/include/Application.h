@@ -189,4 +189,4 @@ namespace QtOgre
 	};
 }
 
-#endif /*QTOGRE_APPLICATION_H_*/ 
+#endif /*QTOGRE_APPLICATION_H_*/

@@ -42,4 +42,4 @@ namespace QtOgre
 	};
 }
 
-#endif /*QTOGRE_OGREWIDGET_H_*/ 
+#endif /*QTOGRE_OGREWIDGET_H_*/
