@@ -132,6 +132,7 @@ namespace QtOgre
 			if(resolution.compare("FullScreen", Qt::CaseInsensitive) == 0)
 			{
 				showFullScreen();
+				//setWindowState(windowState() | Qt::WindowFullScreen); //TODO should use this instead of showFullScreen? (http://techbase.kde.org/Policies/API_to_Avoid#QWidget::showFullScreen.2FMaximized.2FMinimized.2FNormal.28.29)
 				applied = true;
 			}
 			else
@@ -150,6 +151,7 @@ namespace QtOgre
 
 					if(widthValid && heightValid)
 					{
+						//setWindowState(windowState() & ~Qt::WindowFullScreen); //TODO Should use this as above? This time in addition to resize().
 						resize(width, height);
 						Application::centerWidget(this);
 						applied = true;

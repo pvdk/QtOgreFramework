@@ -53,7 +53,8 @@ namespace QtOgre
 		 */
 		~Application();
 
-		//Getters
+		///\name Getters
+		//@{
 		/**
 		 * The total number of frames rendered
 		 * \return the number of frames rendered since the application started.
@@ -78,21 +79,27 @@ namespace QtOgre
 		 * \return the log used by the QtOgre framework.
 		 */
 		Log* _systemLog(void);
+		//@}
 
-		//Setters
+		///\name Setters
+		//@{
 		/**
 		 * Sets the period between sucessive updates.
 		 * \param intervalInMilliseconds the period between sucessive updates
 		 */
 		void setUpdateInterval(int intervalInMilliseconds);
+		//@}
 
-		//Testers
+		///\name Testers
+		//@{
 		///\return whether the OpenGL render system is available.
 		bool isOpenGLAvailable(void);
 		///\return whether the Direct3D9 render system is available.
 		bool isDirect3D9Available(void);
+		//@}
 		
-		//Other
+		///\name Other
+		//@{
 		/**
 		 * Creates a new log with a given name.
 		 * \param name the name of the log
@@ -107,12 +114,14 @@ namespace QtOgre
 		void showLogManager(void);
 		///Shows the settings dialog.
 		int showSettingsDialog(void);
-
+		//@}
+		
 		//Static functions
 		/**
 		 * Start the main event loop.
 		 * \param displaySettingsDialog should the settings dialog be displayed
 		 * \return the application return code
+		 * \todo Make the bool a self-documenting enum (http://doc.trolltech.com/qq/qq13-apis.html#thebooleanparametertrap)
 		 */
 		static int exec(bool displaySettingsDialog = true); //Use 'displaySettingsDialog' because there is already a function called 'showSettingsDialog'.
 
