@@ -1,0 +1,25 @@
+QtOgre Framework Installation Instructions
+==========================================
+
+Windows
+-------
+
+To build QtOgre, CMake (http://cmake.org/cmake/resources/software.html, look
+for the "Win32 Installer") is needed. Once it is downloaded, run the beta
+cmake-gui. Point the source directory at where you unzipped this source, point
+the build directory at where you want to build, generally a subdirectory of the
+source directory.
+##TODO##
+
+
+Linux
+-----
+
+Navigate to the directory containing this file, then:
+
+$ mkdir build && cd build
+$ cmake ..
+$ make install
+
+This will install QtOgre Framework to /usr/local/. To install to a different
+path, pass -DCMAKE_INSTALL_PREFIX=/path/to/install to the cmake step.
