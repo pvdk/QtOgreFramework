@@ -59,26 +59,26 @@ namespace QtOgre
 		 * The total number of frames rendered
 		 * \return the number of frames rendered since the application started.
 		 */
-		unsigned int frameCount(void);
+		unsigned int frameCount(void) const;
 		/**
 		 * Get the OGRE RenderWindow for adding viewports
 		 * \return a pointer to the Ogre RenderWindow
 		 */   
-		Ogre::RenderWindow* ogreRenderWindow(void);
+		Ogre::RenderWindow* ogreRenderWindow(void) const;
 		/**
 		 * Get the main window widget
 		 * \return a pointer to the applications main window.
 		 */
-		QWidget* mainWidget(void);
+		QWidget* mainWidget(void) const;
 		/**
 		 * Access the application settings
 		 * \return a pointer to the application settings
 		 */
-		QSettings* settings(void);
+		QSettings* settings(void) const;
 		/**
 		 * \return the log used by the QtOgre framework.
 		 */
-		Log* _systemLog(void);
+		Log* _systemLog(void) const;
 		//@}
 
 		///\name Setters
@@ -93,9 +93,9 @@ namespace QtOgre
 		///\name Testers
 		//@{
 		///\return whether the OpenGL render system is available.
-		bool isOpenGLAvailable(void);
+		bool isOpenGLAvailable(void) const;
 		///\return whether the Direct3D9 render system is available.
-		bool isDirect3D9Available(void);
+		bool isDirect3D9Available(void) const;
 		//@}
 		
 		///\name Other

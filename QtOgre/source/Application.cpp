@@ -97,17 +97,17 @@ namespace QtOgre
 		}
 	}
 
-	bool Application::isOpenGLAvailable(void)
+	bool Application::isOpenGLAvailable(void) const
 	{
 		return mOpenGLRenderSystem != 0;
 	}
 
-	bool Application::isDirect3D9Available(void)
+	bool Application::isDirect3D9Available(void) const
 	{
 		return mDirect3D9RenderSystem != 0;
 	}
 
-	unsigned int Application::frameCount(void)
+	unsigned int Application::frameCount(void) const
 	{
 		return mFrameCounter;
 	}
@@ -117,12 +117,12 @@ namespace QtOgre
 	users are expected to instead create their own log with createLog(). The reason
 	it is exposed is that the Qt debugging system (qtMessageHandler()) also redirects
 	to this log, and that cannot be made a member function.*/
-	Log* Application::_systemLog(void)
+	Log* Application::_systemLog(void) const
 	{
 		return mSystemLog;
 	}
 
-	QWidget* Application::mainWidget(void)
+	QWidget* Application::mainWidget(void) const
 	{
 		return mOgreWidget;
 	}
@@ -424,12 +424,12 @@ namespace QtOgre
 		mLogManager->setVisible(true);
 	}
 
-	Ogre::RenderWindow* Application::ogreRenderWindow(void)
+	Ogre::RenderWindow* Application::ogreRenderWindow(void) const
 	{
 		return mOgreWidget->getOgreRenderWindow();
 	}
 
-	QSettings* Application::settings(void)
+	QSettings* Application::settings(void) const
 	{
 		return mSettings;
 	}
