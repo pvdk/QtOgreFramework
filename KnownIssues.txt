@@ -1,0 +1,9 @@
+1) Under Windows Vista there are problems when setting the OpenGL renderer to fullscreen. This is due to known limitations with Windows Vista:
+
+http://www.opengl.org/pipeline/article/vol003_9/
+
+The important point is here:
+
+"During full-screen applications, such as games, the DWM is not performing window compositing..."
+
+Unfortunatly the QtOgre framework relies on such compositing to display the overlay windows.
