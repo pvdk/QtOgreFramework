@@ -5,21 +5,28 @@
 		<colourAmbient r="0.2980392" g="0.2980392" b="0.2980392" />
 	</environment>
 	<nodes>
-		<!--node name="Node0">
-			<position x="20" y="0" z="0" />
+		<node name="CubeNode">
 			<scale x="0.02" y="0.02" z="0.02" />
-			<entity meshFile="Cube01.mesh" name="Robot0" castShadows="True"/>
-			<node name="Node1">
-				<position x="0" y="20" z="0" />
-				<scale x="1" y="1" z="1" />
-				<entity meshFile="Cube01.mesh" name="Robot1" castShadows="True"/>
-				<node name="Node2">
-					<position x="0" y="0" z="20" />
-					<scale x="1" y="1" z="1" />
-					<entity meshFile="Cube01.mesh" name="Robot2" castShadows="True"/>
+			<position x="-5" y="0" z="0" />			
+			<entity meshFile="Cube.mesh" name="Cube" castShadows="True"/>
+			<node name="JaiquaNode0">
+				<scale x="7" y="7" z="7" />
+				<position x="-150" y="-200" z="400" />				
+				<entity meshFile="Jaiqua.mesh" name="Jaiqua0" castShadows="True"/>
+				<node name="JaiquaNode1">
+					<position x="40" y="0" z="0" />
+					<entity meshFile="Jaiqua.mesh" name="Jaiqua1" castShadows="True"/>
+					<node name="JaiquaNode2">
+						<position x="0" y="40" z="0" />
+						<entity meshFile="Jaiqua.mesh" name="Jaiqua2" castShadows="True"/>
+						<node name="JaiquaNode3">
+							<position x="-40" y="0" z="0" />
+							<entity meshFile="Jaiqua.mesh" name="Jaiqua3" castShadows="True"/>
+						</node>
+					</node>
 				</node>
 			</node>
-		</node-->
+		</node>
 		<node name="SphereNode">
 			<scale x="0.02" y="0.02" z="0.02" />
 			<position x="5" y="0" z="0" />			
