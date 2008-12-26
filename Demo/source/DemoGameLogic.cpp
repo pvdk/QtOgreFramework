@@ -98,6 +98,19 @@ namespace QtOgre
 		file.open(QFile::ReadOnly | QFile::Text);
 		QXmlInputSource xmlInputSource(&file);
 		reader.parse(xmlInputSource);
+
+		for (Ogre::SceneManager::MovableObjectIterator moi = mSceneManager->getMovableObjectIterator("Entity"); moi.hasMoreElements(); moi.moveNext())
+		{
+			Ogre::Entity *entity = static_cast<Ogre::Entity*>(moi.peekNextValue());
+
+			Ogre::AnimationStateSet* animationStateSet = entity->getAllAnimationStates();		
+			if(animationStateSet && animationStateSet->hasAnimationState("Walk"))
+			{
+				Ogre::AnimationState* walkAnimationState = animationStateSet->getAnimationState("Walk");
+				walkAnimationState->setLoop(true);
+				walkAnimationState->setEnabled(true);
+			}
+		}
 	}
 
 	void DemoGameLogic::update(void)
@@ -107,8 +120,19 @@ namespace QtOgre
 
 		float timeElapsedInSeconds = (mCurrentTime - mLastFrameTime) / 1000.0f;
 
-		mRobotEntity->getAnimationState("Walk")->addTime(timeElapsedInSeconds);
-		mJaiquaEntity->getAnimationState("Walk")->addTime(timeElapsedInSeconds);
+		//mRobotEntity->getAnimationState("Walk")->addTime(timeElapsedInSeconds);
+		//mJaiquaEntity->getAnimationState("Walk")->addTime(timeElapsedInSeconds);
+		for (Ogre::SceneManager::MovableObjectIterator moi = mSceneManager->getMovableObjectIterator("Entity"); moi.hasMoreElements(); moi.moveNext())
+		{
+			Ogre::Entity *entity = static_cast<Ogre::Entity*>(moi.peekNextValue());
+
+			Ogre::AnimationStateSet* animationStateSet = entity->getAllAnimationStates();		
+			if(animationStateSet && animationStateSet->hasAnimationState("Walk"))
+			{
+				Ogre::AnimationState* walkAnimationState = animationStateSet->getAnimationState("Walk");
+				walkAnimationState->addTime(timeElapsedInSeconds);
+			}
+		}
 
 		float distance = mCameraSpeed * timeElapsedInSeconds;
 
