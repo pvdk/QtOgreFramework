@@ -10,6 +10,7 @@ SET(QtOgre_VERSION "${QtOgre_VERSION_MAJOR}.${QtOgre_VERSION_MINOR}.${QtOgre_VER
 SET(SRC_FILES
 	source/AbstractSettingsWidget.cpp
 	source/Application.cpp
+	source/DotSceneHandler.cpp
 	source/EventHandlingOgreWidget.cpp
 	source/FPSDialog.cpp
 	source/GameLogic.cpp
@@ -23,6 +24,7 @@ SET(SRC_FILES
 SET(INC_FILES
 	include/AbstractSettingsWidget.h
 	include/Application.h
+	include/DotSceneHandler.h
 	include/EventHandler.h
 	include/EventHandlingOgreWidget.h
 	include/FPSDialog.h
@@ -50,7 +52,8 @@ SOURCE_GROUP("Sources" FILES ${SRC_FILES})
 SOURCE_GROUP("Headers" FILES ${INC_FILES})
 
 FIND_PACKAGE(Qt4)
-#SET(QT_USE_QTXML 1)
+SET(QT_USE_QTGUI 1)
+SET(QT_USE_QTXML 1)
 INCLUDE(${QT_USE_FILE})
 
 QT4_WRAP_CPP(MOC_SRCS ${INC_FILES})

@@ -1,4 +1,5 @@
 #include "DemoGameLogic.h"
+#include "DotSceneHandler.h"
 #include "MainMenu.h"
 
 #include "LogManager.h"
@@ -40,7 +41,7 @@ namespace QtOgre
 		//Set up scene
 		mCamera = mSceneManager->createCamera("Cam");
 
-		mCamera->setPosition(10, 10, 10);
+		mCamera->setPosition(30, 30, 30);
 		mCamera->lookAt(0, 0, 0);
 		mCamera->setNearClipDistance(1.0);
 		mCamera->setFarClipDistance(1000.0);
@@ -84,7 +85,17 @@ namespace QtOgre
 
 		mIsFirstFrame = true;
 
-		mCameraSpeed = 10.0;
+		mCameraSpeed = 50.0;
+
+		DotSceneHandler handler(mSceneManager);
+		QXmlSimpleReader reader;
+		reader.setContentHandler(&handler);
+		reader.setErrorHandler(&handler);
+
+		QFile file("media\\scenes\\test.scene");
+		file.open(QFile::ReadOnly | QFile::Text);
+		QXmlInputSource xmlInputSource(&file);
+		reader.parse(xmlInputSource);
 	}
 
 	void DemoGameLogic::update(void)
