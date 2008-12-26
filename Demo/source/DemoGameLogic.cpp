@@ -41,7 +41,7 @@ namespace QtOgre
 		//Set up scene
 		mCamera = mSceneManager->createCamera("Cam");
 
-		mCamera->setPosition(30, 30, 30);
+		mCamera->setPosition(0, 0, 20);
 		mCamera->lookAt(0, 0, 0);
 		mCamera->setNearClipDistance(1.0);
 		mCamera->setFarClipDistance(1000.0);
@@ -57,6 +57,8 @@ namespace QtOgre
 		mJaiquaNode->attachObject( mJaiquaEntity );
 		mJaiquaNode->scale(0.4,0.4,0.4);
 		mJaiquaNode->rotate(Ogre::Vector3(0.0,1.0,0.0), Ogre::Radian(-1.57));
+
+		mJaiquaNode->setVisible(false);
 
 		mJaiquaEntity->getAnimationState("Walk")->setLoop(true);
 		mJaiquaEntity->getAnimationState("Walk")->setEnabled(true);
@@ -85,7 +87,7 @@ namespace QtOgre
 
 		mIsFirstFrame = true;
 
-		mCameraSpeed = 50.0;
+		mCameraSpeed = 10.0;
 
 		DotSceneHandler handler(mSceneManager);
 		QXmlSimpleReader reader;

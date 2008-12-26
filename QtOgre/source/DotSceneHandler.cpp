@@ -13,7 +13,7 @@ bool DotSceneHandler::startElement(const QString & /* namespaceURI */,
 								   const QString &qName,
 								   const QXmlAttributes &attributes)
 {
-	qDebug(qName.toStdString().c_str());
+	qDebug((QString("Starting Element ") + qName).toStdString().c_str());
 	
 	if(qName == "entity")
 	{
@@ -31,6 +31,24 @@ bool DotSceneHandler::startElement(const QString & /* namespaceURI */,
 	if(qName == "position")
 	{
 		mCurrentNode->setPosition(attributes.value("x").toFloat(), attributes.value("y").toFloat(), attributes.value("z").toFloat());
+	}
+	if(qName == "scale")
+	{
+		mCurrentNode->setScale(attributes.value("x").toFloat(), attributes.value("y").toFloat(), attributes.value("z").toFloat());
+	}
+
+	return true;
+}
+
+bool DotSceneHandler::endElement(const QString & /* namespaceURI */,
+								 const QString & /* localName */,
+								 const QString &qName)
+{
+	qDebug((QString("Ending Element ") + qName).toStdString().c_str());
+
+	if(qName == "node")
+	{
+		mCurrentNode = mCurrentNode->getParentSceneNode();
 	}
 
 	return true;

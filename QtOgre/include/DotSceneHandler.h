@@ -11,7 +11,8 @@ class DotSceneHandler : public QXmlDefaultHandler
 public:
 	DotSceneHandler(Ogre::SceneManager* sceneManager);
 
-	bool DotSceneHandler::startElement(const QString &, const QString &, const QString &qName, const QXmlAttributes &attributes);
+	bool DotSceneHandler::startElement(const QString &, const QString &, const QString& qName, const QXmlAttributes &attributes);
+	bool DotSceneHandler::endElement(const QString &, const QString &, const QString& qName);
 
 private:
 	Ogre::SceneManager* mSceneManager;
