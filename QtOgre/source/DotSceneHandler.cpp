@@ -32,6 +32,10 @@ bool DotSceneHandler::startElement(const QString & /* namespaceURI */,
 	{
 		mCurrentNode->setPosition(attributes.value("x").toFloat(), attributes.value("y").toFloat(), attributes.value("z").toFloat());
 	}
+	if(qName == "rotation")
+	{
+		mCurrentNode->setOrientation(attributes.value("qw").toFloat(), attributes.value("qx").toFloat(), attributes.value("qy").toFloat(), attributes.value("qz").toFloat());
+	}
 	if(qName == "scale")
 	{
 		mCurrentNode->setScale(attributes.value("x").toFloat(), attributes.value("y").toFloat(), attributes.value("z").toFloat());
