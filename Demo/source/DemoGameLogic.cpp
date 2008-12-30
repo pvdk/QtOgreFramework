@@ -39,48 +39,20 @@ namespace QtOgre
 		mSceneManager = Ogre::Root::getSingleton().createSceneManager(Ogre::ST_GENERIC, "GenericSceneManager");
 
 		//Set up scene
-		mCamera = mSceneManager->createCamera("Cam");
+		loadScene("media\\scenes\\test.scene");
 
-		mCamera->setPosition(0, 0, 20);
-		mCamera->lookAt(0, 0, 0);
-		mCamera->setNearClipDistance(1.0);
-		mCamera->setFarClipDistance(1000.0);
-		mCamera->setFOVy(Ogre::Radian(1.0f));
-
-		mApplication->ogreRenderWindow()->addViewport(mCamera)->setBackgroundColour(Ogre::ColourValue::Black);
+		//mApplication->ogreRenderWindow()->addViewport(mCamera)->setBackgroundColour(Ogre::ColourValue::Black);
 
 		mSceneManager->setAmbientLight( Ogre::ColourValue( 1, 1, 1 ) );
-
-		//Set up models
-		mJaiquaEntity = mSceneManager->createEntity( "Jaiqua", "jaiqua.mesh" );
-		mJaiquaNode = mSceneManager->getRootSceneNode()->createChildSceneNode( "JaiquaNode" );
-		mJaiquaNode->attachObject( mJaiquaEntity );
-		mJaiquaNode->scale(0.4,0.4,0.4);
-		mJaiquaNode->rotate(Ogre::Vector3(0.0,1.0,0.0), Ogre::Radian(-1.57));
-
-		mJaiquaNode->setVisible(false);
-
-		mJaiquaEntity->getAnimationState("Walk")->setLoop(true);
-		mJaiquaEntity->getAnimationState("Walk")->setEnabled(true);
-
-		mRobotEntity = mSceneManager->createEntity( "Robot", "robot.mesh" );
-		mRobotNode = mSceneManager->getRootSceneNode()->createChildSceneNode( "RobotNode" );
-		mRobotNode->attachObject( mRobotEntity );
-		mRobotNode->scale(0.1,0.1,0.1);
-		mRobotNode->translate(Ogre::Vector3(3.0,0.0,0.0));
-		mRobotEntity->setVisible(false);
-
-		mRobotEntity->getAnimationState("Walk")->setLoop(true);
-		mRobotEntity->getAnimationState("Walk")->setEnabled(true);
 
 		//Create the MainMenu
 		mMainMenu = new MainMenu(qApp, qApp->mainWidget());
 
 		//Create widget to choose between models
-		mChooseMeshWidget = new ChooseMeshWidget(mJaiquaEntity, mRobotEntity, qApp->mainWidget());
-		mChooseMeshWidget->setWindowOpacity(qApp->settings()->value("System/DefaultWindowOpacity", 1.0).toDouble());
-		mChooseMeshWidget->move(qApp->mainWidget()->geometry().left() + qApp->mainWidget()->geometry().width() - mChooseMeshWidget->frameGeometry().width() - 10, qApp->mainWidget()->geometry().top() + 10);
-		mChooseMeshWidget->show();
+		//mChooseMeshWidget = new ChooseMeshWidget(mJaiquaEntity, mRobotEntity, qApp->mainWidget());
+		//mChooseMeshWidget->setWindowOpacity(qApp->settings()->value("System/DefaultWindowOpacity", 1.0).toDouble());
+		//mChooseMeshWidget->move(qApp->mainWidget()->geometry().left() + qApp->mainWidget()->geometry().width() - mChooseMeshWidget->frameGeometry().width() - 10, qApp->mainWidget()->geometry().top() + 10);
+		//mChooseMeshWidget->show();
 
 		mTime = new QTime;
 		mTime->start();
@@ -89,15 +61,7 @@ namespace QtOgre
 
 		mCameraSpeed = 10.0;
 
-		DotSceneHandler handler(mSceneManager);
-		QXmlSimpleReader reader;
-		reader.setContentHandler(&handler);
-		reader.setErrorHandler(&handler);
-
-		QFile file("media\\scenes\\test.scene");
-		file.open(QFile::ReadOnly | QFile::Text);
-		QXmlInputSource xmlInputSource(&file);
-		reader.parse(xmlInputSource);
+		
 
 		for (Ogre::SceneManager::MovableObjectIterator moi = mSceneManager->getMovableObjectIterator("Entity"); moi.hasMoreElements(); moi.moveNext())
 		{
@@ -120,8 +84,6 @@ namespace QtOgre
 
 		float timeElapsedInSeconds = (mCurrentTime - mLastFrameTime) / 1000.0f;
 
-		//mRobotEntity->getAnimationState("Walk")->addTime(timeElapsedInSeconds);
-		//mJaiquaEntity->getAnimationState("Walk")->addTime(timeElapsedInSeconds);
 		for (Ogre::SceneManager::MovableObjectIterator moi = mSceneManager->getMovableObjectIterator("Entity"); moi.hasMoreElements(); moi.moveNext())
 		{
 			Ogre::Entity *entity = static_cast<Ogre::Entity*>(moi.peekNextValue());
@@ -174,12 +136,7 @@ namespace QtOgre
 
 	void DemoGameLogic::shutdown(void)
 	{
-		mSceneManager->destroyEntity(mRobotEntity);
-		mSceneManager->getRootSceneNode()->removeAndDestroyAllChildren();
-		mSceneManager->destroyAllEntities();
-		mSceneManager->destroyAllCameras();
-		mSceneManager->destroyAllAnimationStates();
-		mSceneManager->destroyAllAnimations();
+		mSceneManager->clearScene();
 		Ogre::Root::getSingleton().destroySceneManager(mSceneManager);
 	}
 
@@ -218,5 +175,37 @@ namespace QtOgre
 	Log* DemoGameLogic::demoLog(void)
 	{
 		return mDemoLog;
+	}
+
+	void DemoGameLogic::loadScene(QString filename)
+	{
+		//The QtOgre DotScene loading code will clear the existing scene except for cameras, as these
+		//could be used by existing viewports. Therefore we clear and viewports and cameras before
+		//calling the loading code.
+		mApplication->ogreRenderWindow()->removeAllViewports();
+		mSceneManager->destroyAllCameras();
+
+		//Now load the scene.
+		DotSceneHandler handler(mSceneManager);
+		QXmlSimpleReader reader;
+		reader.setContentHandler(&handler);
+		reader.setErrorHandler(&handler);
+
+		QFile file(filename);
+		file.open(QFile::ReadOnly | QFile::Text);
+		QXmlInputSource xmlInputSource(&file);
+		reader.parse(xmlInputSource);
+
+		//Now create a viewport, using the first camera in the scene.
+		mCamera = mSceneManager->getCameraIterator().peekNextValue();
+
+		mCamera->setPosition(0, 0, 20);
+		mCamera->lookAt(0, 0, 0);
+		mCamera->setNearClipDistance(1.0);
+		mCamera->setFarClipDistance(1000.0);
+		//mCamera->setFOVy(Ogre::Radian(1.0f));
+
+		Ogre::Viewport* viewport = mApplication->ogreRenderWindow()->addViewport(mCamera);
+		viewport->setBackgroundColour(Ogre::ColourValue::Black);
 	}
 }

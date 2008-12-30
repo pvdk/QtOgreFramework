@@ -38,6 +38,8 @@ namespace QtOgre
 
 		QtOgre::Log* demoLog(void);
 
+		void loadScene(QString filename);
+
 	private:
 		QHash<int, KeyStates> mKeyStates;
 		QPoint mLastFrameMousePos;
@@ -53,12 +55,6 @@ namespace QtOgre
 		bool mIsFirstFrame;
 
 		float mCameraSpeed;
-
-		Ogre::Entity *mJaiquaEntity;
-		Ogre::SceneNode* mJaiquaNode;
-
-		Ogre::Entity *mRobotEntity;
-		Ogre::SceneNode* mRobotNode;
 
 		ChooseMeshWidget* mChooseMeshWidget;
 

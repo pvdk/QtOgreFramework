@@ -15,6 +15,12 @@ bool DotSceneHandler::startElement(const QString & /* namespaceURI */,
 {
 	qDebug((QString("Starting Element ") + qName).toStdString().c_str());
 	
+	if(qName == "camera")
+	{
+		Ogre::Camera* camera = mSceneManager->createCamera(attributes.value("name").toStdString());
+		camera->setFOVy(Ogre::Radian(attributes.value("fov").toFloat()));
+		mCurrentNode->attachObject(camera);
+	}
 	if(qName == "entity")
 	{
 		Ogre::Entity* entity = mSceneManager->createEntity(attributes.value("name").toStdString(), attributes.value("meshFile").toStdString());
@@ -39,6 +45,10 @@ bool DotSceneHandler::startElement(const QString & /* namespaceURI */,
 	if(qName == "scale")
 	{
 		mCurrentNode->setScale(attributes.value("x").toFloat(), attributes.value("y").toFloat(), attributes.value("z").toFloat());
+	}
+	if(qName == "scene")
+	{
+		mSceneManager->clearScene();
 	}
 
 	return true;

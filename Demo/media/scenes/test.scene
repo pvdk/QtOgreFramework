@@ -5,6 +5,9 @@
 		<colourAmbient r="0.2980392" g="0.2980392" b="0.2980392" />
 	</environment>
 	<nodes>
+		<node name="CameraNode">
+			<camera name="Camera" fov="2.0" />
+		</node>
 		<node name="CubeNode">
 			<scale x="0.02" y="0.02" z="0.02" />
 			<rotation qw="0" qx="0" qy="1" qz="0"/>
