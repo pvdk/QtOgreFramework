@@ -25,8 +25,8 @@ public:
 	void* handleScale(const QXmlAttributes &attributes);
 	void* handleScene(const QXmlAttributes &attributes);
 
-	bool DotSceneHandler::startElement(const QString &, const QString &, const QString& qName, const QXmlAttributes &attributes);
-	bool DotSceneHandler::endElement(const QString &, const QString &, const QString& qName);
+	bool startElement(const QString &, const QString &, const QString& qName, const QXmlAttributes &attributes);
+	bool endElement(const QString &, const QString &, const QString& qName);
 
 private:
 	Ogre::SceneManager* mSceneManager;
