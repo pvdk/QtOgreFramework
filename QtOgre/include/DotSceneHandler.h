@@ -3,6 +3,8 @@
 
 #include <OgrePrerequisites.h>
 
+#include <QPair>
+#include <QStack>
 #include <QXmlSimpleReader>
 #include <QXmlDefaultHandler>
 
@@ -14,12 +16,21 @@ class DotSceneHandler : public QXmlDefaultHandler
 public:
 	DotSceneHandler(Ogre::SceneManager* sceneManager);
 
+	Ogre::Camera* handleCamera(const QXmlAttributes &attributes);
+	Ogre::Entity* handleEntity(const QXmlAttributes &attributes);
+	Ogre::SceneNode* handleNode(const QXmlAttributes &attributes);
+	Ogre::SceneNode* handleNodes(const QXmlAttributes &attributes);
+	void* handlePosition(const QXmlAttributes &attributes);
+	void* handleRotation(const QXmlAttributes &attributes);
+	void* handleScale(const QXmlAttributes &attributes);
+	void* handleScene(const QXmlAttributes &attributes);
+
 	bool DotSceneHandler::startElement(const QString &, const QString &, const QString& qName, const QXmlAttributes &attributes);
 	bool DotSceneHandler::endElement(const QString &, const QString &, const QString& qName);
 
 private:
 	Ogre::SceneManager* mSceneManager;
-	Ogre::SceneNode* mCurrentNode;
+	QStack< QPair< QString, void* > > mParentOgreObjects;
 };
 
 #endif //__DotSceneHandler_H__

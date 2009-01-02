@@ -199,7 +199,7 @@ namespace QtOgre
 		//Now create a viewport, using the first camera in the scene.
 		mCamera = mSceneManager->getCameraIterator().peekNextValue();
 
-		mCamera->setPosition(0, 0, 20);
+		//mCamera->setPosition(0, 0, 20);
 		mCamera->lookAt(0, 0, 0);
 		mCamera->setNearClipDistance(1.0);
 		mCamera->setFarClipDistance(1000.0);
