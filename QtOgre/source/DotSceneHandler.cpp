@@ -49,6 +49,10 @@ bool DotSceneHandler::startElement(const QString & /* namespaceURI */,
 	{
 		ogreObject = handleScene(attributes);
 	}
+	if(qName == "skyBox")
+	{
+		ogreObject = handleSkyBox(attributes);
+	}
 
 	if(ogreObject != 0)
 	{		
@@ -74,6 +78,10 @@ bool DotSceneHandler::endElement(const QString & /* namespaceURI */,
 		mParentOgreObjects.pop();
 	}
 	if(qName == "node")
+	{
+		mParentOgreObjects.pop();
+	}
+	if(qName == "skyBox")
 	{
 		mParentOgreObjects.pop();
 	}
@@ -170,4 +178,67 @@ void* DotSceneHandler::handleScene(const QXmlAttributes &attributes)
 	mSceneManager->clearScene();
 
 	return mSceneManager;
+}
+
+Ogre::SceneNode* DotSceneHandler::handleSkyBox(const QXmlAttributes &attributes)
+{	
+	//Extract the attributes while allowing default parameters
+	QString material = convertWithDefault(attributes.value("material"), "BaseWhiteNoLighting");
+	double distance = convertWithDefault(attributes.value("distance"), 5000.0);
+	bool drawFirst = convertWithDefault(attributes.value("drawFirst"), true);
+
+	//Set up the skybox
+	mSceneManager->setSkyBox(true, material.toStdString(), distance, drawFirst);
+
+	//Return the skybox node - we may apply rotations to this later.
+	return mSceneManager->getSkyBoxNode();
+}
+
+bool DotSceneHandler::convertWithDefault(const QString& inputString, bool defaultVal)
+{
+	if(inputString.compare("true", Qt::CaseInsensitive))
+	{
+		return true;
+	}
+	if(inputString.compare("false", Qt::CaseInsensitive))
+	{
+		return false;
+	}
+	else
+	{
+		return defaultVal;
+	}
+}
+
+double DotSceneHandler::convertWithDefault(const QString& inputString, double defaultVal)
+{
+	bool ok = false;
+	double retVal = inputString.toDouble(&ok);
+	return (ok ? retVal : defaultVal);
+}
+
+float DotSceneHandler::convertWithDefault(const QString& inputString, float defaultVal)
+{
+	bool ok = false;
+	float retVal = inputString.toFloat(&ok);
+	return (ok ? retVal : defaultVal);
+}
+
+int DotSceneHandler::convertWithDefault(const QString& inputString, int defaultVal)
+{
+	bool ok = false;
+	int retVal = inputString.toInt(&ok);
+	return (ok ? retVal : defaultVal);
+}
+
+QString DotSceneHandler::convertWithDefault(const QString& inputString, char* defaultVal)
+{
+	if(inputString.isEmpty() == false)
+	{
+		return inputString;
+	}
+	else
+	{
+		return defaultVal;
+	}
 }

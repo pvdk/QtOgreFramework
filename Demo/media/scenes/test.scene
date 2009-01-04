@@ -1,8 +1,9 @@
 <?xml version="1.0" standalone="yes"?>
 <scene formatVersion="2.0">
 	<environment>
-		<skyBox material="Examples/SpaceSkyBox" />
-		<colourAmbient r="0.2980392" g="0.2980392" b="0.2980392" />
+		<skyBox material="SkyBox" distance="100.0" drawFirst="true">
+			<!--rotation qw="0" qx="0" qy="1" qz="0"/-->
+		</skyBox>
 	</environment>
 	<nodes>
 		<node name="CameraNode">			

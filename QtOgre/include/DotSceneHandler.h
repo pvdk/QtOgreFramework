@@ -24,11 +24,18 @@ public:
 	void* handleRotation(const QXmlAttributes &attributes);
 	void* handleScale(const QXmlAttributes &attributes);
 	void* handleScene(const QXmlAttributes &attributes);
+	Ogre::SceneNode* handleSkyBox(const QXmlAttributes &attributes);
 
 	bool startElement(const QString &, const QString &, const QString& qName, const QXmlAttributes &attributes);
 	bool endElement(const QString &, const QString &, const QString& qName);
 
 private:
+	bool convertWithDefault(const QString& inputString, bool defaultVal);
+	double convertWithDefault(const QString& inputString, double defaultVal);
+	float convertWithDefault(const QString& inputString, float defaultVal);
+	int convertWithDefault(const QString& inputString, int defaultVal);
+	QString convertWithDefault(const QString& inputString, char* defaultVal);
+
 	Ogre::SceneManager* mSceneManager;
 	QStack< QPair< QString, void* > > mParentOgreObjects;
 };
