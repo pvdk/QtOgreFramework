@@ -1,7 +1,7 @@
 #ifndef QTOGRE_SETTINGSDIALOG_H_
 #define QTOGRE_SETTINGSDIALOG_H_
 
-#include "../ui_SettingsDialog.h"
+#include "ui_SettingsDialog.h"
 
 #include "AbstractSettingsWidget.h"
 

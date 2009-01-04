@@ -1,7 +1,7 @@
 #ifndef QTOGRE_FPSDIALOG_H_
 #define QTOGRE_FPSDIALOG_H_
 
-#include "../ui_FPSDialog.h"
+#include "ui_FPSDialog.h"
 
 #include <QTime>
 #include <QTimer>

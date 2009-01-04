@@ -62,7 +62,7 @@ QT4_ADD_RESOURCES(RESOURCE_SRCS ${RESOURCE_FILES})
 
 SET(CMAKE_DEBUG_POSTFIX "_d")
 
-INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/include ${QtOgre_BINARY_DIR}/include ${OGRE_INCLUDE_DIRS})
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/include ${QtOgre_BINARY_DIR} ${OGRE_INCLUDE_DIRS})
 LINK_DIRECTORIES(${OGRE_LIBRARY_DIRS})
 
 ADD_LIBRARY(QtOgre SHARED ${SRC_FILES} ${MOC_SRCS} ${UI_SRCS} ${RESOURCE_SRCS})
@@ -82,6 +82,18 @@ install(TARGETS QtOgre QtOgreStatic
 install(FILES ${INC_FILES}
 	DESTINATION include
 )
+
+#In addition  to the main headers installed above, we also need to install the ones which were auto generated
+#by UIC. These are in the build folder,  so we copy them to the installation folder here.
+install(DIRECTORY ${QtOgre_BINARY_DIR}/
+		DESTINATION include
+		FILES_MATCHING PATTERN "*.h"
+		PATTERN "CMakeFiles" EXCLUDE
+		PATTERN "debug" EXCLUDE
+		PATTERN "include" EXCLUDE
+		PATTERN "QtOgre.dir" EXCLUDE
+		PATTERN "QtOgreStatic.dir" EXCLUDE
+		PATTERN "release" EXCLUDE)
 
 #Set up OGREConfig.cmake
 if(WIN32)

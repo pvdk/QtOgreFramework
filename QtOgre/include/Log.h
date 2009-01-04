@@ -1,7 +1,7 @@
 #ifndef QTOGRE_LOG_H_
 #define QTOGRE_LOG_H_
 
-#include "../ui_Log.h"
+#include "ui_Log.h"
 
 #include <QTextStream>
 

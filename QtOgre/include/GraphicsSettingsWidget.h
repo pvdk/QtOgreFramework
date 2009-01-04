@@ -1,7 +1,7 @@
 #ifndef QTOGRE_GRAPHICSSETTINGSWIDGET_H_
 #define QTOGRE_GRAPHICSSETTINGSWIDGET_H_
 
-#include "../ui_GraphicsSettingsWidget.h"
+#include "ui_GraphicsSettingsWidget.h"
 
 #include "AbstractSettingsWidget.h"
 
