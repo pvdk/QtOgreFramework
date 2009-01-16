@@ -1,0 +1,42 @@
+TODO
+====
+
+Samples
+-------
+
+Simple Qt theming integration
+
+Simple QtScript integration
+
+
+Documentation
+-------------
+
+Some brief tutorials
+
+
+Ideas
+-----
+
+3D Widgets
+``````````
+
+Embeding Qt widgets inside a 3D scene (like the computer terminals in Quake IV).
+This could possibly also be used to draw screen aligned quads for GUI etc?
+
+Some ideas on implementation:
+
+WolfenQt woks by overlaying a QGraphiscView and performing transformations on
+the QGraphicsWidgets to align them correctly with the 3D scene underneath. This
+seems a bad way to do it.
+
+Instead, perhaps try to find a way to get an image of the widget converted into
+an OGRE material. The following two points seem like good starting candidates:
+
+ QPixmap QPixmap::grabWidget(QWidget* widget, ...)
+ Perhaps ExternalTextureSource in OGRE
+  (http://www.ogre3d.org/docs/manual/manual_69.html)
+
+A second step would involve interaction with the 3D widgets. Would need a way to
+tell Qt about ray intersection coords and mouse clicks and for Qt to tell OGRE
+what to do in response.
