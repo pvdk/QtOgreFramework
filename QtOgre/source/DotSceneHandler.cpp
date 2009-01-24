@@ -249,7 +249,7 @@ int DotSceneHandler::convertWithDefault(const QString& inputString, int defaultV
 	return (ok ? retVal : defaultVal);
 }
 
-QString DotSceneHandler::convertWithDefault(const QString& inputString, char* defaultVal)
+QString DotSceneHandler::convertWithDefault(const QString& inputString, const char* defaultVal)
 {
 	if(inputString.isEmpty() == false)
 	{

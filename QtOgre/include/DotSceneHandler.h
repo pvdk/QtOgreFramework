@@ -33,7 +33,7 @@ private:
 	double convertWithDefault(const QString& inputString, double defaultVal);
 	float convertWithDefault(const QString& inputString, float defaultVal);
 	int convertWithDefault(const QString& inputString, int defaultVal);
-	QString convertWithDefault(const QString& inputString, char* defaultVal);
+	QString convertWithDefault(const QString& inputString, const char* defaultVal);
 
 	///The scene manager into which the XML is being loaded
 	Ogre::SceneManager* mSceneManager;
