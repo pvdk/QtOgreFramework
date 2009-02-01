@@ -29,6 +29,10 @@ bool DotSceneHandler::startElement(const QString & /* namespaceURI */,
 	{
 		ogreObject = handleEntity(attributes);
 	}
+	if(qName == "lookTarget")
+	{
+		ogreObject = handleLookTarget(attributes);
+	}
 	if(qName == "node")
 	{
 		ogreObject = handleNode(attributes);
@@ -58,13 +62,10 @@ bool DotSceneHandler::startElement(const QString & /* namespaceURI */,
 		ogreObject = handleSkyBox(attributes);
 	}
 
-	//If an Ogre object was created then add it to the stack.
+	//Add any created object (or just a null pointer) onto the stack.
 	//Later transformations will be applied to this top object.
-	if(ogreObject != 0)
-	{		
-		QPair< QString, void* > pair(qName, ogreObject);
-		mParentOgreObjects.push(pair);
-	}
+	QPair< QString, void* > pair(qName, ogreObject);
+	mParentObjects.push(pair);
 
 	return true;
 }
@@ -76,25 +77,15 @@ bool DotSceneHandler::endElement(const QString & /* namespaceURI */,
 	//For debugging
 	qDebug((QString("Ending Element ") + qName).toStdString().c_str());
 
-	//If the XML node causes an Ogre object to be added to the stack,
-	//we remove it to expose the one which was there previously.
-	if
-	(
-		(qName == "camera") ||
-		(qName == "entity") ||
-		(qName == "node") ||
-		(qName == "skyBox")
-	)
-	{
-		mParentOgreObjects.pop();
-	}
+	//Pop the top most object off the stack.
+	mParentObjects.pop();
 
 	return true;
 }
 
 Ogre::Camera* DotSceneHandler::handleCamera(const QXmlAttributes &attributes)
 {
-	QPair< QString, void* > topPair = mParentOgreObjects.top();
+	QPair< QString, void* > topPair = mParentObjects.top();
 	//Camera can be attached to the root node ('nodes'), or one of it's children ('node').
 	if((topPair.first == "node") || (topPair.first == "nodes"))
 	{
@@ -110,7 +101,7 @@ Ogre::Camera* DotSceneHandler::handleCamera(const QXmlAttributes &attributes)
 
 Ogre::Entity* DotSceneHandler::handleEntity(const QXmlAttributes &attributes)
 {
-	QPair< QString, void* > topPair = mParentOgreObjects.top();
+	QPair< QString, void* > topPair = mParentObjects.top();
 	//Entity can be attached to the root node ('nodes'), or one of it's children ('node').
 	if((topPair.first == "node") || (topPair.first == "nodes"))
 	{
@@ -123,9 +114,20 @@ Ogre::Entity* DotSceneHandler::handleEntity(const QXmlAttributes &attributes)
 	return 0;
 }
 
+void* DotSceneHandler::handleLookTarget(const QXmlAttributes &attributes)
+{
+	QPair< QString, void* > topPair = mParentObjects.top();
+	//Entity can be attached to the root node ('nodes'), or one of it's children ('node').
+	if(topPair.first == "camera")
+	{
+		//Nothing to actually do here - lookAt() is called later when we find the position node.
+	}
+	return 0;
+}
+
 Ogre::SceneNode* DotSceneHandler::handleNode(const QXmlAttributes &attributes)
 {
-	QPair< QString, void* > topPair = mParentOgreObjects.top();
+	QPair< QString, void* > topPair = mParentObjects.top();
 	//Node can be attached to the root node ('nodes'), or one of it's children ('node').
 	if((topPair.first == "node") || (topPair.first == "nodes"))
 	{
@@ -143,11 +145,22 @@ Ogre::SceneNode* DotSceneHandler::handleNodes(const QXmlAttributes &attributes)
 
 void* DotSceneHandler::handlePosition(const QXmlAttributes &attributes)
 {
-	QPair< QString, void* > topPair = mParentOgreObjects.top();
+	QPair< QString, void* > topPair = mParentObjects.top();
 	if(topPair.first == "camera")
 	{
 		Ogre::Camera* camera = static_cast<Ogre::Camera*>(topPair.second);
 		camera->setPosition(attributes.value("x").toFloat(), attributes.value("y").toFloat(), attributes.value("z").toFloat());
+	}
+	if(topPair.first == "lookTarget")
+	{
+		//If we have a lookTarget node, we want to go up another level to find what the lookTarget is attached to.
+		QPair< QString, void* > nextPair = mParentObjects.at(mParentObjects.size() - 2);
+		//Check if we are setting the lookTarget of a camera...
+		if(nextPair.first == "camera")
+		{
+			Ogre::Camera* camera = static_cast<Ogre::Camera*>(nextPair.second);
+			camera->lookAt(attributes.value("x").toFloat(), attributes.value("y").toFloat(), attributes.value("z").toFloat());
+		}
 	}
 	if(topPair.first == "node")
 	{
@@ -161,7 +174,7 @@ void* DotSceneHandler::handlePosition(const QXmlAttributes &attributes)
 
 void* DotSceneHandler::handleRotation(const QXmlAttributes &attributes)
 {
-	QPair< QString, void* > topPair = mParentOgreObjects.top();
+	QPair< QString, void* > topPair = mParentObjects.top();
 	if(topPair.first == "skyBox")
 	{
 		//Finding a skybox actually adds a SceneNode to the stack.
@@ -180,7 +193,7 @@ void* DotSceneHandler::handleRotation(const QXmlAttributes &attributes)
 
 void* DotSceneHandler::handleScale(const QXmlAttributes &attributes)
 {
-	QPair < QString, void* >topPair = mParentOgreObjects.top();
+	QPair < QString, void* >topPair = mParentObjects.top();
 	if(topPair.first == "node")
 	{
 		Ogre::SceneNode* node = static_cast<Ogre::SceneNode*>(topPair.second);

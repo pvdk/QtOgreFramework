@@ -200,7 +200,7 @@ namespace QtOgre
 		mCamera = mSceneManager->getCameraIterator().peekNextValue();
 
 		//mCamera->setPosition(0, 0, 20);
-		mCamera->lookAt(0, 0, 0);
+		//mCamera->lookAt(0, 0, 0);
 		mCamera->setNearClipDistance(1.0);
 		mCamera->setFarClipDistance(1000.0);
 		//mCamera->setFOVy(Ogre::Radian(1.0f));

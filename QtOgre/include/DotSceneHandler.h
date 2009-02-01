@@ -21,6 +21,7 @@ public:
 private:
 	Ogre::Camera* handleCamera(const QXmlAttributes &attributes);
 	Ogre::Entity* handleEntity(const QXmlAttributes &attributes);
+	void* handleLookTarget(const QXmlAttributes &attributes);
 	Ogre::SceneNode* handleNode(const QXmlAttributes &attributes);
 	Ogre::SceneNode* handleNodes(const QXmlAttributes &attributes);
 	void* handlePosition(const QXmlAttributes &attributes);
@@ -41,14 +42,14 @@ private:
 	There are primarily two types of XML nodes we will encounter. Some (like 'entity', 'camera', etc) are
 	actual Ogre objects which can exist in the scene. Others (like 'rotation', 'scale', etc) are transformations
 	which should be applied to the Ogre object with the 'most local scope'. As we enter and exit XML nodes we
-	push and pop the corresponding Ogre objects onto the stack below. Then, when we encounter a transformation,
-	we just apply it to whatever is at the top of the stack.
+	push and pop the corresponding objects (or just null pointers) onto the stack below. Then, when we encounter
+	a transformation, we just apply it to whatever is at the top of the stack.
 
 	The apporach works, but there might be a better and/or more type safe way to do it. Because any kind of Ogre
 	object could be on the stack we store them using void pointers and then use the string to cast to the correct
 	type at runtime.
 	*/
-	QStack< QPair< QString, void* > > mParentOgreObjects;
+	QStack< QPair< QString, void* > > mParentObjects;
 };
 
 #endif //__DotSceneHandler_H__

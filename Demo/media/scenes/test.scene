@@ -9,6 +9,9 @@
 		<node name="CameraNode">			
 			<camera name="Camera" fov="1.0">
 				<position x="0" y="0" z="20" />
+					<lookTarget>
+						<position x="0" y="0" z="0" />
+					</lookTarget>
 			</camera>
 		</node>
 		<node name="CubeNode">
