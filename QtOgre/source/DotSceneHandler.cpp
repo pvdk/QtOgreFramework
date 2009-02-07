@@ -25,6 +25,10 @@ bool DotSceneHandler::startElement(const QString & /* namespaceURI */,
 	{
 		ogreObject = handleCamera(attributes);
 	}
+	if(qName == "clipping")
+	{
+		ogreObject = handleClipping(attributes);
+	}
 	if(qName == "entity")
 	{
 		ogreObject = handleEntity(attributes);
@@ -94,6 +98,20 @@ Ogre::Camera* DotSceneHandler::handleCamera(const QXmlAttributes &attributes)
 		camera->setFOVy(Ogre::Radian(attributes.value("fov").toFloat()));
 		node->attachObject(camera);
 		return camera;
+	}
+
+	return 0;
+}
+
+void* DotSceneHandler::handleClipping(const QXmlAttributes &attributes)
+{
+	QPair< QString, void* > topPair = mParentObjects.top();
+	//Camera can be attached to the root node ('nodes'), or one of it's children ('node').
+	if(topPair.first == "camera")
+	{
+		Ogre::Camera* camera = static_cast<Ogre::Camera*>(topPair.second);
+		camera->setNearClipDistance(convertWithDefault(attributes.value("near"), 0.1f));
+		camera->setFarClipDistance(convertWithDefault(attributes.value("far"), 1000.0f));
 	}
 
 	return 0;

@@ -20,6 +20,7 @@ public:
 
 private:
 	Ogre::Camera* handleCamera(const QXmlAttributes &attributes);
+	void* handleClipping(const QXmlAttributes &attributes);
 	Ogre::Entity* handleEntity(const QXmlAttributes &attributes);
 	void* handleLookTarget(const QXmlAttributes &attributes);
 	Ogre::SceneNode* handleNode(const QXmlAttributes &attributes);
