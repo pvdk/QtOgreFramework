@@ -29,6 +29,10 @@ bool DotSceneHandler::startElement(const QString & /* namespaceURI */,
 	{
 		ogreObject = handleClipping(attributes);
 	}
+	if(qName == "colourAmbient")
+	{
+		ogreObject = handleColourAmbient(attributes);
+	}
 	if(qName == "entity")
 	{
 		ogreObject = handleEntity(attributes);
@@ -112,6 +116,21 @@ void* DotSceneHandler::handleClipping(const QXmlAttributes &attributes)
 		Ogre::Camera* camera = static_cast<Ogre::Camera*>(topPair.second);
 		camera->setNearClipDistance(convertWithDefault(attributes.value("near"), 0.1f));
 		camera->setFarClipDistance(convertWithDefault(attributes.value("far"), 1000.0f));
+	}
+
+	return 0;
+}
+
+void* DotSceneHandler::handleColourAmbient(const QXmlAttributes &attributes)
+{
+	QPair< QString, void* > topPair = mParentObjects.top();
+	//Camera can be attached to the root node ('nodes'), or one of it's children ('node').
+	if(topPair.first == "environment")
+	{
+		float red = convertWithDefault(attributes.value("r"), 1.0f);
+		float green = convertWithDefault(attributes.value("g"), 1.0f);
+		float blue = convertWithDefault(attributes.value("b"), 1.0f);
+		mSceneManager->setAmbientLight(Ogre::ColourValue(red, green, blue));
 	}
 
 	return 0;
