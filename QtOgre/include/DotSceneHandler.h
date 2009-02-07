@@ -23,9 +23,11 @@ private:
 	void* handleClipping(const QXmlAttributes &attributes);
 	void* handleColourAmbient(const QXmlAttributes &attributes);
 	Ogre::Entity* handleEntity(const QXmlAttributes &attributes);
+	Ogre::Light* handleLight(const QXmlAttributes &attributes);
 	void* handleLookTarget(const QXmlAttributes &attributes);
 	Ogre::SceneNode* handleNode(const QXmlAttributes &attributes);
 	Ogre::SceneNode* handleNodes(const QXmlAttributes &attributes);
+	void* handleNormal(const QXmlAttributes &attributes);
 	void* handlePosition(const QXmlAttributes &attributes);
 	void* handleRotation(const QXmlAttributes &attributes);
 	void* handleScale(const QXmlAttributes &attributes);

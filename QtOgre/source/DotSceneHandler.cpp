@@ -37,6 +37,10 @@ bool DotSceneHandler::startElement(const QString & /* namespaceURI */,
 	{
 		ogreObject = handleEntity(attributes);
 	}
+	if(qName == "light")
+	{
+		ogreObject = handleLight(attributes);
+	}
 	if(qName == "lookTarget")
 	{
 		ogreObject = handleLookTarget(attributes);
@@ -48,6 +52,10 @@ bool DotSceneHandler::startElement(const QString & /* namespaceURI */,
 	if(qName == "nodes")
 	{
 		ogreObject = handleNodes(attributes);
+	}
+	if(qName == "normal")
+	{
+		ogreObject = handleNormal(attributes);
 	}
 	if(qName == "position")
 	{
@@ -151,6 +159,36 @@ Ogre::Entity* DotSceneHandler::handleEntity(const QXmlAttributes &attributes)
 	return 0;
 }
 
+Ogre::Light* DotSceneHandler::handleLight(const QXmlAttributes &attributes)
+{
+	QPair< QString, void* > topPair = mParentObjects.top();
+	//Light can be attached to the root node ('nodes'), or one of it's children ('node').
+	if((topPair.first == "node") || (topPair.first == "nodes"))
+	{
+		Ogre::SceneNode* node = static_cast<Ogre::SceneNode*>(topPair.second);
+		Ogre::Light* light = mSceneManager->createLight(attributes.value("name").toStdString());
+
+		QString type = convertWithDefault(attributes.value("type"), "point");
+		if(type == "point")
+		{
+			light->setType(Ogre::Light::LightTypes::LT_POINT);
+		}
+		else if(type == "directional")
+		{
+			light->setType(Ogre::Light::LightTypes::LT_DIRECTIONAL);
+		}
+		else if(type == "spot")
+		{
+			light->setType(Ogre::Light::LightTypes::LT_SPOTLIGHT);
+		}
+
+		node->attachObject(light);
+
+		return light;
+	}
+	return 0;
+}
+
 void* DotSceneHandler::handleLookTarget(const QXmlAttributes &attributes)
 {
 	QPair< QString, void* > topPair = mParentObjects.top();
@@ -180,6 +218,20 @@ Ogre::SceneNode* DotSceneHandler::handleNodes(const QXmlAttributes &attributes)
 	return mSceneManager->getRootSceneNode();
 }
 
+void* DotSceneHandler::handleNormal(const QXmlAttributes &attributes)
+{
+	QPair< QString, void* > topPair = mParentObjects.top();
+
+	if(topPair.first == "light")
+	{
+		Ogre::Light* light = static_cast<Ogre::Light*>(topPair.second);
+		light->setDirection(attributes.value("x").toFloat(), attributes.value("y").toFloat(), attributes.value("z").toFloat());
+	}
+
+	//We haven't created any Ogre objects, so nothing to return
+	return 0;
+}
+
 void* DotSceneHandler::handlePosition(const QXmlAttributes &attributes)
 {
 	QPair< QString, void* > topPair = mParentObjects.top();
@@ -187,6 +239,11 @@ void* DotSceneHandler::handlePosition(const QXmlAttributes &attributes)
 	{
 		Ogre::Camera* camera = static_cast<Ogre::Camera*>(topPair.second);
 		camera->setPosition(attributes.value("x").toFloat(), attributes.value("y").toFloat(), attributes.value("z").toFloat());
+	}
+	if(topPair.first == "light")
+	{
+		Ogre::Light* light = static_cast<Ogre::Light*>(topPair.second);
+		light->setPosition(attributes.value("x").toFloat(), attributes.value("y").toFloat(), attributes.value("z").toFloat());
 	}
 	if(topPair.first == "lookTarget")
 	{
