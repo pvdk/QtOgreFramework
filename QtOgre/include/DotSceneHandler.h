@@ -15,25 +15,26 @@ class DotSceneHandler : public QXmlDefaultHandler
 public:
 	DotSceneHandler(Ogre::SceneManager* sceneManager);
 
-	bool startElement(const QString &, const QString &, const QString& qName, const QXmlAttributes &attributes);
-	bool endElement(const QString &, const QString &, const QString& qName);
+	virtual bool startElement(const QString &, const QString &, const QString& qName, const QXmlAttributes &attributes);
+	virtual bool endElement(const QString &, const QString &, const QString& qName);
+
+protected:
+	virtual Ogre::Camera* handleCamera(const QXmlAttributes &attributes);
+	virtual void* handleClipping(const QXmlAttributes &attributes);
+	virtual void* handleColourAmbient(const QXmlAttributes &attributes);
+	virtual Ogre::Entity* handleEntity(const QXmlAttributes &attributes);
+	virtual Ogre::Light* handleLight(const QXmlAttributes &attributes);
+	virtual void* handleLookTarget(const QXmlAttributes &attributes);
+	virtual Ogre::SceneNode* handleNode(const QXmlAttributes &attributes);
+	virtual Ogre::SceneNode* handleNodes(const QXmlAttributes &attributes);
+	virtual void* handleNormal(const QXmlAttributes &attributes);
+	virtual void* handlePosition(const QXmlAttributes &attributes);
+	virtual void* handleRotation(const QXmlAttributes &attributes);
+	virtual void* handleScale(const QXmlAttributes &attributes);
+	virtual void* handleScene(const QXmlAttributes &attributes);
+	virtual Ogre::SceneNode* handleSkyBox(const QXmlAttributes &attributes);
 
 private:
-	Ogre::Camera* handleCamera(const QXmlAttributes &attributes);
-	void* handleClipping(const QXmlAttributes &attributes);
-	void* handleColourAmbient(const QXmlAttributes &attributes);
-	Ogre::Entity* handleEntity(const QXmlAttributes &attributes);
-	Ogre::Light* handleLight(const QXmlAttributes &attributes);
-	void* handleLookTarget(const QXmlAttributes &attributes);
-	Ogre::SceneNode* handleNode(const QXmlAttributes &attributes);
-	Ogre::SceneNode* handleNodes(const QXmlAttributes &attributes);
-	void* handleNormal(const QXmlAttributes &attributes);
-	void* handlePosition(const QXmlAttributes &attributes);
-	void* handleRotation(const QXmlAttributes &attributes);
-	void* handleScale(const QXmlAttributes &attributes);
-	void* handleScene(const QXmlAttributes &attributes);
-	Ogre::SceneNode* handleSkyBox(const QXmlAttributes &attributes);
-
 	bool convertWithDefault(const QString& inputString, bool defaultVal);
 	double convertWithDefault(const QString& inputString, double defaultVal);
 	float convertWithDefault(const QString& inputString, float defaultVal);
