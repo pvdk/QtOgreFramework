@@ -171,15 +171,15 @@ Ogre::Light* DotSceneHandler::handleLight(const QXmlAttributes &attributes)
 		QString type = convertWithDefault(attributes.value("type"), "point");
 		if(type == "point")
 		{
-			light->setType(Ogre::Light::LightTypes::LT_POINT);
+			light->setType(Ogre::Light::LT_POINT);
 		}
 		else if(type == "directional")
 		{
-			light->setType(Ogre::Light::LightTypes::LT_DIRECTIONAL);
+			light->setType(Ogre::Light::LT_DIRECTIONAL);
 		}
 		else if(type == "spot")
 		{
-			light->setType(Ogre::Light::LightTypes::LT_SPOTLIGHT);
+			light->setType(Ogre::Light::LT_SPOTLIGHT);
 		}
 
 		node->attachObject(light);
