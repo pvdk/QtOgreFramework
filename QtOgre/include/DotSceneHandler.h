@@ -34,12 +34,13 @@ protected:
 	virtual void* handleScene(const QXmlAttributes &attributes);
 	virtual Ogre::SceneNode* handleSkyBox(const QXmlAttributes &attributes);
 
-private:
 	bool convertWithDefault(const QString& inputString, bool defaultVal);
 	double convertWithDefault(const QString& inputString, double defaultVal);
 	float convertWithDefault(const QString& inputString, float defaultVal);
 	int convertWithDefault(const QString& inputString, int defaultVal);
 	QString convertWithDefault(const QString& inputString, const char* defaultVal);
+
+private:
 
 	///The scene manager into which the XML is being loaded
 	Ogre::SceneManager* mSceneManager;
