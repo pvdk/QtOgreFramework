@@ -321,11 +321,11 @@ Ogre::SceneNode* DotSceneHandler::handleSkyBox(const QXmlAttributes &attributes)
 
 bool DotSceneHandler::convertWithDefault(const QString& inputString, bool defaultVal)
 {
-	if(inputString.compare("true"))
+	if(inputString.compare("true") == 0)
 	{
 		return true;
 	}
-	if(inputString.compare("false"))
+	if(inputString.compare("false") == 0)
 	{
 		return false;
 	}
