@@ -99,11 +99,11 @@ install(DIRECTORY ${QtOgre_BINARY_DIR}/
 if(WIN32)
 	set(CONFIG_FILE_DIR "CMake")
 else(WIN32)
-	set(CONFIG_FILE_DIR "lib/QtOgre/CMake")
+	set(CONFIG_FILE_DIR "share/QtOgre/cmake")
 endif(WIN32)
 
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/QtOgreConfig.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/QtOgreConfig.cmake)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/QtOgreConfigVersion.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/QtOgreConfigVersion.cmake)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/QtOgreConfig.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/QtOgreConfig.cmake @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/QtOgreConfigVersion.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/QtOgreConfigVersion.cmake @ONLY)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/QtOgreConfig.cmake ${CMAKE_CURRENT_BINARY_DIR}/QtOgreConfigVersion.cmake DESTINATION ${CONFIG_FILE_DIR})
 
 find_package(Doxygen)
