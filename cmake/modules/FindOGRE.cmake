@@ -32,6 +32,33 @@ IF (WIN32) #Windows
 		SET(OGRE_LIBRARY_DIRS $ENV{OGRE_SRC}/lib)
 		SET(OGRE_LIBRARIES debug OgreMain_d optimized OgreMain)
 	ENDIF (OGRESOURCE)
+ELSEIF (APPLE) # Apple, requires environment variable OGRE_HOME pointing to the OgreSDK Folder
+    MESSAGE(STATUS "Looking for OGRE")
+    SET(OGRESDK $ENV{OGRE_HOME})
+    IF(DEFINED OGRESDK AND IS_DIRECTORY ${OGRESDK})
+        MESSAGE(STATUS "Found OgreSDK at ${OGRESDK}")
+        SET(Ogre_FRAMEWORKS ${OGRESDK}/Dependencies/Ogre.framework)
+    ELSE(DEFINED OGRESDK AND IS_DIRECTORY ${OGRESDK})
+        MESSAGE(FATAL_ERROR "OGRE_HOME environment variable not set")
+    ENDIF(DEFINED OGRESDK AND IS_DIRECTORY ${OGRESDK})
+    
+    IF (Ogre_FRAMEWORKS)
+        SET(OGRE_FOUND TRUE)
+
+        FOREACH (dir ${Ogre_FRAMEWORKS})
+            SET(Ogre_FRAMEWORK_INCLUDES ${Ogre_FRAMEWORK_INCLUDES} ${dir}/Headers)
+        ENDFOREACH (dir)
+
+        SET (OGRE_INCLUDE_DIRS
+            ${OGRE_INCLUDE_DIRS}
+            ${Ogre_FRAMEWORK_INCLUDES}
+        )
+        SET (OGRE_LIBRARY_DIRS
+            ${OGRE_LIBRARY_DIRS}
+        )
+        
+        SET(OGRE_LIBRARIES ${OGRE_LIBRARIES} ${Ogre_FRAMEWORKS})
+    ENDIF (Ogre_FRAMEWORKS)
 ELSE (WIN32) #Unix
 	CMAKE_MINIMUM_REQUIRED(VERSION 2.6.0 FATAL_ERROR) #Needed for VERSION stuff
 	FIND_PACKAGE(PkgConfig)
@@ -41,6 +68,9 @@ ELSE (WIN32) #Unix
 	SET(OGRE_LIBRARY_DIRS ${OGRE_LIBDIR})
 	SET(OGRE_LIBRARIES ${OGRE_LIBRARIES} CACHE STRING "")
 ENDIF (WIN32)
+
+
+
 
 #Version checking
 IF(DEFINED OGRE_FIND_VERSION AND DEFINED OGRE_VERSION)

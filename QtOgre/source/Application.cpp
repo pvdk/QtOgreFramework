@@ -16,7 +16,7 @@
 #include <QTimer>
 #include <QSettings>
 
-//Q_INIT_RESOURCE cannot be called from within a namespace, so we provide 
+//Q_INIT_RESOURCE cannot be called from within a namespace, so we provide
 //this function. See the Q_INIT_RESOURCE documentation for an explanation.
 inline void initQtResources() { Q_INIT_RESOURCE(resources); }
 
@@ -144,21 +144,21 @@ namespace QtOgre
 
 	void Application::initialise(void)
 	{
-		
+
 		mOgreWidget->show();
 		mOgreWidget->resize(800,600);
 		centerWidget(mOgreWidget);
 
-		
-		
+
+
 		//mLogManagerDockWidget = mMainWindow->addAsDockWidget(mLogManager, "Logs", Qt::AllDockWidgetAreas);
 		//mLogManager->setParent(mMainWindow);
 		centerWidget(mLogManager, mOgreWidget);
-		
-		
+
+
 		mLogManager->show();
 
-		
+
 
 		mLogManager->setForceProcessEvents(true);
 		initialiseOgre();
@@ -171,7 +171,7 @@ namespace QtOgre
 		//mLogManager->hide();
 
 
-		
+
 
 		mOgreWidget->setEventHandler(mGameLogic);
 
@@ -214,13 +214,13 @@ namespace QtOgre
 		mLogManager = new LogManager(mOgreWidget);
 		mLogManager->resize(550, 400);
 		mLogManager->setWindowOpacity(settings()->value("System/DefaultWindowOpacity", 1.0).toDouble());
-		
+
 		//Redirect Qt's logging system to our own
 		mSystemLog = mLogManager->createLog("System");
 		qInstallMsgHandler(&qtMessageHandler);
 		qDebug("Debug test");
 		qWarning("Warning test");
-		qCritical("Critical test");	
+		qCritical("Critical test");
 
 		//Redirect Ogre's logging system to our own
 		//This has to all be done before creating the Root object.
@@ -236,10 +236,10 @@ namespace QtOgre
 	#if defined(Q_WS_WIN)
 		try
 		{
-			#if defined(_DEBUG)			
+			#if defined(_DEBUG)
 				mRoot->loadPlugin("RenderSystem_GL_d");
 			#else
-				mRoot->loadPlugin("RenderSystem_GL");		
+				mRoot->loadPlugin("RenderSystem_GL");
 			#endif
 		}
 		catch(...)
@@ -248,10 +248,10 @@ namespace QtOgre
 		}
 		try
 		{
-			#if defined(_DEBUG)			
+			#if defined(_DEBUG)
 				mRoot->loadPlugin("RenderSystem_Direct3D9_d");
 			#else
-				mRoot->loadPlugin("RenderSystem_Direct3D9");		
+				mRoot->loadPlugin("RenderSystem_Direct3D9");
 			#endif
 		}
 		catch(...)
@@ -264,6 +264,16 @@ namespace QtOgre
 		{
 			mRoot->loadPlugin("/usr/local/lib/OGRE/RenderSystem_GL");
 			//mRoot->loadPlugin("/usr/lib64/OGRE/RenderSystem_GL"); //Needed for Matt
+		}
+		catch(...)
+		{
+			qWarning("Failed to load OpenGL plugin");
+		}
+	#endif
+	#if defined(Q_WS_MAC)
+		try
+		{
+			mRoot->loadPlugin("RenderSystem_GL");
 		}
 		catch(...)
 		{
@@ -294,7 +304,7 @@ namespace QtOgre
 	}
 
 	void Application::initialiseOgre(void)
-	{	
+	{
 		QString renderSystem = mSettingsDialog->mSettings->value("Graphics/RenderSystem").toString();
 		if(renderSystem.compare("OpenGL Rendering Subsystem") == 0)
 		{
@@ -304,13 +314,13 @@ namespace QtOgre
 		{
 			mActiveRenderSystem = mDirect3D9RenderSystem;
 		}
-		
+
 		Ogre::Root::getSingletonPtr()->setRenderSystem(mActiveRenderSystem);
 
 		Ogre::Root::getSingletonPtr()->initialise(false);
 	}
 
-	void Application::messageLogged(const Ogre::String& message, Ogre::LogMessageLevel lml, bool maskDebug, const Ogre::String& logName) 	
+	void Application::messageLogged(const Ogre::String& message, Ogre::LogMessageLevel lml, bool maskDebug, const Ogre::String& logName)
 	{
 		//Convert message to Qt's string type.
 		QString messageAsQString = QString::fromStdString(message);
