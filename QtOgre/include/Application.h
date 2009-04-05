@@ -7,14 +7,6 @@
 
 class QSettings;
 
-//This redefines qApp, causing it to return an Application pointer instead of a QApplication one.
-//This is useful, for example, to access the logging system. This is done in the same way that
-//Qt does it to get a QApplication rather than a QCoreApplication, so it should be legitimate.
-#if defined(qApp)
-#undef qApp
-#endif
-#define qApp (static_cast<Application *>(QCoreApplication::instance()))
-
 namespace QtOgre
 {
 	class EventHandlingOgreWidget;
@@ -188,5 +180,13 @@ namespace QtOgre
 		QSettings* mSettings;
 	};
 }
+
+//This redefines qApp, causing it to return an Application pointer instead of a QApplication one.
+//This is useful, for example, to access the logging system. This is done in the same way that
+//Qt does it to get a QApplication rather than a QCoreApplication, so it should be legitimate.
+#if defined(qApp)
+#undef qApp
+#endif
+#define qApp (static_cast<QtOgre::Application *>(QCoreApplication::instance()))
 
 #endif /*QTOGRE_APPLICATION_H_*/
