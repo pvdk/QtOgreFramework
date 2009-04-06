@@ -31,6 +31,7 @@ namespace QtOgre
 		void initialise(const Ogre::NameValuePairList *miscParams = 0);
 
 	protected:
+		QPaintEngine *paintEngine() const;
 		void paintEvent(QPaintEvent* evt);
 		void resizeEvent(QResizeEvent* evt);
 

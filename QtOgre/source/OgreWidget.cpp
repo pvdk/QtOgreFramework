@@ -91,6 +91,11 @@ namespace QtOgre
 		return m_pOgreRenderWindow;
 	}
 
+	QPaintEngine *OgreWidget:: paintEngine() const
+	{
+		return 0;
+	}
+
 	void OgreWidget::paintEvent(QPaintEvent* evt)
 	{
 		if(mIsInitialised)
