@@ -1,0 +1,9 @@
+Programming
+===========
+David Williams - Main developer
+Matt Williams - Build system and documentation
+Trey Stout - Logging framework
+
+Artwork
+=======
+Several icons are taken from the KDE Oxygen project (http://www.oxygen-icons.org/)

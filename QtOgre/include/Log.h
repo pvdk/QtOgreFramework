@@ -4,11 +4,19 @@
 #include "ui_Log.h"
 
 #include <QTextStream>
+#include <QAbstractTableModel>
+#include <QSortFilterProxyModel>
+#include <QTime>
 
 class QFile;
 
 namespace QtOgre
 {
+	//forward declarations
+	class LogEntry;
+	class LogModel;
+	class LogModelSortFilterProxy;
+
 	enum LogLevel
 	{ 
 		//These values are specifically chosen to be over 1000. This means they can be used as the 'type'
@@ -39,26 +47,13 @@ namespace QtOgre
 		//TODO - should this be a Qt property?
 		void setForceProcessEvents(bool forceProcessEvents);
 
-	public slots:
-		void on_filterLineEdit_textChanged(const QString& string);
-		void on_clearFilterButton_clicked();
-		void on_showDebugButton_clicked();
-		void on_showInformationButton_clicked();
-		void on_showWarningsButton_clicked();
-		void on_showErrorsButton_clicked();
+		QIcon &get_icon(LogLevel level);
+		QColor &get_fg_color(LogLevel level);
 
 	private:
-		//Private methods used for filtering and row visiblity
-		void computeVisibleMessageTypes(void);
-		void filterMessages(void);
-		void setRowVisibility(int row);
-
 		//Private methods for writing HTML
 		void writeHTMLHeader(void);
-		void writeMessageToHTML(const QString& message, const QString& timeStampAsString, LogLevel logLevel);
 		void writeHTMLTail(void);
-
-		void writeMessageToWidget(const QString& message, const QString& timeStampAsString, LogLevel logLevel);
 
 		//This is used as a bitfield to determine what message types are enabled
 		int mVisibleMessageTypes;
@@ -70,7 +65,7 @@ namespace QtOgre
 		QIcon errorIcon;
 
 		//Colours used for the log viewer
-		QColor backgroundColor;
+		QColor bgColor;
 		QColor debugColor;
 		QColor infoColor;
 		QColor warningColor;
@@ -83,7 +78,98 @@ namespace QtOgre
 		QString mName;
 		QFile* mFile;
 		QTextStream mTextStream;
+
+		//New Models
+		LogModel* mLogModel; //holds all log data
+		LogModelSortFilterProxy *mProxyModel; //proxy for sorting/filtering the mLogModel
+		
+		private slots:
+			void writeMessageToHTML(LogEntry *entry);
+			void computeVisibleMessageTypes(bool ignored);
 	};
+
+
+	// This could probably just be a struct but I'm using QObject as a base so that the model
+	// can manage the pointers for us
+	class LogEntry : public QObject {
+		Q_OBJECT
+	public:
+		LogEntry(int line, const QString &file, const QString &msg, LogLevel level, QObject *parent = 0)
+			:QObject(parent)
+			,m_line(line)
+			,m_file(file)
+			,m_msg(msg)
+			,m_level(level)
+			,m_timestamp(QTime::currentTime())
+		{}
+		LogLevel get_level() {return m_level;}
+		QVariant get_data(int column) {
+			switch(column) {
+				case 0: return QVariant(m_timestamp);
+				case 1: return QVariant(m_line);
+				case 2: return QVariant(m_file);
+				case 3: return QVariant(m_msg);
+				default: return QVariant();
+			}
+		}
+
+	private:
+		int m_line;
+		QString m_file;
+		QString m_msg;
+		QTime m_timestamp;
+		LogLevel m_level;
+		
+	};
+
+	// A simple model that will let us customize display, sorting, and filtering of log messages
+	class LogModel : public QAbstractTableModel {
+		Q_OBJECT
+
+	public:
+		// takes a pointer to the owning log object (right now just for fetching icons & colors)
+		LogModel(Log *log, QObject *parent = 0);
+
+		int rowCount(const QModelIndex &parent = QModelIndex()) const {return m_entries.length();}
+		int columnCount(const QModelIndex &parent = QModelIndex()) const {return 4;}
+
+		QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+		QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+
+		public slots:
+			//TODO: make slots for debug, warning, etc...
+			void append(int line, const QString &file, const QString &msg, LogLevel level);
+	
+	signals:
+		// slots can't return values, so we'll fire this signal when items are added and let Qt handle
+	    // dispatching
+		void entry_added(LogEntry*);
+
+	private:
+		QList<LogEntry*> m_entries;
+		Log *m_log;
+	};
+
+	class LogModelSortFilterProxy : public QSortFilterProxyModel {
+		Q_OBJECT
+	public:
+		LogModelSortFilterProxy(QObject *parent = 0);
+		void setShowLineAndFile(bool show);
+		void setVisisbleLevels(int level_bitmask) {
+			mVisibleLevels = level_bitmask;
+			invalidateFilter();
+		}
+
+	protected:
+		bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const;
+		bool filterAcceptsColumn(int source_column, const QModelIndex &source_parent) const;
+
+	private:
+		bool mShowLineAndFile;
+		int mVisibleLevels;
+	};
+
+
 }
 
 #endif /*QTOGRE_LOG_H_*/
