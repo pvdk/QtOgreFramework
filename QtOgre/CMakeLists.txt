@@ -65,15 +65,21 @@ SET(CMAKE_DEBUG_POSTFIX "_d")
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/include ${QtOgre_BINARY_DIR} ${OGRE_INCLUDE_DIRS})
 LINK_DIRECTORIES(${OGRE_LIBRARY_DIRS})
 
-ADD_LIBRARY(QtOgre SHARED ${SRC_FILES} ${MOC_SRCS} ${UI_SRCS} ${RESOURCE_SRCS})
-TARGET_LINK_LIBRARIES(QtOgre ${QT_LIBRARIES} ${OGRE_LIBRARIES})
-SET_TARGET_PROPERTIES(QtOgre PROPERTIES VERSION ${QtOgre_VERSION} SOVERSION ${QtOgre_VERSION_MAJOR})
+#NOTE - The shared version of the library has been giving some problems (at least in windows). Sometimes you have
+#to build twice before everything works. Or maybe it was that you had to build the static project on it's own, before
+#you could build the shared. I forget, but something didn't seem right. Anyway, the nature of the QtOgre framework 
+#seems a lot more like something which people will want to include directly into their executable, rather than
+#providing Qt and Ogre *and* QtOgre shared libraries. So, for now at least, I'm removing the shared option.
+#ADDITIONAL - Actually, maybe there should be a switch to CMake shich specifies whether shared or static should be built?
+#ADD_LIBRARY(QtOgre SHARED ${SRC_FILES} ${MOC_SRCS} ${UI_SRCS} ${RESOURCE_SRCS})
+#TARGET_LINK_LIBRARIES(QtOgre ${QT_LIBRARIES} ${OGRE_LIBRARIES})
+#SET_TARGET_PROPERTIES(QtOgre PROPERTIES VERSION ${QtOgre_VERSION} SOVERSION ${QtOgre_VERSION_MAJOR})
 
 ADD_LIBRARY(QtOgreStatic ${SRC_FILES} ${MOC_SRCS} ${UI_SRCS} ${RESOURCE_SRCS})
 TARGET_LINK_LIBRARIES(QtOgreStatic ${QT_LIBRARIES} ${OGRE_LIBRARIES})
 SET_TARGET_PROPERTIES(QtOgreStatic PROPERTIES OUTPUT_NAME "QtOgre")
 
-install(TARGETS QtOgre QtOgreStatic
+install(TARGETS QtOgreStatic
 	RUNTIME DESTINATION bin
 	LIBRARY DESTINATION lib
 	ARCHIVE DESTINATION lib
