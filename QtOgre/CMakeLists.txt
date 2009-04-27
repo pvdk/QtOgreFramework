@@ -15,8 +15,11 @@ SET(SRC_FILES
 	source/FPSDialog.cpp
 	source/GameLogic.cpp
 	source/GraphicsSettingsWidget.cpp
-	source/LogManager.cpp
 	source/Log.cpp
+	source/LogEntry.cpp
+	source/LogManager.cpp
+	source/LogModel.cpp
+	source/LogModelSortFilterProxy.cpp
 	source/OgreWidget.cpp
 	source/SettingsDialog.cpp
 )
@@ -30,8 +33,12 @@ SET(INC_FILES
 	include/FPSDialog.h
 	include/GameLogic.h
 	include/GraphicsSettingsWidget.h
-	include/LogManager.h
 	include/Log.h
+	include/LogEntry.h
+	include/LogLevel.h
+	include/LogManager.h
+	include/LogModel.h
+	include/LogModelSortFilterProxy.h
 	include/OgreWidget.h
 	include/SettingsDialog.h
 )
