@@ -149,23 +149,14 @@ namespace QtOgre
 		mOgreWidget->resize(800,600);
 		centerWidget(mOgreWidget);
 
-
-
-		//mLogManagerDockWidget = mMainWindow->addAsDockWidget(mLogManager, "Logs", Qt::AllDockWidgetAreas);
-		//mLogManager->setParent(mMainWindow);
 		centerWidget(mLogManager, mOgreWidget);
-
-
-		mLogManager->show();
-
-
 
 		mLogManager->setForceProcessEvents(true);
 		initialiseOgre();
 		Ogre::NameValuePairList ogreWindowParams;
 		//ogreWindowParams["FSAA"] = "8";
 		mOgreWidget->initialise(&ogreWindowParams);
-		mGameLogic->initialise();
+		
 		mLogManager->setForceProcessEvents(false);
 
 		//mLogManager->hide();
@@ -186,9 +177,10 @@ namespace QtOgre
 		mFPSDialog = new FPSDialog(mOgreWidget, Qt::FramelessWindowHint);
 		mFPSDialog->setWindowOpacity(settings()->value("System/DefaultWindowOpacity", 1.0).toDouble());
 		mFPSDialog->move(mainWidget()->geometry().topLeft() + QPoint(10,10));
-		mFPSDialog->show();
 
 		mLogManager->move(mainWidget()->geometry().left() + 10, mainWidget()->geometry().top() + mainWidget()->geometry().height() - mLogManager->frameGeometry().height() - 10);
+
+		mGameLogic->initialise();
 
 		mUpdateTimer->start();
 	}
@@ -452,5 +444,15 @@ namespace QtOgre
 		}
 		mUpdateTimer->start(intervalInMilliseconds);*/
 		mUpdateTimer->setInterval(intervalInMilliseconds);
+	}
+
+	void Application::hideFPSCounter(void)
+	{
+		mFPSDialog->setVisible(false);
+	}
+
+	void Application::showFPSCounter(void)
+	{
+		mFPSDialog->setVisible(true);
 	}
 }

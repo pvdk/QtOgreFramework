@@ -98,10 +98,15 @@ namespace QtOgre
 		 * \return a pointer to the log
 		 */
 		Log* createLog(const QString& name);
+		///Hides the FPS counter window.
+		void hideFPSCounter(void);
 		///Hides the LogManager window.
 		void hideLogManager(void);
 		///Hides the settings dialog.
 		void hideSettingsDialog(void);
+
+		///Shows the FPS counter window.
+		void showFPSCounter(void);
 		///Shows the LogManager window.
 		void showLogManager(void);
 		///Shows the settings dialog.

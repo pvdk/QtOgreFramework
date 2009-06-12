@@ -25,6 +25,8 @@ namespace QtOgre
 	{
 		mDemoLog = mApplication->createLog("Demo");
 
+		mApplication->showLogManager();
+
 		mDemoLog->logMessage("A demonstration debug message", LL_DEBUG);
 		mDemoLog->logMessage("A demonstration info message", LL_INFO);
 		mDemoLog->logMessage("A demonstration warning message", LL_WARNING);
@@ -75,6 +77,8 @@ namespace QtOgre
 				walkAnimationState->setEnabled(true);
 			}
 		}
+
+		mApplication->showFPSCounter();
 	}
 
 	void DemoGameLogic::update(void)
