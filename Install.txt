@@ -23,3 +23,9 @@ $ make install
 
 This will install QtOgre Framework to /usr/local/. To install to a different
 path, pass -DCMAKE_INSTALL_PREFIX=/path/to/install to the cmake step.
+
+QMake
+-----
+As an alternative to the CMake build system, QMake files were contributed in June 2006.
+They are not guarentted to be as up to date as the CMake files but hopefully work as 
+expected. If you find and fix any problems with them we would be pleased to hear about it.
