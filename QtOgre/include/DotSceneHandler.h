@@ -22,6 +22,7 @@ protected:
 	virtual Ogre::Camera* handleCamera(const QXmlAttributes &attributes);
 	virtual void* handleClipping(const QXmlAttributes &attributes);
 	virtual void* handleColourAmbient(const QXmlAttributes &attributes);
+	virtual void* handleColourDiffuse(const QXmlAttributes &attributes);
 	virtual Ogre::Entity* handleEntity(const QXmlAttributes &attributes);
 	virtual Ogre::Light* handleLight(const QXmlAttributes &attributes);
 	virtual void* handleLookTarget(const QXmlAttributes &attributes);

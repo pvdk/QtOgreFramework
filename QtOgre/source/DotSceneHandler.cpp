@@ -33,6 +33,10 @@ bool DotSceneHandler::startElement(const QString & /* namespaceURI */,
 	{
 		ogreObject = handleColourAmbient(attributes);
 	}
+	if(qName == "colourDiffuse")
+	{
+		ogreObject = handleColourDiffuse(attributes);
+	}
 	if(qName == "entity")
 	{
 		ogreObject = handleEntity(attributes);
@@ -118,7 +122,7 @@ Ogre::Camera* DotSceneHandler::handleCamera(const QXmlAttributes &attributes)
 void* DotSceneHandler::handleClipping(const QXmlAttributes &attributes)
 {
 	QPair< QString, void* > topPair = mParentObjects.top();
-	//Camera can be attached to the root node ('nodes'), or one of it's children ('node').
+	//Clipping can be attached to a camera
 	if(topPair.first == "camera")
 	{
 		Ogre::Camera* camera = static_cast<Ogre::Camera*>(topPair.second);
@@ -132,13 +136,30 @@ void* DotSceneHandler::handleClipping(const QXmlAttributes &attributes)
 void* DotSceneHandler::handleColourAmbient(const QXmlAttributes &attributes)
 {
 	QPair< QString, void* > topPair = mParentObjects.top();
-	//Camera can be attached to the root node ('nodes'), or one of it's children ('node').
+	//colourAmbient can be attached to the environment
 	if(topPair.first == "environment")
 	{
 		float red = convertWithDefault(attributes.value("r"), 1.0f);
 		float green = convertWithDefault(attributes.value("g"), 1.0f);
 		float blue = convertWithDefault(attributes.value("b"), 1.0f);
 		mSceneManager->setAmbientLight(Ogre::ColourValue(red, green, blue));
+	}
+
+	return 0;
+}
+
+void* DotSceneHandler::handleColourDiffuse(const QXmlAttributes &attributes)
+{
+	QPair< QString, void* > topPair = mParentObjects.top();
+	//colourAmbient can be attached to the environment
+	if(topPair.first == "light")
+	{
+		float red = convertWithDefault(attributes.value("r"), 1.0f);
+		float green = convertWithDefault(attributes.value("g"), 1.0f);
+		float blue = convertWithDefault(attributes.value("b"), 1.0f);
+		
+		Ogre::Light* light = static_cast<Ogre::Light*>(topPair.second);
+		light->setDiffuseColour(red, green, blue);
 	}
 
 	return 0;
