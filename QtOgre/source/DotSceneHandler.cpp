@@ -243,10 +243,13 @@ void* DotSceneHandler::handleNormal(const QXmlAttributes &attributes)
 {
 	QPair< QString, void* > topPair = mParentObjects.top();
 
+	Ogre::Vector3 normal(attributes.value("x").toFloat(), attributes.value("y").toFloat(), attributes.value("z").toFloat());
+	normal.normalise(); //It's not clear whether this should be done, but it seems sensible.
+
 	if(topPair.first == "light")
 	{
 		Ogre::Light* light = static_cast<Ogre::Light*>(topPair.second);
-		light->setDirection(attributes.value("x").toFloat(), attributes.value("y").toFloat(), attributes.value("z").toFloat());
+		light->setDirection(normal);
 	}
 
 	//We haven't created any Ogre objects, so nothing to return
