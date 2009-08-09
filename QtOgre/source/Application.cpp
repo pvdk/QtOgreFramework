@@ -61,8 +61,8 @@ namespace QtOgre
 		QObject::connect(mUpdateTimer, SIGNAL(timeout()), this, SLOT(update()));
 		//On the test system, a value of one here gives a high frame rate and still allows
 		//event prcessing to take place. A value of 0 doubles the frame rate but the mouse
-		//becomes jumpy. This property should probably be configurable.
-		mUpdateTimer->setInterval(20);
+		//becomes jumpy. This property is configerable via setUpdateInterval().
+		mUpdateTimer->setInterval(1);
 
 		//Load the settings file. If it doesn't exist it is created.
 		mSettings = new QSettings("settings.ini", QSettings::IniFormat);
