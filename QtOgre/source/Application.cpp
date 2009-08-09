@@ -62,7 +62,7 @@ namespace QtOgre
 		//On the test system, a value of one here gives a high frame rate and still allows
 		//event prcessing to take place. A value of 0 doubles the frame rate but the mouse
 		//becomes jumpy. This property should probably be configurable.
-		mUpdateTimer->setInterval(1);
+		mUpdateTimer->setInterval(20);
 
 		//Load the settings file. If it doesn't exist it is created.
 		mSettings = new QSettings("settings.ini", QSettings::IniFormat);
@@ -153,9 +153,7 @@ namespace QtOgre
 
 		mLogManager->setForceProcessEvents(true);
 		initialiseOgre();
-		Ogre::NameValuePairList ogreWindowParams;
-		//ogreWindowParams["FSAA"] = "8";
-		mOgreWidget->initialise(&ogreWindowParams);
+		
 		
 		mLogManager->setForceProcessEvents(false);
 
@@ -173,6 +171,10 @@ namespace QtOgre
 		//We also call accept, to do the initial setup. See also Application::exec().
 		connect(mSettingsDialog, SIGNAL(accepted()), this, SLOT(applySettings()));
 		mSettingsDialog->accept();
+
+		Ogre::NameValuePairList ogreWindowParams;
+		//ogreWindowParams["FSAA"] = "8";
+		mOgreWidget->initialise(&ogreWindowParams);
 
 		mFPSDialog = new FPSDialog(mOgreWidget, Qt::FramelessWindowHint);
 		mFPSDialog->setWindowOpacity(settings()->value("System/DefaultWindowOpacity", 1.0).toDouble());

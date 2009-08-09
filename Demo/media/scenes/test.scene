@@ -22,16 +22,16 @@
 			<node name="JaiquaNode0">
 				<scale x="7" y="7" z="7" />
 				<position x="-150" y="-200" z="50" />				
-				<entity meshFile="Jaiqua.mesh" name="Jaiqua0" castShadows="True"/>
+				<entity meshFile="jaiqua.mesh" name="Jaiqua0" castShadows="True"/>
 				<node name="JaiquaNode1">
 					<position x="40" y="0" z="0" />
-					<entity meshFile="Jaiqua.mesh" name="Jaiqua1" castShadows="True"/>
+					<entity meshFile="jaiqua.mesh" name="Jaiqua1" castShadows="True"/>
 					<node name="JaiquaNode2">
 						<position x="0" y="40" z="0" />
-						<entity meshFile="Jaiqua.mesh" name="Jaiqua2" castShadows="True"/>
+						<entity meshFile="jaiqua.mesh" name="Jaiqua2" castShadows="True"/>
 						<node name="JaiquaNode3">
 							<position x="-40" y="0" z="0" />
-							<entity meshFile="Jaiqua.mesh" name="Jaiqua3" castShadows="True"/>
+							<entity meshFile="jaiqua.mesh" name="Jaiqua3" castShadows="True"/>
 						</node>
 					</node>
 				</node>
@@ -46,25 +46,25 @@
 			<scale x="0.03" y="0.03" z="0.03" />
 			<rotation qw="0.707" qx="0" qy="-0.707" qz="0"/>
 			<position x="8" y="-1" z="0" />			
-			<entity meshFile="Robot.mesh" name="Robot0" castShadows="True"/>
+			<entity meshFile="robot.mesh" name="Robot0" castShadows="True"/>
 		</node>
 		<node name="RobotNode1">
 			<scale x="0.03" y="0.03" z="0.03" />
 			<rotation qw="0.707" qx="0" qy="-0.707" qz="0"/>
 			<position x="2" y="-1" z="0" />			
-			<entity meshFile="Robot.mesh" name="Robot1" castShadows="True"/>
+			<entity meshFile="robot.mesh" name="Robot1" castShadows="True"/>
 		</node>
 		<node name="RobotNode2">
 			<scale x="0.03" y="0.03" z="0.03" />
 			<rotation qw="0.707" qx="0" qy="-0.707" qz="0"/>
 			<position x="5" y="2" z="0" />			
-			<entity meshFile="Robot.mesh" name="Robot2" castShadows="True"/>
+			<entity meshFile="robot.mesh" name="Robot2" castShadows="True"/>
 		</node>
 		<node name="RobotNode3">
 			<scale x="0.03" y="0.03" z="0.03" />
 			<rotation qw="0.707" qx="0" qy="-0.707" qz="0"/>
 			<position x="5" y="-4" z="0" />			
-			<entity meshFile="Robot.mesh" name="Robot3" castShadows="True"/>
+			<entity meshFile="robot.mesh" name="Robot3" castShadows="True"/>
 		</node>
 
 	</nodes>

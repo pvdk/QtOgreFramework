@@ -39,6 +39,7 @@ namespace QtOgre
 
 		//Parameters to pass to Ogre::Root::createRenderWindow()
 		Ogre::NameValuePairList params;
+		params["useNVPerfHUD"] = "true";
 
 		//If the user passed in any parameters then be sure to copy them into our own parameter set.
 		//NOTE: Many of the parameters the user can supply (left, top, border, etc) will be ignored

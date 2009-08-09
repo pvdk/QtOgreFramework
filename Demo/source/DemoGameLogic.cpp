@@ -41,7 +41,7 @@ namespace QtOgre
 		mSceneManager = Ogre::Root::getSingleton().createSceneManager(Ogre::ST_GENERIC, "GenericSceneManager");
 
 		//Set up scene
-		loadScene("media\\scenes\\test.scene");
+		loadScene("media/scenes/test.scene");
 
 		//mApplication->ogreRenderWindow()->addViewport(mCamera)->setBackgroundColour(Ogre::ColourValue::Black);
 
