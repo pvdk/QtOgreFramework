@@ -1,6 +1,11 @@
 TODO
 ====
 
+Features
+--------
+Allow the disabling of logging (useful, and known to cause threading issues).
+Reconsider use of plugins.cfg, etc.
+
 Samples
 -------
 
