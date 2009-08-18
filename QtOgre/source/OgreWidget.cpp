@@ -149,11 +149,11 @@ namespace QtOgre
 				{
 					bool widthValid = false;
 					int width = splitResolution.at(0).toInt(&widthValid);
-					widthValid &= (width > 100) && (width < 10000);
+					widthValid &= (width > 10) && (width < 10000);
 					
 					bool heightValid = false;
 					int height = splitResolution.at(1).toInt(&heightValid);
-					heightValid &= (width > 100) && (width < 10000);
+					heightValid &= (height > 10) && (height < 10000);
 
 					if(widthValid && heightValid)
 					{
