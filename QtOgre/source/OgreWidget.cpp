@@ -21,10 +21,10 @@ namespace QtOgre
 	,m_pOgreRenderWindow(0)
 	,mIsInitialised(false)
 	{		
-		QPalette palette = this->palette(); //FIXME - Doesn't compile unless we use 'this'?! Because we are in the constructor?
-		palette.setColor(QPalette::Active, QPalette::WindowText, Qt::black);
-		palette.setColor(QPalette::Active, QPalette::Window, Qt::black);
-		setPalette(palette);
+		QPalette colourPalette = palette();
+		colourPalette.setColor(QPalette::Active, QPalette::WindowText, Qt::black);
+		colourPalette.setColor(QPalette::Active, QPalette::Window, Qt::black);
+		setPalette(colourPalette);
 	}
 
 	OgreWidget::~OgreWidget()
