@@ -92,21 +92,15 @@ install(TARGETS QtOgreStatic
 	ARCHIVE DESTINATION lib
 )
 
-install(FILES ${INC_FILES}
-	DESTINATION include
-)
+if(WIN32)
+	set(QtOgre_INCLUDE_INSTALL_DIRS "include")
+ELSE()
+	set(QtOgre_INCLUDE_INSTALL_DIRS "include/QtOgre")
+ENDIF()
 
-#In addition  to the main headers installed above, we also need to install the ones which were auto generated
-#by UIC. These are in the build folder,  so we copy them to the installation folder here.
-install(DIRECTORY ${QtOgre_BINARY_DIR}/
-		DESTINATION include
-		FILES_MATCHING PATTERN "*.h"
-		PATTERN "CMakeFiles" EXCLUDE
-		PATTERN "debug" EXCLUDE
-		PATTERN "include" EXCLUDE
-		PATTERN "QtOgre.dir" EXCLUDE
-		PATTERN "QtOgreStatic.dir" EXCLUDE
-		PATTERN "release" EXCLUDE)
+install(FILES ${INC_FILES} ${UI_SRCS}
+	DESTINATION ${QtOgre_INCLUDE_INSTALL_DIRS}
+)
 
 #Set up OGREConfig.cmake
 if(WIN32)
