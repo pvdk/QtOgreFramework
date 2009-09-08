@@ -17,119 +17,75 @@ namespace QtOgre
 	class LogManager;
 	class SettingsDialog;
 	
-	/**
-	 * The entry point for QtOgre
-	 * 
-	 * Usage:
-	 * \code
-	 * int main(int argc, char *argv[])
-	 * {
-	 * 	QtOgre::Application app(argc, argv, new MyGameLogic);
-	 * 	return app.exec(true);
-	 * }
-	 * \endcode
-	 * Where \c MyGameLogic is a QtOgre::GameLogic subclass
-	 * \author David Williams
-	 */
+	////////////////////////////////////////////////////////////////////////////////
+	/// The entry point for QtOgre
+	/// 
+	/// Usage:
+	/// \code
+	/// int main(int argc, char *argv[])
+	/// {
+	/// 	QtOgre::Application app(argc, argv, new MyGameLogic);
+	/// 	return app.exec(true);
+	/// }
+	/// \endcode
+	/// Where \c MyGameLogic is a QtOgre::GameLogic subclass
+	/// \author David Williams
+	////////////////////////////////////////////////////////////////////////////////
 	class Application : public QApplication, public Ogre::LogListener
 	{
 		Q_OBJECT
 
 	public:
-		/**
-		 * Creates an instance of the Application class.
-		 */
+		/// Creates an instance of the Application class.
 		Application(int & argc, char ** argv, GameLogic* gameLogic = 0);
-		/**
-		 * Destroys an instance of the Application class
-		 */
+		/Destroys an instance of the Application class
 		~Application();
 
 		///\name Getters
 		//@{
-		/**
-		 * The total number of frames rendered
-		 * \return the number of frames rendered since the application started.
-		 */
+		/// The total number of frames rendered
 		unsigned int frameCount(void) const;
-		/**
-		 * Get the OGRE RenderWindow for adding viewports
-		 * \return a pointer to the Ogre RenderWindow
-		 */   
+		/// Get the OGRE RenderWindow for adding viewports   
 		Ogre::RenderWindow* ogreRenderWindow(void) const;
-		/**
-		 * Get the main window widget
-		 * \return a pointer to the applications main window.
-		 */
+		/// Get the main window widget
 		QWidget* mainWidget(void) const;
-		/**
-		 * Access the application settings
-		 * \return a pointer to the application settings
-		 */
+		/// Access the application settings
 		QSettings* settings(void) const;
-		/**
-		 * \return the log used by the QtOgre framework.
-		 */
+		/// Gets the log used by the QtOgre framework.
 		Log* _systemLog(void) const;
 		//@}
 
 		///\name Setters
 		//@{
-		/**
-		 * Sets the period between sucessive updates.
-		 * \param intervalInMilliseconds the period between sucessive updates
-		 */
+		/// Sets the period between sucessive updates.
 		void setUpdateInterval(int intervalInMilliseconds);
 		//@}
 
 		///\name Testers
 		//@{
-		///\return whether the OpenGL render system is available.
+		/// Determine whether the OpenGL render system is available
 		bool isOpenGLAvailable(void) const;
-		///\return whether the Direct3D9 render system is available.
+		/// Determine whether the Direct3D9 render system is available.
 		bool isDirect3D9Available(void) const;
 		//@}
 		
 		///\name Other
 		//@{
-		/**
-		 * Creates a new log with a given name.
-		 * \param name the name of the log
-		 * \return a pointer to the log
-		 */
+		///Creates a new log with a given name.
 		Log* createLog(const QString& name);
 		//@}
 		
 		//Static functions
-		/**
-		 * Start the main event loop.
-		 * \param displaySettingsDialog should the settings dialog be displayed
-		 * \return the application return code
-		 * \todo Make the bool a self-documenting enum (http://doc.trolltech.com/qq/qq13-apis.html#thebooleanparametertrap)
-		 */
+		/// Start the main event loop.
 		static int exec(bool displaySettingsDialog = true); //Use 'displaySettingsDialog' because there is already a function called 'showSettingsDialog'.
-
-		/**
-		 * Utility function to center a widget.
-		 * \param widgetToCenter the widget to centre
-		 * \param parent the parent of the widget
-		 */
+		/// Utility function to center a widget.
 		static void centerWidget(QWidget* widgetToCenter, QWidget* parent = 0);
 
-		/**
-		 * Shows a message box with an 'Info' icon and 'Information' in the title bar.
-		 * \param text the text to display
-		 */
+		/// Shows a message box with an 'Info' icon and 'Information' in the title bar.
 		static void showInfoMessageBox(const QString& text);
-		/**
-		 * Shows a message box with a 'Warning' icon and 'Warning' in the title bar.
-		 * \param text the text to display
-		 */
+		/// Shows a message box with a 'Warning' icon and 'Warning' in the title bar.
 		static void showWarningMessageBox(const QString& text);
-		/**
-		 * Shows a message box with an 'Error' icon and 'Error' in the title bar.
-		 * \param text the text to display
-		 */
+		/// Shows a message box with an 'Error' icon and 'Error' in the title bar.
 		static void showErrorMessageBox(const QString& text);
 
 	public slots:
@@ -138,18 +94,18 @@ namespace QtOgre
 		void shutdown(void);
 		void update(void);	
 
-		///Hides the FPS counter window.
+		/// Hides the FPS counter window.
 		void hideFPSCounter(void);
-		///Hides the LogManager window.
+		/// Hides the LogManager window.
 		void hideLogManager(void);
-		///Hides the settings dialog.
+		/// Hides the settings dialog.
 		void hideSettingsDialog(void);
 
-		///Shows the FPS counter window.
+		/// Shows the FPS counter window.
 		void showFPSCounter(void);
-		///Shows the LogManager window.
+		/// Shows the LogManager window.
 		void showLogManager(void);
-		///Shows the settings dialog.
+		/// Shows the settings dialog.
 		int showSettingsDialog(void);
 
 	private:

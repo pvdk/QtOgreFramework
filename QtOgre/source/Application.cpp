@@ -97,31 +97,46 @@ namespace QtOgre
 		}
 	}
 
+	////////////////////////////////////////////////////////////////////////////////
+	/// \return whether the OpenGL render system is available
+	////////////////////////////////////////////////////////////////////////////////
 	bool Application::isOpenGLAvailable(void) const
 	{
 		return mOpenGLRenderSystem != 0;
 	}
 
+	////////////////////////////////////////////////////////////////////////////////
+	/// \return whether the Direct3D9 render system is available.
+	////////////////////////////////////////////////////////////////////////////////
 	bool Application::isDirect3D9Available(void) const
 	{
 		return mDirect3D9RenderSystem != 0;
 	}
 
+	////////////////////////////////////////////////////////////////////////////////
+	/// \return the number of frames rendered since the application started.
+	////////////////////////////////////////////////////////////////////////////////
 	unsigned int Application::frameCount(void) const
 	{
 		return mFrameCounter;
 	}
 
-	/**This function is an implementation detail, and should not really be exposed.
-	It return the log which the QtOgre framework uses for its messages, whereas
-	users are expected to instead create their own log with createLog(). The reason
-	it is exposed is that the Qt debugging system (qtMessageHandler()) also redirects
-	to this log, and that cannot be made a member function.*/
+	////////////////////////////////////////////////////////////////////////////////
+	///This function is an implementation detail, and should not really be exposed.
+	///It return the log which the QtOgre framework uses for its messages, whereas
+	///users are expected to instead create their own log with createLog(). The reason
+	///it is exposed is that the Qt debugging system (qtMessageHandler()) also redirects
+	///to this log, and that cannot be made a member function.
+	/// \return the log used by the QtOgre framework.
+	////////////////////////////////////////////////////////////////////////////////
 	Log* Application::_systemLog(void) const
 	{
 		return mSystemLog;
 	}
 
+	////////////////////////////////////////////////////////////////////////////////
+	/// \return a pointer to the applications main window.
+	////////////////////////////////////////////////////////////////////////////////
 	QWidget* Application::mainWidget(void) const
 	{
 		return mOgreWidget;
@@ -333,11 +348,11 @@ namespace QtOgre
 		}
 	}
 
-	/*SettingsDialog* Application::settingsDialog(void)
-	{
-		return mSettingsDialog;
-	}*/
-
+	////////////////////////////////////////////////////////////////////////////////
+	/// \param displaySettingsDialog should the settings dialog be displayed
+	/// \return the application return code
+	/// \todo Make the bool a self-documenting enum (http://doc.trolltech.com/qq/qq13-apis.html#thebooleanparametertrap)
+	////////////////////////////////////////////////////////////////////////////////
 	int Application::exec(bool displaySettingsDialog)
 	{
 		//If we don't show the setting dialog, or we do show it and it is accepted, then proceed.
@@ -353,9 +368,13 @@ namespace QtOgre
 		}
 	}
 
-	/*Centers a widget inside its parent, or inside the desktop if no
-	parent is provided. This requires the widget to be free to move.
-	If not (e.g. its in a layout) then the behaviour is undefined*/
+	////////////////////////////////////////////////////////////////////////////////
+	/// Centers a widget inside its parent, or inside the desktop if no
+	/// parent is provided. This requires the widget to be free to move.
+	/// If not (e.g. its in a layout) then the behaviour is undefined
+	/// \param widgetToCenter the widget to centre
+	/// \param parent the parent of the widget
+	////////////////////////////////////////////////////////////////////////////////	
 	void Application::centerWidget(QWidget* widgetToCenter, QWidget* parent)
 	{
 		QRect parentGeometry;
@@ -373,6 +392,9 @@ namespace QtOgre
 		widgetToCenter->move(parentGeometry.x() + xOffset, parentGeometry.y() + yOffset);
 	}
 
+	////////////////////////////////////////////////////////////////////////////////
+	/// \param text the text to display
+	////////////////////////////////////////////////////////////////////////////////
 	void Application::showInfoMessageBox(const QString& text)
 	{
 		QMessageBox msgBox;
@@ -383,6 +405,9 @@ namespace QtOgre
 		msgBox.exec();
 	}
 
+	////////////////////////////////////////////////////////////////////////////////
+	/// \param text the text to display
+	////////////////////////////////////////////////////////////////////////////////
 	void Application::showWarningMessageBox(const QString& text)
 	{
 		QMessageBox msgBox;
@@ -393,6 +418,9 @@ namespace QtOgre
 		msgBox.exec();
 	}
 
+	////////////////////////////////////////////////////////////////////////////////
+	/// \param text the text to display
+	////////////////////////////////////////////////////////////////////////////////
 	void Application::showErrorMessageBox(const QString& text)
 	{
 		QMessageBox msgBox;
@@ -413,6 +441,10 @@ namespace QtOgre
 		return mSettingsDialog->exec();
 	}
 
+	////////////////////////////////////////////////////////////////////////////////
+	/// \param name the name of the log
+	/// \return a pointer to the log
+	////////////////////////////////////////////////////////////////////////////////
 	Log* Application::createLog(const QString& name)
 	{
 		return mLogManager->createLog(name);
@@ -428,23 +460,28 @@ namespace QtOgre
 		mLogManager->setVisible(true);
 	}
 
+	////////////////////////////////////////////////////////////////////////////////
+	/// \return a pointer to the Ogre RenderWindow
+	//////////////////////////////////////////////////////////////////////////////// 
 	Ogre::RenderWindow* Application::ogreRenderWindow(void) const
 	{
 		return mOgreWidget->getOgreRenderWindow();
 	}
 
+	////////////////////////////////////////////////////////////////////////////////
+	// \return a pointer to the application settings
+	////////////////////////////////////////////////////////////////////////////////
 	QSettings* Application::settings(void) const
 	{
 		return mSettings;
 	}
 
+	/**
+	* Sets the period between sucessive updates.
+	* \param intervalInMilliseconds the period between sucessive updates
+	*/
 	void Application::setUpdateInterval(int intervalInMilliseconds)
 	{
-		/*if(mUpdateTimer->isActive())
-		{
-			mUpdateTimer->stop();
-		}
-		mUpdateTimer->start(intervalInMilliseconds);*/
 		mUpdateTimer->setInterval(intervalInMilliseconds);
 	}
 
