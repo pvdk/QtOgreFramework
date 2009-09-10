@@ -47,6 +47,8 @@ namespace QtOgre
 	,mOpenGLRenderSystem(0)
 	,mDirect3D9RenderSystem(0)
 	,mFrameCounter(0)
+	,mAutoUpdateEnabled(true)
+	,mIsInitialised(false)
 	{
 		mGameLogic = gameLogic;
 		if(mGameLogic != 0)
@@ -57,12 +59,12 @@ namespace QtOgre
 		//Initialise the resources.
 		initQtResources();
 
-		mUpdateTimer = new QTimer;
-		QObject::connect(mUpdateTimer, SIGNAL(timeout()), this, SLOT(update()));
+		mAutoUpdateTimer = new QTimer;
+		QObject::connect(mAutoUpdateTimer, SIGNAL(timeout()), this, SLOT(update()));
 		//On the test system, a value of one here gives a high frame rate and still allows
 		//event prcessing to take place. A value of 0 doubles the frame rate but the mouse
-		//becomes jumpy. This property is configerable via setUpdateInterval().
-		mUpdateTimer->setInterval(1);
+		//becomes jumpy. This property is configerable via setAutoUpdateInterval().
+		mAutoUpdateTimer->setInterval(1);
 
 		//Load the settings file. If it doesn't exist it is created.
 		mSettings = new QSettings("settings.ini", QSettings::IniFormat);
@@ -199,7 +201,12 @@ namespace QtOgre
 
 		mGameLogic->initialise();
 
-		mUpdateTimer->start();
+		if(mAutoUpdateEnabled)
+		{
+			mAutoUpdateTimer->start();
+		}
+
+		mIsInitialised = true;
 	}
 
 	void Application::update(void)
@@ -211,7 +218,7 @@ namespace QtOgre
 
 	void Application::shutdown(void)
 	{
-		mUpdateTimer->stop();
+		mAutoUpdateTimer->stop();
 		mGameLogic->shutdown();
 		mInternalOgreLog->removeListener(this);
 		this->exit(0);
@@ -479,9 +486,9 @@ namespace QtOgre
 	* Sets the period between sucessive updates.
 	* \param intervalInMilliseconds the period between sucessive updates
 	*/
-	void Application::setUpdateInterval(int intervalInMilliseconds)
+	void Application::setAutoUpdateInterval(int intervalInMilliseconds)
 	{
-		mUpdateTimer->setInterval(intervalInMilliseconds);
+		mAutoUpdateTimer->setInterval(intervalInMilliseconds);
 	}
 
 	void Application::hideFPSCounter(void)
@@ -492,5 +499,21 @@ namespace QtOgre
 	void Application::showFPSCounter(void)
 	{
 		mFPSDialog->setVisible(true);
+	}
+
+	void Application::setAutoUpdateEnabled(bool autoUpdateEnabled)
+	{
+		mAutoUpdateEnabled = autoUpdateEnabled;
+
+		//Only call start if the app is initialised, otherwise
+		//the update() function might be using null pointers.
+		if(mAutoUpdateEnabled && mIsInitialised)
+		{
+			mAutoUpdateTimer->start();
+		}
+		else
+		{
+			mAutoUpdateTimer->stop();
+		}
 	}
 }

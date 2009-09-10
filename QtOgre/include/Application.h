@@ -64,7 +64,9 @@ namespace QtOgre
 		///\name Setters
 		//@{
 		/// Sets the period between sucessive updates.
-		void setUpdateInterval(int intervalInMilliseconds);
+		void setAutoUpdateInterval(int intervalInMilliseconds);
+		/// Controls whether QtOgre periodically calls update().
+		void setAutoUpdateEnabled(bool autoUpdateEnabled);
 		//@}
 
 		///\name Testers
@@ -144,8 +146,10 @@ namespace QtOgre
 		//Misc
 		unsigned int mFrameCounter;
 		GameLogic* mGameLogic;
-		QTimer* mUpdateTimer;
+		QTimer* mAutoUpdateTimer;
 		QSettings* mSettings;
+		bool mAutoUpdateEnabled;
+		bool mIsInitialised;
 	};
 }
 
