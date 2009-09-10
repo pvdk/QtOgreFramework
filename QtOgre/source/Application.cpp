@@ -351,12 +351,11 @@ namespace QtOgre
 	////////////////////////////////////////////////////////////////////////////////
 	/// \param displaySettingsDialog should the settings dialog be displayed
 	/// \return the application return code
-	/// \todo Make the bool a self-documenting enum (http://doc.trolltech.com/qq/qq13-apis.html#thebooleanparametertrap)
 	////////////////////////////////////////////////////////////////////////////////
-	int Application::exec(bool displaySettingsDialog)
+	int Application::exec(SettingsDialogMode eDialogMode)
 	{
 		//If we don't show the setting dialog, or we do show it and it is accepted, then proceed.
-		if((displaySettingsDialog == false) || (qApp->showSettingsDialog() == QDialog::Accepted))
+		if((eDialogMode == SuppressSettingsDialog) || (qApp->showSettingsDialog() == QDialog::Accepted))
 		{
 			qApp->initialise();
 			return QApplication::exec();

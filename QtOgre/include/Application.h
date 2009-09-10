@@ -9,6 +9,12 @@ class QSettings;
 
 namespace QtOgre
 {
+	enum SettingsDialogMode
+	{
+		DisplaySettingsDialog,
+		SuppressSettingsDialog
+	};
+
 	class EventHandlingOgreWidget;
 	class FPSDialog;
 	class GameLogic;
@@ -38,7 +44,7 @@ namespace QtOgre
 	public:
 		/// Creates an instance of the Application class.
 		Application(int & argc, char ** argv, GameLogic* gameLogic = 0);
-		/Destroys an instance of the Application class
+		/// Destroys an instance of the Application class
 		~Application();
 
 		///\name Getters
@@ -77,7 +83,7 @@ namespace QtOgre
 		
 		//Static functions
 		/// Start the main event loop.
-		static int exec(bool displaySettingsDialog = true); //Use 'displaySettingsDialog' because there is already a function called 'showSettingsDialog'.
+		static int exec(SettingsDialogMode eDialogMode = DisplaySettingsDialog);
 		/// Utility function to center a widget.
 		static void centerWidget(QWidget* widgetToCenter, QWidget* parent = 0);
 

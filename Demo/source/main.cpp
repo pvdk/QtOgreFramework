@@ -9,5 +9,5 @@ using namespace QtOgre;
 int main(int argc, char *argv[])
 {
 	Application app(argc, argv, new DemoGameLogic);
-	return app.exec(true);
+	return app.exec(QtOgre::DisplaySettingsDialog);
 }
