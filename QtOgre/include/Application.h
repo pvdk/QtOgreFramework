@@ -31,7 +31,7 @@ namespace QtOgre
 	/// int main(int argc, char *argv[])
 	/// {
 	/// 	QtOgre::Application app(argc, argv, new MyGameLogic);
-	/// 	return app.exec(true);
+	/// 	return app.exec();
 	/// }
 	/// \endcode
 	/// Where \c MyGameLogic is a QtOgre::GameLogic subclass
