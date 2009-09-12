@@ -15,6 +15,19 @@ namespace QtOgre
 		SuppressSettingsDialog
 	};
 
+	enum OgreConfigFiles
+	{
+		NoConfigFiles			= 0,
+		CustomCapabilitiesCfg	= 1,
+		MediaCfg				= 2,
+		OgreCfg					= 4,
+		PluginsCfg				= 8,
+		Quake3SettingsCfg		= 16,
+		ResourcesCfg			= 32,
+		TerrainCfg				= 64,
+		AllConfigFiles			= 127 // Sum of previous entries
+	};
+
 	class EventHandlingOgreWidget;
 	class FPSDialog;
 	class GameLogic;
@@ -43,7 +56,7 @@ namespace QtOgre
 
 	public:
 		/// Creates an instance of the Application class.
-		Application(int & argc, char ** argv, GameLogic* gameLogic = 0);
+		Application(int & argc, char ** argv, GameLogic* gameLogic = 0, OgreConfigFiles configFilesToWarnAbout = AllConfigFiles);
 		/// Destroys an instance of the Application class
 		~Application();
 
@@ -142,6 +155,9 @@ namespace QtOgre
 		Ogre::RenderSystem* mDirect3D9RenderSystem;
 		Ogre::Root* mRoot;
 
+		//Config warnings
+		void warnAboutDeprecatedConfigFile(const Ogre::String& filename);
+
 		//Misc
 		unsigned int mFrameCounter;
 		GameLogic* mGameLogic;
@@ -149,6 +165,7 @@ namespace QtOgre
 		QSettings* mSettings;
 		bool mAutoUpdateEnabled;
 		bool mIsInitialised;
+		OgreConfigFiles mConfigFilesToWarnAbout;
 	};
 }
 

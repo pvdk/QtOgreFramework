@@ -12,6 +12,7 @@
 
 #include <QCloseEvent>
 #include <QDesktopWidget>
+#include <QFile>
 #include <QMessageBox>
 #include <QTimer>
 #include <QSettings>
@@ -42,13 +43,14 @@ namespace QtOgre
          }
      }
 
-	Application::Application(int& argc, char** argv, GameLogic* gameLogic)
+	Application::Application(int& argc, char** argv, GameLogic* gameLogic, OgreConfigFiles configFilesToWarnAbout)
 	:QApplication(argc, argv)
 	,mOpenGLRenderSystem(0)
 	,mDirect3D9RenderSystem(0)
 	,mFrameCounter(0)
 	,mAutoUpdateEnabled(true)
 	,mIsInitialised(false)
+	,mConfigFilesToWarnAbout(configFilesToWarnAbout)
 	{
 		mGameLogic = gameLogic;
 		if(mGameLogic != 0)
@@ -77,7 +79,19 @@ namespace QtOgre
 		//Create the root and load render system plugins. We do that here so that we know
 		//what render systems are available by the time we show the settings dialog.
 		//Note that the render system is not initialised until the user selects one.
-		mRoot = new Ogre::Root();
+		if(QFile::exists("plugins.cfg"))
+		{
+			if(mConfigFilesToWarnAbout & PluginsCfg)
+			{
+				warnAboutDeprecatedConfigFile("plugins.cfg");
+			}
+			mRoot = new Ogre::Root();			
+		}
+		else
+		{
+			showErrorMessageBox("Loading plugins from settings.ini not implemented yet.");
+		}
+
 		mOpenGLRenderSystem = mRoot->getRenderSystemByName("OpenGL Rendering Subsystem");
 		mDirect3D9RenderSystem = mRoot->getRenderSystemByName("Direct3D9 Rendering Subsystem");
 		if(!(mOpenGLRenderSystem || mDirect3D9RenderSystem))
@@ -449,5 +463,20 @@ namespace QtOgre
 		{
 			mAutoUpdateTimer->stop();
 		}
+	}
+
+	void Application::warnAboutDeprecatedConfigFile(const Ogre::String& filename)
+	{
+		std::string message =
+			"The file \'" + filename + "\' has been found in the applications working directory." +
+			"\n\n" +
+			"Although this file is usually used by Ogre and/or the ExampleApplication framework, the QtOgre framework has deprecated " +
+			"this functionality in favour of using the QSettings functioanlity provided by Qt. It is recommended you use this instead." +
+			"\n\n" +
+			"In the mean time, the framework should continue to function correctly using the \'" + filename + "\' file you supplied" +
+			"\n\n" +
+			"You can suppress this message by passing the appropriate flags to the Application constructor. Please consult the documentation";
+
+		showWarningMessageBox(QString::fromStdString(message));
 	}
 }
