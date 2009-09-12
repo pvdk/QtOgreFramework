@@ -17,15 +17,10 @@ namespace QtOgre
 
 	enum OgreConfigFiles
 	{
-		NoConfigFiles				= 0,
-		CustomCapabilitiesTestCfg	= 1,
-		MediaCfg					= 2,
-		OgreCfg						= 4,
-		PluginsCfg					= 8,
-		Quake3SettingsCfg			= 16,
-		ResourcesCfg				= 32,
-		TerrainCfg					= 64,
-		AllConfigFiles				= 127 // Sum of previous entries
+		NoConfigFiles			= 0x00,
+		DeprecatedConfigFiles	= 0x01,
+		IgnoredConfigFiles		= 0x02,
+		AllConfigFiles			= 0x03 // Sum of previous entries (which should all be powers of two)
 	};
 
 	class EventHandlingOgreWidget;
@@ -156,8 +151,8 @@ namespace QtOgre
 		Ogre::Root* mRoot;
 
 		//Config warnings
-		void warnAboutDeprecatedConfigFile(const Ogre::String& filename);
-		void warnAboutIgnoredConfigFile(const Ogre::String& filename);
+		void warnAboutDeprecatedConfigFile(const QString& filename);
+		void warnAboutIgnoredConfigFile(const QString& filename);
 
 		//Misc
 		unsigned int mFrameCounter;
