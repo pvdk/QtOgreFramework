@@ -36,8 +36,8 @@ namespace QtOgre
 		//TODO - should this be a Qt property?
 		void setForceProcessEvents(bool forceProcessEvents);
 
-		QIcon &get_icon(LogLevel level);
-		QColor &get_fg_color(LogLevel level);
+		QIcon &getIcon(LogLevel level);
+		QColor &getForegroundColour(LogLevel level);
 
 	private:
 		//Private methods for writing HTML
@@ -72,9 +72,9 @@ namespace QtOgre
 		LogModel* mLogModel; //holds all log data
 		LogModelSortFilterProxy *mProxyModel; //proxy for sorting/filtering the mLogModel
 		
-		private slots:
-			void writeMessageToHTML(LogEntry *entry);
-			void computeVisibleMessageTypes(bool ignored);
+	private slots:
+		void writeMessageToHTML(LogEntry *entry);
+		void computeVisibleMessageTypes(bool ignored);
 	};
 }
 

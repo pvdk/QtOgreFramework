@@ -24,7 +24,7 @@ namespace QtOgre
 		connect(showInformationButton, SIGNAL(toggled(bool)), this, SLOT(computeVisibleMessageTypes(bool)));
 		connect(showWarningsButton, SIGNAL(toggled(bool)), this, SLOT(computeVisibleMessageTypes(bool)));
 		connect(showErrorsButton, SIGNAL(toggled(bool)), this, SLOT(computeVisibleMessageTypes(bool)));
-		connect(filterLineEdit, SIGNAL(textChanged(const QString&)), mProxyModel, SLOT(setFilterRegExp(const QString&)));
+		connect(filterLineEdit, SIGNAL(textChanged(const QString&)), mProxyModel, SLOT(setFilterFixedString(const QString&)));
 		connect(clearFilterButton, SIGNAL(pressed()), filterLineEdit, SLOT(clear()));
 		connect(mLogModel, SIGNAL(entry_added(LogEntry*)), this, SLOT(writeMessageToHTML(LogEntry*)));
 		
@@ -98,24 +98,38 @@ namespace QtOgre
 	}
 
 	//Used by the model for determining the decoration to use for an entry
-	QIcon &Log::get_icon(LogLevel level) {
-		switch (level) {
-			case LL_DEBUG: return debugIcon;
-			case LL_INFO: return infoIcon;
-			case LL_WARNING: return warningIcon;
-			case LL_ERROR: return errorIcon;
-			default: return errorIcon;
+	QIcon &Log::getIcon(LogLevel level)
+	{
+		switch (level)
+		{
+			case LL_DEBUG:
+				return debugIcon;
+			case LL_INFO:
+				return infoIcon;
+			case LL_WARNING:
+				return warningIcon;
+			case LL_ERROR:
+				return errorIcon;
+			default:
+				return errorIcon;
 		}
 	}
 
 	//Used by the model for determining the foreground color to use for an entry
-	QColor &Log::get_fg_color(LogLevel level) {
-		switch (level) {
-			case LL_DEBUG: return debugColor;
-			case LL_INFO: return infoColor;
-			case LL_WARNING: return warningColor;
-			case LL_ERROR: return errorColor;
-			default: return debugColor;
+	QColor &Log::getForegroundColour(LogLevel level)
+	{
+		switch (level)
+		{
+			case LL_DEBUG:
+				return debugColor;
+			case LL_INFO:
+				return infoColor;
+			case LL_WARNING:
+				return warningColor;
+			case LL_ERROR:
+				return errorColor;
+			default:
+				return debugColor;
 		}
 	}
 
@@ -162,7 +176,7 @@ namespace QtOgre
 	{
 		QString colour;
 		QString icon;
-		switch(entry->get_level())
+		switch(entry->getLevel())
 		{
 		case LL_DEBUG:
 			colour = "white";
@@ -188,10 +202,10 @@ namespace QtOgre
 			<< "<img src=\"images/" << icon << "\">"
 			<< "</td>"
 			<< "<td style=\"width: 90px;\"><span style=\"color: " << colour << ";\">"
-			<< entry->get_data(0).toTime().toString("hh:mm:ss a") << " - "
+			<< entry->getData(0).toTime().toString("hh:mm:ss a") << " - "
 			<< "</span></td>"
 			<< "<td><span style=\"color: " << colour << ";\">"
-			<< entry->get_data(3).toString()
+			<< entry->getData(3).toString()
 			<< "</span></td></tr>" << endl;
 
 	}
