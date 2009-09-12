@@ -78,7 +78,13 @@ namespace QtOgre
 		//what render systems are available by the time we show the settings dialog.
 		//Note that the render system is not initialised until the user selects one.
 		mRoot = new Ogre::Root();
-		loadRenderSystemsFromPlugins();
+		mOpenGLRenderSystem = mRoot->getRenderSystemByName("OpenGL Rendering Subsystem");
+		mDirect3D9RenderSystem = mRoot->getRenderSystemByName("Direct3D9 Rendering Subsystem");
+		if(!(mOpenGLRenderSystem || mDirect3D9RenderSystem))
+		{
+			qCritical("No rendering subsystems found");
+			showErrorMessageBox("No rendering subsystems found. Please ensure that your 'plugins.cfg' is correct and can be found by the executable.");
+		}
 
 		mSettingsDialog = new SettingsDialog(mSettings, mOgreWidget);
 		mGraphicsSettingsWidget = new GraphicsSettingsWidget;
@@ -245,78 +251,6 @@ namespace QtOgre
 		mInternalOgreLogManager = new Ogre::LogManager();
 		mInternalOgreLog = mInternalOgreLogManager->createLog("Ogre.log", false, true, true);
 		mInternalOgreLog->addListener(this);
-	}
-
-	void Application::loadRenderSystemsFromPlugins(void)
-	{
-	#if defined(Q_WS_WIN)
-		try
-		{
-			#if defined(_DEBUG)
-				mRoot->loadPlugin("RenderSystem_GL_d");
-			#else
-				mRoot->loadPlugin("RenderSystem_GL");
-			#endif
-		}
-		catch(...)
-		{
-			qWarning("Failed to load OpenGL plugin");
-		}
-		try
-		{
-			#if defined(_DEBUG)
-				mRoot->loadPlugin("RenderSystem_Direct3D9_d");
-			#else
-				mRoot->loadPlugin("RenderSystem_Direct3D9");
-			#endif
-		}
-		catch(...)
-		{
-			qWarning("Failed to load Direct3D9 plugin");
-		}
-	#endif
-	#if defined(Q_WS_X11)
-		try
-		{
-			mRoot->loadPlugin("/usr/local/lib/OGRE/RenderSystem_GL");
-			//mRoot->loadPlugin("/usr/lib64/OGRE/RenderSystem_GL"); //Needed for Matt
-		}
-		catch(...)
-		{
-			qWarning("Failed to load OpenGL plugin");
-		}
-	#endif
-	#if defined(Q_WS_MAC)
-		try
-		{
-			mRoot->loadPlugin("RenderSystem_GL");
-		}
-		catch(...)
-		{
-			qWarning("Failed to load OpenGL plugin");
-		}
-	#endif
-
-		Ogre::RenderSystemList *list = Ogre::Root::getSingletonPtr()->getAvailableRenderers();
-		Ogre::RenderSystemList::iterator i = list->begin();
-
-		while (i != list->end())
-		{
-			if ((*i)->getName() == "OpenGL Rendering Subsystem")
-			{
-				mOpenGLRenderSystem = *i;
-			}
-			if ((*i)->getName() == "Direct3D9 Rendering Subsystem")
-			{
-				mDirect3D9RenderSystem = *i;
-			}
-			i++;
-		}
-
-		if(!(mOpenGLRenderSystem || mDirect3D9RenderSystem))
-		{
-			qCritical("No rendering subsystems found");
-		}
 	}
 
 	void Application::initialiseOgre(void)

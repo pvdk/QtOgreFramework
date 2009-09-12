@@ -120,7 +120,6 @@ namespace QtOgre
 		//Private functions
 		void initialiseLogging(void);
 		void initialiseOgre(void);
-		void loadRenderSystemsFromPlugins(void);
 		///Implemented from Ogre::LogListener to redirect logging 
 		void messageLogged(const Ogre::String& message, Ogre::LogMessageLevel lml, bool maskDebug, const Ogre::String& logName);
 
