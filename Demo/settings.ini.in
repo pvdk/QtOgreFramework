@@ -9,3 +9,7 @@ AllowPerfHUD=false
 EnableGammaCorrection=false
 FSSAFactor=2
 EnableVerticalSync=false
+
+[OgrePlugins]
+PluginFolder=${OGRE_LIBRARY_DIRS}
+Plugins=RenderSystem_GL_d, RenderSystem_Direct3D9_d

@@ -61,6 +61,36 @@ namespace QtOgre
 		//Initialise the resources.
 		initQtResources();
 
+		//Sanity check for config files
+		if((QFile::exists("customCapabilitiesTest.cfg")) && (mConfigFilesToWarnAbout & CustomCapabilitiesTestCfg))
+		{
+			warnAboutIgnoredConfigFile("customCapabilitiesTest.cfg");
+		}
+		if((QFile::exists("media.cfg")) && (mConfigFilesToWarnAbout & MediaCfg))
+		{
+			warnAboutIgnoredConfigFile("media.cfg");
+		}
+		if((QFile::exists("ogre.cfg")) && (mConfigFilesToWarnAbout & OgreCfg))
+		{
+			warnAboutIgnoredConfigFile("ogre.cfg");
+		}
+		if((QFile::exists("plugins.cfg")) && (mConfigFilesToWarnAbout & PluginsCfg))
+		{
+			warnAboutDeprecatedConfigFile("plugins.cfg");
+		}
+		if((QFile::exists("quake3settings.cfg")) && (mConfigFilesToWarnAbout & Quake3SettingsCfg))
+		{
+			warnAboutIgnoredConfigFile("quake3settings.cfg");
+		}
+		if((QFile::exists("resources.cfg")) && (mConfigFilesToWarnAbout & ResourcesCfg))
+		{
+			warnAboutDeprecatedConfigFile("resources.cfg");
+		}
+		if((QFile::exists("terrain.cfg")) && (mConfigFilesToWarnAbout & TerrainCfg))
+		{
+			warnAboutIgnoredConfigFile("terrain.cfg");
+		}
+
 		mAutoUpdateTimer = new QTimer;
 		QObject::connect(mAutoUpdateTimer, SIGNAL(timeout()), this, SLOT(update()));
 		//On the test system, a value of one here gives a high frame rate and still allows
@@ -81,15 +111,18 @@ namespace QtOgre
 		//Note that the render system is not initialised until the user selects one.
 		if(QFile::exists("plugins.cfg"))
 		{
-			if(mConfigFilesToWarnAbout & PluginsCfg)
-			{
-				warnAboutDeprecatedConfigFile("plugins.cfg");
-			}
-			mRoot = new Ogre::Root();			
+			mRoot = new Ogre::Root("plugins.cfg", "");
 		}
 		else
-		{
-			showErrorMessageBox("Loading plugins from settings.ini not implemented yet.");
+		{		
+			mRoot = new Ogre::Root("", "");
+			QString ogrePluginFolder = mSettings->value("OgrePlugins/PluginFolder").toString();
+			QStringList ogrePlugins = mSettings->value("OgrePlugins/Plugins").toStringList();
+			foreach(QString pluginName, ogrePlugins)
+			{
+				QString qualifiedName = ogrePluginFolder + "/" + pluginName;
+				mRoot->loadPlugin(qualifiedName.toStdString());
+			}
 		}
 
 		mOpenGLRenderSystem = mRoot->getRenderSystemByName("OpenGL Rendering Subsystem");
@@ -474,6 +507,21 @@ namespace QtOgre
 			"this functionality in favour of using the QSettings functioanlity provided by Qt. It is recommended you use this instead." +
 			"\n\n" +
 			"In the mean time, the framework should continue to function correctly using the \'" + filename + "\' file you supplied" +
+			"\n\n" +
+			"You can suppress this message by passing the appropriate flags to the Application constructor. Please consult the documentation";
+
+		showWarningMessageBox(QString::fromStdString(message));
+	}
+
+	void Application::warnAboutIgnoredConfigFile(const Ogre::String& filename)
+	{
+		std::string message =
+			"The file \'" + filename + "\' has been found in the applications working directory." +
+			"\n\n" +
+			"Although this file is usually used by Ogre and/or the ExampleApplication framework, the QtOgre framework has deprecated " +
+			"this functionality in favour of using the QSettings functioanlity provided by Qt. It is recommended you use this instead." +
+			"\n\n" +
+			"<b>The file you supplied will be ignored, and your application may not behave as expected.</b>" +
 			"\n\n" +
 			"You can suppress this message by passing the appropriate flags to the Application constructor. Please consult the documentation";
 
