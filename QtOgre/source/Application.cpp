@@ -74,6 +74,7 @@ namespace QtOgre
 				if(QString::compare(it.fileInfo().suffix(), "cfg", Qt::CaseInsensitive) == 0)
 				{
 					if(	(QString::compare(it.fileInfo().baseName(), "plugins", Qt::CaseInsensitive) != 0) &&
+						(QString::compare(it.fileInfo().baseName(), "plugins_d", Qt::CaseInsensitive) != 0) &&
 						(QString::compare(it.fileInfo().baseName(), "resources", Qt::CaseInsensitive) != 0))
 					{
 						//We have found a file with the .cfg extension but which is not
@@ -102,13 +103,17 @@ namespace QtOgre
 		//Create the root and load render system plugins. We do that here so that we know
 		//what render systems are available by the time we show the settings dialog.
 		//Note that the render system is not initialised until the user selects one.
-		mRoot = new Ogre::Root;
+#ifdef QT_DEBUG
+		mRoot = new Ogre::Root("plugins_d.cfg");
+#else
+		mRoot = new Ogre::Root("plugins.cfg");
+#endif
 		mOpenGLRenderSystem = mRoot->getRenderSystemByName("OpenGL Rendering Subsystem");
 		mDirect3D9RenderSystem = mRoot->getRenderSystemByName("Direct3D9 Rendering Subsystem");
 		if(!(mOpenGLRenderSystem || mDirect3D9RenderSystem))
 		{
 			qCritical("No rendering subsystems found");
-			showErrorMessageBox("No rendering subsystems found. Please ensure that your 'plugins.cfg' is correct and can be found by the executable.");
+			showErrorMessageBox("No rendering subsystems found. Please ensure that your 'plugins.cfg' (or 'plugins_d.cfg') is correct and can be found by the executable.");
 		}
 
 		mSettingsDialog = new SettingsDialog(mSettings, mOgreWidget);
@@ -493,7 +498,7 @@ namespace QtOgre
 		message += "The file \'" + filename + "\' has been found in the applications working directory.";
 		message += "\n\n";
 		message += "The '.cfg' extension implies the file may usually be used by Ogre and/or the ExampleApplication framework. ";
-		message += "However, the QtOgre framework currently only supports the 'plugins.cfg' and 'resources.cfg' files. ";
+		message += "However, the QtOgre framework currently only supports the 'plugins.cfg', 'plugins_d.cfg', and 'resources.cfg' files. ";
 		message += "The file will be ignored by the QtOgre framework, and your application may not behave as expected. ";
 		message += "\n\n";
 		message += "If the file is being used by your application code, or by one of the plugins which you are loading, then you can suppress ";

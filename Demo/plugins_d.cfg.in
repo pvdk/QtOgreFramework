@@ -4,5 +4,5 @@
 PluginFolder=${OGRE_LIBRARY_DIRS}
 
 # Define plugins
-Plugin=RenderSystem_GL
-Plugin=RenderSystem_Direct3D9
+Plugin=RenderSystem_GL_d
+Plugin=RenderSystem_Direct3D9_d
