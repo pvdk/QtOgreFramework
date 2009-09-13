@@ -128,6 +128,7 @@ namespace QtOgre
 		void initialiseOgre(void);
 		///Implemented from Ogre::LogListener to redirect logging 
 		void messageLogged(const Ogre::String& message, Ogre::LogMessageLevel lml, bool maskDebug, const Ogre::String& logName);
+		void loadResourcePathsFromConfigFile(const QString& filename);
 
 		//Widgets
 		FPSDialog* mFPSDialog;

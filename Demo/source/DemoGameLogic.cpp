@@ -32,10 +32,7 @@ namespace QtOgre
 		mDemoLog->logMessage("A demonstration warning message", LL_WARNING);
 		mDemoLog->logMessage("A demonstration error message", LL_ERROR);
 
-		Ogre::ResourceGroupManager::getSingleton().addResourceLocation("./media/models", "FileSystem");
-		Ogre::ResourceGroupManager::getSingleton().addResourceLocation("./media/textures", "FileSystem");
-		Ogre::ResourceGroupManager::getSingleton().addResourceLocation("./media/materials", "FileSystem");
-		Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
+		//Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 
 		// Create the generic scene manager
 		mSceneManager = Ogre::Root::getSingleton().createSceneManager(Ogre::ST_GENERIC, "GenericSceneManager");

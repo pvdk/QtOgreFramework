@@ -7,6 +7,7 @@
 #include "LogManager.h"
 #include "SettingsDialog.h"
 
+#include <OgreConfigFile.h>
 #include <OgreRenderSystem.h>
 #include <OgreRoot.h>
 
@@ -225,6 +226,14 @@ namespace QtOgre
 		Ogre::NameValuePairList ogreWindowParams;
 		//ogreWindowParams["FSAA"] = "8";
 		mOgreWidget->initialise(&ogreWindowParams);
+
+		//Set up resource paths. This can't be done until the OgreWidget
+		//is initialised, because we need the GPUProgramManager.
+		if(QFile::exists("resources.cfg"))
+		{
+			loadResourcePathsFromConfigFile("resources.cfg");
+			Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
+		}
 
 		mFPSDialog = new FPSDialog(mOgreWidget, Qt::FramelessWindowHint);
 		mFPSDialog->setWindowOpacity(settings()->value("System/DefaultWindowOpacity", 1.0).toDouble());
@@ -491,4 +500,31 @@ namespace QtOgre
 		message += "this warning dialog box by passing the appropriate flags to the Application constructor. Please consult the documentation.";
 		showWarningMessageBox(message);
 	}
+
+	//This function is based on code from the Ogre ExampleApplication.
+	//It is not constrained by the Ogre licence (free for any use).
+	void Application::loadResourcePathsFromConfigFile(const QString& filename)
+    {
+        // Load resource paths from config file
+		Ogre::ConfigFile cf;
+		cf.load(filename.toStdString());
+
+        // Go through all sections & settings in the file
+        Ogre::ConfigFile::SectionIterator seci = cf.getSectionIterator();
+
+        Ogre::String secName, typeName, archName;
+        while (seci.hasMoreElements())
+        {
+            secName = seci.peekNextKey();
+            Ogre::ConfigFile::SettingsMultiMap *settings = seci.getNext();
+            Ogre::ConfigFile::SettingsMultiMap::iterator i;
+            for (i = settings->begin(); i != settings->end(); ++i)
+            {
+                typeName = i->first;
+                archName = i->second;
+                Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
+                    archName, typeName, secName);
+            }
+        }
+    }
 }
