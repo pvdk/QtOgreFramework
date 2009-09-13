@@ -137,15 +137,18 @@ namespace QtOgre
 
 	Application::~Application()
 	{
-		if(mOgreWidget)
-		{
-			delete mOgreWidget;
-			mOgreWidget = 0;
-		}
 		if (mRoot)
 		{
             delete mRoot;
 			mRoot = 0;
+		}
+
+		//We delete the OgreWidget last because it
+		//owns the LogManager (through Qt's mechanism).
+		if(mOgreWidget)
+		{
+			delete mOgreWidget;
+			mOgreWidget = 0;
 		}
 	}
 
