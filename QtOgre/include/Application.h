@@ -15,12 +15,10 @@ namespace QtOgre
 		SuppressSettingsDialog
 	};
 
-	enum OgreConfigFiles
+	enum IgnoredConfigWarningMode
 	{
-		NoConfigFiles			= 0x00,
-		DeprecatedConfigFiles	= 0x01,
-		IgnoredConfigFiles		= 0x02,
-		AllConfigFiles			= 0x03 // Sum of previous entries (which should all be powers of two)
+		WarnAboutIgnoredConfigs,
+		DoNotWarnAboutIgnoredConfigs
 	};
 
 	class EventHandlingOgreWidget;
@@ -51,7 +49,7 @@ namespace QtOgre
 
 	public:
 		/// Creates an instance of the Application class.
-		Application(int & argc, char ** argv, GameLogic* gameLogic = 0, OgreConfigFiles configFilesToWarnAbout = AllConfigFiles);
+		Application(int & argc, char ** argv, GameLogic* gameLogic = 0, IgnoredConfigWarningMode ignoredConfigWarningMode = WarnAboutIgnoredConfigs);
 		/// Destroys an instance of the Application class
 		~Application();
 
@@ -151,7 +149,6 @@ namespace QtOgre
 		Ogre::Root* mRoot;
 
 		//Config warnings
-		void warnAboutDeprecatedConfigFile(const QString& filename);
 		void warnAboutIgnoredConfigFile(const QString& filename);
 
 		//Misc
@@ -161,7 +158,7 @@ namespace QtOgre
 		QSettings* mSettings;
 		bool mAutoUpdateEnabled;
 		bool mIsInitialised;
-		OgreConfigFiles mConfigFilesToWarnAbout;
+		IgnoredConfigWarningMode mIgnoredConfigWarningMode;
 	};
 }
 

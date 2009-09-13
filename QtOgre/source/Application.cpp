@@ -45,14 +45,14 @@ namespace QtOgre
          }
      }
 
-	Application::Application(int& argc, char** argv, GameLogic* gameLogic, OgreConfigFiles configFilesToWarnAbout)
+	Application::Application(int& argc, char** argv, GameLogic* gameLogic, IgnoredConfigWarningMode ignoredConfigWarningMode)
 	:QApplication(argc, argv)
 	,mOpenGLRenderSystem(0)
 	,mDirect3D9RenderSystem(0)
 	,mFrameCounter(0)
 	,mAutoUpdateEnabled(true)
 	,mIsInitialised(false)
-	,mConfigFilesToWarnAbout(configFilesToWarnAbout)
+	,mIgnoredConfigWarningMode(ignoredConfigWarningMode)
 	{
 		mGameLogic = gameLogic;
 		if(mGameLogic != 0)
@@ -64,24 +64,19 @@ namespace QtOgre
 		initQtResources();
 
 		//Sanity check for config files
-		QDirIterator it(".");
-		while (it.hasNext())
+		if(mIgnoredConfigWarningMode == WarnAboutIgnoredConfigs)
 		{
-			it.next();
-			if(QString::compare(it.fileInfo().suffix(), "cfg", Qt::CaseInsensitive) == 0)
+			QDirIterator it(".");
+			while (it.hasNext())
 			{
-				if(	(QString::compare(it.fileInfo().baseName(), "plugins", Qt::CaseInsensitive) == 0) ||
-					(QString::compare(it.fileInfo().baseName(), "resources", Qt::CaseInsensitive) == 0))
+				it.next();
+				if(QString::compare(it.fileInfo().suffix(), "cfg", Qt::CaseInsensitive) == 0)
 				{
-					if(mConfigFilesToWarnAbout & DeprecatedConfigFiles)
+					if(	(QString::compare(it.fileInfo().baseName(), "plugins", Qt::CaseInsensitive) != 0) &&
+						(QString::compare(it.fileInfo().baseName(), "resources", Qt::CaseInsensitive) != 0))
 					{
-						warnAboutDeprecatedConfigFile(it.fileInfo().fileName());
-					}
-				}
-				else
-				{
-					if(mConfigFilesToWarnAbout & IgnoredConfigFiles)
-					{
+						//We have found a file with the .cfg extension but which is not
+						//'plugins.cfg' or 'resources.cfg'. Warn the user about this.
 						warnAboutIgnoredConfigFile(it.fileInfo().fileName());
 					}
 				}
@@ -106,22 +101,7 @@ namespace QtOgre
 		//Create the root and load render system plugins. We do that here so that we know
 		//what render systems are available by the time we show the settings dialog.
 		//Note that the render system is not initialised until the user selects one.
-		if(QFile::exists("plugins.cfg"))
-		{
-			mRoot = new Ogre::Root("plugins.cfg", "");
-		}
-		else
-		{		
-			mRoot = new Ogre::Root("", "");
-			QString ogrePluginFolder = mSettings->value("OgrePlugins/PluginFolder").toString();
-			QStringList ogrePlugins = mSettings->value("OgrePlugins/Plugins").toStringList();
-			foreach(QString pluginName, ogrePlugins)
-			{
-				QString qualifiedName = ogrePluginFolder + "/" + pluginName;
-				mRoot->loadPlugin(qualifiedName.toStdString());
-			}
-		}
-
+		mRoot = new Ogre::Root;
 		mOpenGLRenderSystem = mRoot->getRenderSystemByName("OpenGL Rendering Subsystem");
 		mDirect3D9RenderSystem = mRoot->getRenderSystemByName("Direct3D9 Rendering Subsystem");
 		if(!(mOpenGLRenderSystem || mDirect3D9RenderSystem))
@@ -498,31 +478,17 @@ namespace QtOgre
 		}
 	}
 
-	void Application::warnAboutDeprecatedConfigFile(const QString& filename)
-	{
-		QString message;
-		message += "The file \'" + filename + "\' has been found in the applications working directory.";
-		message += "\n\n";
-		message += "Although this file is usually used by Ogre and/or the ExampleApplication framework, the QtOgre framework has deprecated ";
-		message += "this functionality in favour of using the QSettings functioanlity provided by Qt. It is recommended you use this instead.";
-		message += "\n\n";
-		message += "In the mean time, the framework should continue to function correctly using the \'" + filename + "\' file you supplied";
-		message += "\n\n";
-		message += "You can suppress this message by passing the appropriate flags to the Application constructor. Please consult the documentation";
-		showWarningMessageBox(message);
-	}
-
 	void Application::warnAboutIgnoredConfigFile(const QString& filename)
 	{
 		QString message;
 		message += "The file \'" + filename + "\' has been found in the applications working directory.";
 		message += "\n\n";
-		message += "Although this file may usually be used by Ogre and/or the ExampleApplication framework, the QtOgre framework has deprecated ";
-		message += "this functionality in favour of using the QSettings functioanlity provided by Qt. It is recommended you use this instead.";
+		message += "The '.cfg' extension implies the file may usually be used by Ogre and/or the ExampleApplication framework. ";
+		message += "However, the QtOgre framework currently only supports the 'plugins.cfg' and 'resources.cfg' files. ";
+		message += "The file will be ignored by the QtOgre framework, and your application may not behave as expected. ";
 		message += "\n\n";
-		message += "THE FILE WILL BE IGNORED BY THE QTOGRE FRAMEWORK, AND YOUR APPLICATION MAY NOT BEHAVE AS EXPECTED.";
-		message += "\n\n";
-		message += "You can suppress this message by passing the appropriate flags to the Application constructor. Please consult the documentation";
+		message += "If the file is being used by your application code, or by one of the plugins which you are loading, then you can suppress ";
+		message += "this warning dialog box by passing the appropriate flags to the Application constructor. Please consult the documentation.";
 		showWarningMessageBox(message);
 	}
 }
