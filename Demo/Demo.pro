@@ -16,10 +16,10 @@ DESTDIR = $$ROOT/Demo
 
 CONFIG(debug, debug|release) {
   TARGET = $$join(TARGET,,,d)
-  LIBS *= -lOgreMain_d -lqtogred
+  LIBS *= -lOgreMain_d -lQtOgred
 }
 CONFIG(release, debug|release) {
-  LIBS *= -lOgreMain -lqtogre
+  LIBS *= -lOgreMain -lQtOgre
 }
 
 HEADERS += include/ChooseMeshWidget.h include/DemoGameLogic.h include/MainMenu.h
