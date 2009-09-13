@@ -93,6 +93,13 @@ install(TARGETS QtOgreStatic
 )
 
 if(WIN32)
+	#On windows, we also install the debug information. It's unfortunate that we have to hard-code
+	#the 'Debug' part of the path, but CMake doesn't seem to provide a way around this. The best I
+	#found was: http://www.cmake.org/pipermail/cmake/2007-October/016924.html (and it is a bit ugly).
+	install(FILES ${CMAKE_CURRENT_BINARY_DIR}/Debug/QtOgre_d.pdb DESTINATION lib CONFIGURATIONS Debug)
+endif(WIN32)
+
+if(WIN32)
 	set(QtOgre_INCLUDE_INSTALL_DIRS "include")
 ELSE()
 	set(QtOgre_INCLUDE_INSTALL_DIRS "include/QtOgre")
@@ -102,7 +109,7 @@ install(FILES ${INC_FILES} ${UI_SRCS}
 	DESTINATION ${QtOgre_INCLUDE_INSTALL_DIRS}
 )
 
-#Set up OGREConfig.cmake
+#Set up QtOgreConfig.cmake
 if(WIN32)
 	set(CONFIG_FILE_DIR "CMake")
 else(WIN32)

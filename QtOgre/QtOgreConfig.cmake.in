@@ -16,7 +16,7 @@ include(FindPackageMessage)
 set(PREFIX "@CMAKE_INSTALL_PREFIX@")
 set(QtOgre_LIBRARY_DIRS "${PREFIX}/lib")
 set(QtOgre_INCLUDE_DIRS "${PREFIX}/@QtOgre_INCLUDE_INSTALL_DIRS@" "${PREFIX}/include")
-set(QtOgre_LIBRARIES "QtOgre")
+set(QtOgre_LIBRARIES debug "QtOgre_d" optimized "QtOgre")
 
 message(STATUS "Found QtOgre Framework ${QtOgre_VERSION}") #This doesn't work?
 message(STATUS "  libraries : '${QtOgre_LIBRARIES}' from ${QtOgre_LIBRARY_DIRS}")
