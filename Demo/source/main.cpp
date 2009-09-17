@@ -1,4 +1,4 @@
-#include "Application.h"
+#include <Application.h>
 #include "DemoGameLogic.h"
 
 #include <QPushButton>

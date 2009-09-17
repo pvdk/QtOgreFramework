@@ -28,6 +28,7 @@ namespace QtOgre
 	class Log;
 	class LogManager;
 	class SettingsDialog;
+	class AbstractSettingsWidget;
 	
 	////////////////////////////////////////////////////////////////////////////////
 	/// The entry point for QtOgre
@@ -87,6 +88,8 @@ namespace QtOgre
 		//@{
 		///Creates a new log with a given name.
 		Log* createLog(const QString& name);
+		///Adds a new page to the settings dialog
+		void addSettingsWidget(const QString& title, AbstractSettingsWidget* settingsWidget);
 		//@}
 		
 		//Static functions

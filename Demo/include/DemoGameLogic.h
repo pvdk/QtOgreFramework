@@ -18,7 +18,9 @@ namespace QtOgre
 		KS_RELEASED,
 		KS_PRESSED
 	};
-
+	
+	class StyleSettingsWidget;
+	
 	class DemoGameLogic : public GameLogic
 	{
 	public:
@@ -59,6 +61,8 @@ namespace QtOgre
 		ChooseMeshWidget* mChooseMeshWidget;
 
 		MainMenu* mMainMenu;
+		
+		StyleSettingsWidget* mStyleSettingsWidget;
 
 		Ogre::Camera* mCamera;
 		Ogre::SceneManager* mSceneManager;

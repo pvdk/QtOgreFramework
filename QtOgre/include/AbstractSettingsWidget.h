@@ -16,6 +16,8 @@ namespace QtOgre
 
 		void setSettings(QSettings* settings);
 
+		///Reimplement this function and within it disable any elements
+		///which cannot be changed once the application has started
 		virtual void disableFirstTimeOnlySettings(void) = 0;
 
 	public slots:

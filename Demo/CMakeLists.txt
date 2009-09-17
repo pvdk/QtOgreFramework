@@ -7,17 +7,20 @@ SET(SRC_FILES
 	source/ChooseMeshWidget.cpp
 	source/DemoGameLogic.cpp
 	source/MainMenu.cpp
+	source/StyleSettingsWidget.cpp
 )
 
 SET(INC_FILES
 	include/ChooseMeshWidget.h
 	include/DemoGameLogic.h
 	include/MainMenu.h
+	include/StyleSettingsWidget.h
 )
 
 SET(UI_FILES
 	ui/ChooseMeshWidget.ui
 	ui/MainMenu.ui
+	ui/StyleSettingsWidget.ui
 )
 
 SET(RESOURCE_FILES

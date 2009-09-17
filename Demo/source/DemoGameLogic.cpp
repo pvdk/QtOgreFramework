@@ -4,6 +4,7 @@
 
 #include "LogManager.h"
 #include "OgreWidget.h"
+#include "StyleSettingsWidget.h"
 
 #include <OgreEntity.h>
 #include <OgreRenderWindow.h>
@@ -23,6 +24,8 @@ namespace QtOgre
 
 	void DemoGameLogic::initialise(void)
 	{
+		//qApp->setStyleSheet(qApp->settings()->value("UI/StyleFile").toString());
+		
 		mDemoLog = mApplication->createLog("Demo");
 
 		mApplication->showLogManager();
@@ -76,6 +79,9 @@ namespace QtOgre
 		}
 
 		mApplication->showFPSCounter();
+		
+		mStyleSettingsWidget = new StyleSettingsWidget;
+		mApplication->addSettingsWidget("Style", mStyleSettingsWidget);
 	}
 
 	void DemoGameLogic::update(void)

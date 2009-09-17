@@ -440,6 +440,15 @@ namespace QtOgre
 	{
 		mLogManager->setVisible(true);
 	}
+	
+	////////////////////////////////////////////////////////////////////////////////
+	/// \param title the title for the settings widget tab
+	/// \param settingsWidget the widget to add to the dialog
+	//////////////////////////////////////////////////////////////////////////////// 
+	void Application::addSettingsWidget(const QString& title, AbstractSettingsWidget* settingsWidget)
+	{
+		mSettingsDialog->addSettingsWidget(title, settingsWidget);
+	}
 
 	////////////////////////////////////////////////////////////////////////////////
 	/// \return a pointer to the Ogre RenderWindow
@@ -450,7 +459,7 @@ namespace QtOgre
 	}
 
 	////////////////////////////////////////////////////////////////////////////////
-	// \return a pointer to the application settings
+	/// \return a pointer to the application settings
 	////////////////////////////////////////////////////////////////////////////////
 	QSettings* Application::settings(void) const
 	{
