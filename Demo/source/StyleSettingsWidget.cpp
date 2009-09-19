@@ -28,7 +28,10 @@ namespace QtOgre
 	void StyleSettingsWidget::writeToSettings(void)
 	{
 		mSettings->setValue("UI/StyleFile", fileLineEdit->text());
-		qApp->setStyleSheet(fileLineEdit->text());
+		QFile styleFile(fileLineEdit->text());
+		styleFile.open(QIODevice::ReadOnly | QIODevice::Text);
+		qApp->setStyleSheet(QString(styleFile.readAll()));
+		styleFile.close();
 	}
 	
 	void StyleSettingsWidget::chooseStyleFile(bool checked)
