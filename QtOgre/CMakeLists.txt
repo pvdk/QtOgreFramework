@@ -40,6 +40,7 @@ SET(INC_FILES
 	include/LogModel.h
 	include/LogModelSortFilterProxy.h
 	include/OgreWidget.h
+	include/QtOgreForwardDeclarations.h
 	include/SettingsDialog.h
 )
 
