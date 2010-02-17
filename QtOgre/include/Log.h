@@ -39,6 +39,11 @@ namespace QtOgre
 		QIcon &getIcon(LogLevel level);
 		QColor &getForegroundColour(LogLevel level);
 
+	signals:
+		// This signal should not be emmited by users of this class. It is for internal use only.
+		// It is used to ensure the log is only written to from the main thread.
+		void _logMessageReceived(const QString& message, LogLevel logLevel);
+
 	private:
 		//Private methods for writing HTML
 		void writeHTMLHeader(void);
@@ -75,6 +80,10 @@ namespace QtOgre
 	private slots:
 		void writeMessageToHTML(LogEntry *entry);
 		void computeVisibleMessageTypes(bool ignored);
+
+		// Logging is implemented as a slot so that the Qt signal-slot
+		// mechanism can ensure it is always called on the main thread.
+		void logMessageImpl(const QString& message, LogLevel logLevel);
 	};
 }
 

@@ -27,6 +27,12 @@ namespace QtOgre
 		connect(filterLineEdit, SIGNAL(textChanged(const QString&)), mProxyModel, SLOT(setFilterFixedString(const QString&)));
 		connect(clearFilterButton, SIGNAL(pressed()), filterLineEdit, SLOT(clear()));
 		connect(mLogModel, SIGNAL(entry_added(LogEntry*)), this, SLOT(writeMessageToHTML(LogEntry*)));
+
+		// We need to make sure that log messages are only written from the main thread. In order to do this we make use of the Qt signal slot mechanism.
+		// The log message function simply emits a signal, an Qt will ensure that this is delivered to the main thread in a safe manner. There may be better
+		// or faster ways of achiving this behaviour but it seems to work for now.
+		qRegisterMetaType<LogLevel>("LogLevel");
+		connect(this, SIGNAL(_logMessageReceived(const QString&, LogLevel)), this, SLOT(logMessageImpl(const QString&, LogLevel)), Qt::QueuedConnection);
 		
 		//Create a sort/filter proxy of our log entries model so we can sort and filter it :)
 		mProxyModel->setSourceModel(mLogModel); // the proxy should point to the real model
@@ -134,6 +140,18 @@ namespace QtOgre
 	}
 
 	void Log::logMessage(const QString& message, LogLevel logLevel)
+	{
+		/*mLogModel->append(0, "file", message, logLevel);
+		logTable->verticalHeader()->resizeSection(mLogModel->rowCount() - 1, 14);
+		logTable->scrollToBottom();
+		if(mForceProcessEvents)	{
+			qApp->processEvents();
+		}*/
+
+		emit _logMessageReceived(message, logLevel);
+	}
+
+	void Log::logMessageImpl(const QString& message, LogLevel logLevel)
 	{
 		mLogModel->append(0, "file", message, logLevel);
 		logTable->verticalHeader()->resizeSection(mLogModel->rowCount() - 1, 14);
