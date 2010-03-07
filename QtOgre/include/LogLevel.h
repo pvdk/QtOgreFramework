@@ -15,10 +15,10 @@ namespace QtOgre
 		LL_WARNING = 4096,
 		LL_ERROR = 8192
 	};
-
-	//We want to be able to pass log messages across QT
-	//threads, which means making the LogLevel an Qt MetaType.
-	Q_DECLARE_METATYPE(LogLevel)
 }
+
+//We want to be able to pass log messages across QT
+//threads, which means making the LogLevel an Qt MetaType.
+Q_DECLARE_METATYPE(QtOgre::LogLevel)
 
 #endif
