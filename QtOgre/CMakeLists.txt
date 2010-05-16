@@ -22,6 +22,8 @@ SET(SRC_FILES
 	source/LogModelSortFilterProxy.cpp
 	source/OgreWidget.cpp
 	source/SettingsDialog.cpp
+	source/Scripting/OgreVector3Class.cpp
+	source/Scripting/OgreVector3Prototype.cpp
 )
 
 SET(INC_FILES
@@ -42,6 +44,8 @@ SET(INC_FILES
 	include/OgreWidget.h
 	include/QtOgreForwardDeclarations.h
 	include/SettingsDialog.h
+	include/Scripting/OgreVector3Class.h
+	include/Scripting/OgreVector3Prototype.h
 )
 
 SET(UI_FILES
@@ -61,6 +65,7 @@ SOURCE_GROUP("Headers" FILES ${INC_FILES})
 
 FIND_PACKAGE(Qt4)
 SET(QT_USE_QTGUI 1)
+SET(QT_USE_QTSCRIPT 1)
 SET(QT_USE_QTXML 1)
 INCLUDE(${QT_USE_FILE})
 

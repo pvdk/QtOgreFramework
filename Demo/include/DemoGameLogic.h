@@ -5,11 +5,14 @@
 #include "GameLogic.h"
 #include "MainMenu.h"
 
+#include <OgreCamera.h>
 #include <OgrePrerequisites.h>
 
 #include <QHash>
 
 #include <QTime>
+
+#include <QtScript>
 
 namespace QtOgre
 {
@@ -20,6 +23,60 @@ namespace QtOgre
 	};
 	
 	class StyleSettingsWidget;
+
+	class Keyboard : public QObject
+	{
+		Q_OBJECT
+	public slots:
+		bool isPressed(int key)
+		{
+			return mKeyStates[key] == KS_PRESSED;
+		}
+
+		void press(int key)
+		{
+			mKeyStates[key] = KS_PRESSED;
+		}
+
+		void release(int key)
+		{
+			mKeyStates[key] = KS_RELEASED;
+		}
+
+	private:
+		QHash<int, KeyStates> mKeyStates;
+	};
+
+	class CameraWrapper : public QObject
+	{
+		Q_OBJECT
+
+	public:
+		void setOgreCamera(Ogre::Camera* pOgreCamera)
+		{
+			m_pOgreCamera = pOgreCamera;
+		}
+
+	public slots:
+		void moveForward()
+		{
+			Ogre::Vector3 dir = m_pOgreCamera->getDirection();
+			dir.normalise();
+			dir *= 0.01;
+			m_pOgreCamera->setPosition(m_pOgreCamera->getPosition() + dir);
+		}
+
+	private:
+		Ogre::Camera* m_pOgreCamera;
+	};
+
+	struct MyStruct
+	{
+		int x;
+		int y;
+	};
+
+	Q_DECLARE_METATYPE(MyStruct)
 	
 	class DemoGameLogic : public GameLogic
 	{
@@ -43,7 +100,7 @@ namespace QtOgre
 		void loadScene(QString filename);
 
 	private:
-		QHash<int, KeyStates> mKeyStates;
+		Keyboard keyboard;
 		QPoint mLastFrameMousePos;
 		QPoint mCurrentMousePos;
 
@@ -67,7 +124,18 @@ namespace QtOgre
 		Ogre::Camera* mCamera;
 		Ogre::SceneManager* mSceneManager;
 		QtOgre::Log* mDemoLog;
+
+		//Scripting
+		QScriptEngine scriptEngine;
+		QString updateScript;
+		CameraWrapper cameraWrapper;
+		MyStruct myStruct;
+		QScriptValue cameraPositionScriptValue;
+		QScriptValue cameraDirectionScriptValue;
+		QScriptValue cameraRightScriptValue;
 	};
+
+	
 }
 
 #endif /*DEMOGAMELOGIC_H_*/

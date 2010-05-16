@@ -1,6 +1,8 @@
 #include "DemoGameLogic.h"
+
 #include "DotSceneHandler.h"
 #include "MainMenu.h"
+#include "OgreVector3Class.h"
 
 #include "LogManager.h"
 #include "OgreWidget.h"
@@ -15,11 +17,100 @@
 #include <QMouseEvent>
 #include <QSettings>
 
+#include <QMetaObject>
+
 namespace QtOgre
 {
+	QScriptValue toScriptValue(QScriptEngine *engine, const MyStruct &s)
+	{
+		QScriptValue obj = engine->newObject();
+		obj.setProperty("x", s.x);
+		obj.setProperty("y", s.y);
+		return obj;
+	}
+
+	void fromScriptValue(const QScriptValue &obj, MyStruct &s)
+	{
+		s.x = obj.property("x").toInt32();
+		s.y = obj.property("y").toInt32();
+	}
+
+	struct QtMetaObject : private QObject
+	{
+	public:
+		static const QMetaObject *get()
+		{ return &static_cast<QtMetaObject*>(0)->staticQtMetaObject; }
+	};
+
 	DemoGameLogic::DemoGameLogic(void)
 		:GameLogic()
 	{
+		QScriptValue keyboardScriptValue = scriptEngine.newQObject(&keyboard);
+		scriptEngine.globalObject().setProperty("keyboard", keyboardScriptValue);
+
+		QScriptValue cameraScriptValue = scriptEngine.newQObject(&cameraWrapper);
+		scriptEngine.globalObject().setProperty("camera", cameraScriptValue);
+
+		QScriptValue Qt = scriptEngine.newQMetaObject(QtMetaObject::get());
+		Qt.setProperty("App", scriptEngine.newQObject(qApp));
+		scriptEngine.globalObject().setProperty("Qt", Qt);
+
+		OgreVector3Class* cameraPosition = new OgreVector3Class(&scriptEngine);
+		cameraPositionScriptValue = scriptEngine.newObject(cameraPosition);
+		scriptEngine.globalObject().setProperty("cameraPosition", cameraPositionScriptValue);
+
+		OgreVector3Class* cameraDirection = new OgreVector3Class(&scriptEngine);
+		cameraDirectionScriptValue = scriptEngine.newObject(cameraDirection);
+		scriptEngine.globalObject().setProperty("cameraDirection", cameraDirectionScriptValue);
+
+		OgreVector3Class* cameraRight = new OgreVector3Class(&scriptEngine);
+		cameraRightScriptValue = scriptEngine.newObject(cameraRight);
+		scriptEngine.globalObject().setProperty("cameraRight", cameraRightScriptValue);
+
+		myStruct.x = 10;
+		qScriptRegisterMetaType(&scriptEngine, toScriptValue, fromScriptValue);
+		QScriptValue myStructValue = scriptEngine.toScriptValue(myStruct);
+		scriptEngine.globalObject().setProperty("myStruct", myStructValue);
+
+		OgreVector3Class *vecClass = new OgreVector3Class(&scriptEngine);
+		scriptEngine.globalObject().setProperty("OgreVector3", vecClass->constructor());
+
+		//updateScript = "print('w pressed = ', keyboard.isPressed(Qt.Key_W));";
+
+		updateScript =
+			"if(keyboard.isPressed(Qt.Key_W))"
+			"{"
+			"	vec = new OgreVector3;"
+			"	vec.x = 1.0;"
+			"	vec.y = 1.0;"
+			"	vec.z = 1.0;"
+			"	vec.normalise();"
+			"   print('vec x = ', vec.x);"
+			"	myStruct.x = myStruct.x + 1;"
+			"	cameraPosition.x = cameraPosition.x + cameraDirection.x;"
+			"	cameraPosition.y = cameraPosition.y + cameraDirection.y;"
+			"	cameraPosition.z = cameraPosition.z + cameraDirection.z;"
+			"	print('x = ', myStruct.x);"
+			"}"
+			"if(keyboard.isPressed(Qt.Key_S))"
+			"{"
+			"	cameraPosition.x = cameraPosition.x - cameraDirection.x;"
+			"	cameraPosition.y = cameraPosition.y - cameraDirection.y;"
+			"	cameraPosition.z = cameraPosition.z - cameraDirection.z;"
+			"}"
+			"if(keyboard.isPressed(Qt.Key_D))"
+			"{"
+			"	cameraPosition.x = cameraPosition.x + cameraRight.x;"
+			"	cameraPosition.y = cameraPosition.y + cameraRight.y;"
+			"	cameraPosition.z = cameraPosition.z + cameraRight.z;"
+			"}"
+			"if(keyboard.isPressed(Qt.Key_A))"
+			"{"
+			"	cameraPosition.x = cameraPosition.x - cameraRight.x;"
+			"	cameraPosition.y = cameraPosition.y - cameraRight.y;"
+			"	cameraPosition.z = cameraPosition.z - cameraRight.z;"
+			"}"
+			;
 	}
 
 	void DemoGameLogic::initialise(void)
@@ -105,22 +196,22 @@ namespace QtOgre
 
 		float distance = mCameraSpeed * timeElapsedInSeconds;
 
-		if(mKeyStates[Qt::Key_W] == KS_PRESSED)
+		/*if(keyboard.isPressed(Qt::Key_W))
 		{
 			mCamera->setPosition(mCamera->getPosition() + mCamera->getDirection() * distance);
 		}
-		if(mKeyStates[Qt::Key_S] == KS_PRESSED)
+		if(keyboard.isPressed(Qt::Key_S))
 		{
 			mCamera->setPosition(mCamera->getPosition() - mCamera->getDirection() * distance);
 		}
-		if(mKeyStates[Qt::Key_A] == KS_PRESSED)
+		if(keyboard.isPressed(Qt::Key_A))
 		{
 			mCamera->setPosition(mCamera->getPosition() - mCamera->getRight() * distance);
 		}
-		if(mKeyStates[Qt::Key_D] == KS_PRESSED)
+		if(keyboard.isPressed(Qt::Key_D))
 		{
 			mCamera->setPosition(mCamera->getPosition() + mCamera->getRight() * distance);
-		}
+		}*/
 
 		if(!mIsFirstFrame)
 		{
@@ -139,6 +230,34 @@ namespace QtOgre
 		mLastFrameWheelPos = mCurrentWheelPos;
 
 		mIsFirstFrame = false;
+
+		cameraPositionScriptValue.setProperty("x", mCamera->getPosition().x);
+		cameraPositionScriptValue.setProperty("y", mCamera->getPosition().y);
+		cameraPositionScriptValue.setProperty("z", mCamera->getPosition().z);
+
+		cameraDirectionScriptValue.setProperty("x", mCamera->getDirection().x);
+		cameraDirectionScriptValue.setProperty("y", mCamera->getDirection().y);
+		cameraDirectionScriptValue.setProperty("z", mCamera->getDirection().z);
+
+		cameraRightScriptValue.setProperty("x", mCamera->getRight().x);
+		cameraRightScriptValue.setProperty("y", mCamera->getRight().y);
+		cameraRightScriptValue.setProperty("z", mCamera->getRight().z);
+
+		QScriptValue result = scriptEngine.evaluate(updateScript);
+		if (scriptEngine.hasUncaughtException())
+		{
+			int line = scriptEngine.uncaughtExceptionLineNumber();
+			qCritical() << "uncaught exception at line" << line << ":" << result.toString();
+		}
+
+		mCamera->setPosition(cameraPositionScriptValue.property("x").toNumber(), cameraPositionScriptValue.property("y").toNumber(), cameraPositionScriptValue.property("z").toNumber());
+		mCamera->setDirection(cameraDirectionScriptValue.property("x").toNumber(), cameraDirectionScriptValue.property("y").toNumber(), cameraDirectionScriptValue.property("z").toNumber());
+		//mCamera->setRight(cameraRightScriptValue.property("x").toNumber(), cameraRightScriptValue.property("y").toNumber(), cameraRightScriptValue.property("z").toNumber());
+
+
+		//cameraWrapper.moveForward();
+
+		//std::cout << "From C++: myStruct.x = " << myStruct.x << std::endl;
 	}
 
 	void DemoGameLogic::shutdown(void)
@@ -149,7 +268,7 @@ namespace QtOgre
 
 	void DemoGameLogic::onKeyPress(QKeyEvent* event)
 	{
-		mKeyStates[event->key()] = KS_PRESSED;
+		keyboard.press(event->key());
 
 		if(event->key() == Qt::Key_Escape)
 		{
@@ -160,7 +279,7 @@ namespace QtOgre
 
 	void DemoGameLogic::onKeyRelease(QKeyEvent* event)
 	{
-		mKeyStates[event->key()] = KS_RELEASED;
+		keyboard.release(event->key());
 	}
 
 	void DemoGameLogic::onMousePress(QMouseEvent* event)
@@ -214,5 +333,7 @@ namespace QtOgre
 
 		Ogre::Viewport* viewport = mApplication->ogreRenderWindow()->addViewport(mCamera);
 		viewport->setBackgroundColour(Ogre::ColourValue::Black);
+
+		cameraWrapper.setOgreCamera(mCamera);
 	}
 }
