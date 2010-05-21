@@ -22,6 +22,8 @@ SET(SRC_FILES
 	source/LogModelSortFilterProxy.cpp
 	source/OgreWidget.cpp
 	source/SettingsDialog.cpp
+	source/Scripting/OgreCameraClass.cpp
+	source/Scripting/OgreCameraPrototype.cpp
 	source/Scripting/OgreVector3Class.cpp
 	source/Scripting/OgreVector3Prototype.cpp
 )
@@ -44,6 +46,8 @@ SET(INC_FILES
 	include/OgreWidget.h
 	include/QtOgreForwardDeclarations.h
 	include/SettingsDialog.h
+	include/Scripting/OgreCameraClass.h
+	include/Scripting/OgreCameraPrototype.h
 	include/Scripting/OgreVector3Class.h
 	include/Scripting/OgreVector3Prototype.h
 )
