@@ -2,7 +2,7 @@
 
 #include "DotSceneHandler.h"
 #include "MainMenu.h"
-#include "OgreVector3Class.h"
+#include "Scripting/OgreVector3Class.h"
 
 #include "LogManager.h"
 #include "OgreWidget.h"
