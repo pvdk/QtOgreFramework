@@ -49,4 +49,8 @@ private:
     QScriptValue ctor;
 };
 
+Q_DECLARE_METATYPE(Ogre::Vector3*)
+Q_DECLARE_METATYPE(Ogre::Vector3)
+Q_DECLARE_METATYPE(OgreVector3Class*)
+
 #endif //OGREVECTOR3CLASS_H

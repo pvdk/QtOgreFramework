@@ -6,10 +6,6 @@
 
 #include <stdlib.h>
 
-Q_DECLARE_METATYPE(Ogre::Vector3*)
-Q_DECLARE_METATYPE(Ogre::Vector3)
-Q_DECLARE_METATYPE(OgreVector3Class*)
-
 OgreVector3Class::OgreVector3Class(QScriptEngine *engine)
     : QObject(engine), QScriptClass(engine)
 {

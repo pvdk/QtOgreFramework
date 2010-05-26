@@ -126,7 +126,7 @@ namespace QtOgre
 		QtOgre::Log* mDemoLog;
 
 		//Scripting
-		QScriptEngine scriptEngine;
+		QScriptEngine* scriptEngine;
 		QString updateScript;
 		CameraWrapper cameraWrapper;
 		MyStruct myStruct;
