@@ -75,8 +75,6 @@ namespace QtOgre
 		int x;
 		int y;
 	};
-
-	Q_DECLARE_METATYPE(MyStruct)
 	
 	class DemoGameLogic : public GameLogic
 	{
@@ -137,5 +135,7 @@ namespace QtOgre
 
 	
 }
+
+Q_DECLARE_METATYPE(QtOgre::MyStruct)
 
 #endif /*DEMOGAMELOGIC_H_*/
