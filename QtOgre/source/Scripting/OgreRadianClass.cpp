@@ -1,25 +1,21 @@
-#include "Scripting/OgreCameraClass.h"
-#include "Scripting/OgreCameraPrototype.h"
+#include "Scripting/OgreRadianClass.h"
+#include "Scripting/OgreRadianPrototype.h"
 
 #include <QtScript/QScriptClassPropertyIterator>
 #include <QtScript/QScriptEngine>
 
 #include <stdlib.h>
 
-Q_DECLARE_METATYPE(Ogre::Camera*)
-//Q_DECLARE_METATYPE(Ogre::Camera)
-Q_DECLARE_METATYPE(OgreCameraClass*)
-
-OgreCameraClass::OgreCameraClass(QScriptEngine *engine)
+OgreRadianClass::OgreRadianClass(QScriptEngine *engine)
     : QObject(engine), QScriptClass(engine)
 {
-    //qScriptRegisterMetaType<Ogre::Camera>(engine, toScriptValue, fromScriptValue);
+    qScriptRegisterMetaType<Ogre::Radian>(engine, toScriptValue, fromScriptValue);
 
-    /*x = engine->toStringHandle(QLatin1String("x"));
-	y = engine->toStringHandle(QLatin1String("y"));
-	z = engine->toStringHandle(QLatin1String("z"));*/
+    //x = engine->toStringHandle(QLatin1String("x"));
+	//y = engine->toStringHandle(QLatin1String("y"));
+	//z = engine->toStringHandle(QLatin1String("z"));
 
-    proto = engine->newQObject(new OgreCameraPrototype(this),
+    proto = engine->newQObject(new OgreRadianPrototype(this),
                                QScriptEngine::QtOwnership,
                                QScriptEngine::SkipMethodsInEnumeration
                                | QScriptEngine::ExcludeSuperClassMethods
@@ -27,19 +23,19 @@ OgreCameraClass::OgreCameraClass(QScriptEngine *engine)
     QScriptValue global = engine->globalObject();
     proto.setPrototype(global.property("Object").property("prototype"));
 
-    /*ctor = engine->newFunction(construct);
-    ctor.setData(qScriptValueFromValue(engine, this));*/
+    ctor = engine->newFunction(construct);
+    ctor.setData(qScriptValueFromValue(engine, this));
 }
 
-OgreCameraClass::~OgreCameraClass()
+OgreRadianClass::~OgreRadianClass()
 {
 }
 
-QScriptClass::QueryFlags OgreCameraClass::queryProperty(const QScriptValue &object,
+QScriptClass::QueryFlags OgreRadianClass::queryProperty(const QScriptValue &object,
                                                        const QScriptString &name,
                                                        QueryFlags flags, uint *id)
 {
-    Ogre::Camera *ba = qscriptvalue_cast<Ogre::Camera*>(object.data());
+    Ogre::Radian *ba = qscriptvalue_cast<Ogre::Radian*>(object.data());
     if (!ba)
         return 0;
     /*if (name == x)
@@ -57,10 +53,10 @@ QScriptClass::QueryFlags OgreCameraClass::queryProperty(const QScriptValue &obje
        return 0;
 }
 
-QScriptValue OgreCameraClass::property(const QScriptValue &object,
+QScriptValue OgreRadianClass::property(const QScriptValue &object,
                                       const QScriptString &name, uint id)
 {
-    Ogre::Camera *ba = qscriptvalue_cast<Ogre::Camera*>(object.data());
+    Ogre::Radian *ba = qscriptvalue_cast<Ogre::Radian*>(object.data());
     if (!ba)
         return QScriptValue();
     /*if (name == x)
@@ -78,14 +74,14 @@ QScriptValue OgreCameraClass::property(const QScriptValue &object,
     return QScriptValue();
 }
 
-void OgreCameraClass::setProperty(QScriptValue &object,
+void OgreRadianClass::setProperty(QScriptValue &object,
                                  const QScriptString &name,
                                  uint id, const QScriptValue &value)
 {
-    Ogre::Camera *ba = qscriptvalue_cast<Ogre::Camera*>(object.data());
+    Ogre::Radian *ba = qscriptvalue_cast<Ogre::Radian*>(object.data());
     if (!ba)
         return;
-    /*if (name == x)
+   /* if (name == x)
 	{
         ba->x = value.toNumber();
     }
@@ -99,10 +95,10 @@ void OgreCameraClass::setProperty(QScriptValue &object,
     }*/
 }
 
-QScriptValue::PropertyFlags OgreCameraClass::propertyFlags(
+QScriptValue::PropertyFlags OgreRadianClass::propertyFlags(
     const QScriptValue &/*object*/, const QScriptString &name, uint /*id*/)
 {
-    /*if (name == x)
+   /* if (name == x)
 	{
         return QScriptValue::Undeletable
             | QScriptValue::SkipInEnumeration;
@@ -120,51 +116,51 @@ QScriptValue::PropertyFlags OgreCameraClass::propertyFlags(
     return QScriptValue::Undeletable;
 }
 
-QString OgreCameraClass::name() const
+QString OgreRadianClass::name() const
 {
-    return QLatin1String("OgreCamera");
+    return QLatin1String("OgreRadian");
 }
 
-QScriptValue OgreCameraClass::prototype() const
+QScriptValue OgreRadianClass::prototype() const
 {
     return proto;
 }
 
-/*QScriptValue OgreCameraClass::constructor()
+QScriptValue OgreRadianClass::constructor()
 {
     return ctor;
-}*/
+}
 
-/*QScriptValue OgreCameraClass::newInstance(int size)
+QScriptValue OgreRadianClass::newInstance(qreal value)
 {
-	return newInstance(Ogre::Camera());
-}*/
+	return newInstance(Ogre::Radian(value));
+}
 
-/*QScriptValue OgreCameraClass::newInstance(const Ogre::Camera &ba)
+QScriptValue OgreRadianClass::newInstance(const Ogre::Radian &ba)
 {
     QScriptValue data = engine()->newVariant(QVariant::fromValue(ba));
     return engine()->newObject(this, data);
-}*/
+}
 
-/*QScriptValue OgreCameraClass::construct(QScriptContext *ctx, QScriptEngine *)
+QScriptValue OgreRadianClass::construct(QScriptContext *ctx, QScriptEngine *)
 {
-    OgreCameraClass *cls = qscriptvalue_cast<OgreCameraClass*>(ctx->callee().data());
+    OgreRadianClass *cls = qscriptvalue_cast<OgreRadianClass*>(ctx->callee().data());
     if (!cls)
         return QScriptValue();
-    int size = ctx->argument(0).toInt32();
-    return cls->newInstance(size);
-}*/
+    qreal value = ctx->argument(0).toNumber();
+    return cls->newInstance(value);
+}
 
-/*QScriptValue OgreCameraClass::toScriptValue(QScriptEngine *eng, const Ogre::Camera &ba)
+QScriptValue OgreRadianClass::toScriptValue(QScriptEngine *eng, const Ogre::Radian &ba)
 {
-    QScriptValue ctor = eng->globalObject().property("OgreCamera");
-    OgreCameraClass *cls = qscriptvalue_cast<OgreCameraClass*>(ctor.data());
+    QScriptValue ctor = eng->globalObject().property("OgreRadian");
+    OgreRadianClass *cls = qscriptvalue_cast<OgreRadianClass*>(ctor.data());
     if (!cls)
         return eng->newVariant(qVariantFromValue(ba));
     return cls->newInstance(ba);
-}*/
+}
 
-/*void OgreCameraClass::fromScriptValue(const QScriptValue &obj, Ogre::Camera &ba)
+void OgreRadianClass::fromScriptValue(const QScriptValue &obj, Ogre::Radian &ba)
 {
-    ba = qscriptvalue_cast<Ogre::Camera>(obj.data());
-}*/
+	ba = qvariant_cast<Ogre::Radian>(obj.data().toVariant());
+}

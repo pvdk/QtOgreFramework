@@ -58,12 +58,14 @@ namespace QtOgre
 		}
 
 	public slots:
-		void moveForward()
+		void moveRelative(const Ogre::Vector3 &vec)
 		{
-			Ogre::Vector3 dir = m_pOgreCamera->getDirection();
-			dir.normalise();
-			dir *= 0.01;
-			m_pOgreCamera->setPosition(m_pOgreCamera->getPosition() + dir);
+			m_pOgreCamera->moveRelative(vec);
+		}
+
+		void yaw (const Ogre::Radian &angle)
+		{
+			m_pOgreCamera->yaw(angle);
 		}
 
 	private:

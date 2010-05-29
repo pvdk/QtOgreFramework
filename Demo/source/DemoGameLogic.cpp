@@ -2,6 +2,7 @@
 
 #include "DotSceneHandler.h"
 #include "MainMenu.h"
+#include "Scripting/OgreRadianClass.h"
 #include "Scripting/OgreVector3Class.h"
 
 #include "LogManager.h"
@@ -81,41 +82,35 @@ namespace QtOgre
 		OgreVector3Class *vecClass = new OgreVector3Class(scriptEngine);
 		scriptEngine->globalObject().setProperty("OgreVector3", vecClass->constructor());
 
+		OgreRadianClass *radianClass = new OgreRadianClass(scriptEngine);
+		scriptEngine->globalObject().setProperty("OgreRadian", radianClass->constructor());
+
 		//updateScript = "print('w pressed = ', keyboard.isPressed(Qt.Key_W));";
 
 		updateScript =
+			"vec = new OgreVector3;"
+			"vec.x = 0.0;"
+			"vec.y = 0.0;"
+			"vec.z = 0.0;"
 			"if(keyboard.isPressed(Qt.Key_W))"
-			"{"
-			"	vec = new OgreVector3;"
-			"	vec.x = 1.0;"
-			"	vec.y = 1.0;"
-			"	vec.z = 1.0;"
-			"	vec.normalise();"
-			"   print('vec x = ', vec.x);"
-			"	myStruct.x = myStruct.x + 1;"
-			"	cameraPosition.x = cameraPosition.x + cameraDirection.x;"
-			"	cameraPosition.y = cameraPosition.y + cameraDirection.y;"
-			"	cameraPosition.z = cameraPosition.z + cameraDirection.z;"
-			"	print('x = ', myStruct.x);"
+			"{"			
+			"	vec.z = -1.0;"
 			"}"
 			"if(keyboard.isPressed(Qt.Key_S))"
-			"{"
-			"	cameraPosition.x = cameraPosition.x - cameraDirection.x;"
-			"	cameraPosition.y = cameraPosition.y - cameraDirection.y;"
-			"	cameraPosition.z = cameraPosition.z - cameraDirection.z;"
-			"}"
-			"if(keyboard.isPressed(Qt.Key_D))"
-			"{"
-			"	cameraPosition.x = cameraPosition.x + cameraRight.x;"
-			"	cameraPosition.y = cameraPosition.y + cameraRight.y;"
-			"	cameraPosition.z = cameraPosition.z + cameraRight.z;"
+			"{"			
+			"	vec.z = 1.0;"
 			"}"
 			"if(keyboard.isPressed(Qt.Key_A))"
-			"{"
-			"	cameraPosition.x = cameraPosition.x - cameraRight.x;"
-			"	cameraPosition.y = cameraPosition.y - cameraRight.y;"
-			"	cameraPosition.z = cameraPosition.z - cameraRight.z;"
+			"{"			
+			"	vec.x = -1.0;"
 			"}"
+			"if(keyboard.isPressed(Qt.Key_D))"
+			"{"			
+			"	vec.x = 1.0;"
+			"}"
+			"camera.moveRelative(vec);"
+			/*"rad = new OgreRadian(0.1);"
+			"camera.yaw(rad);"*/
 			;
 
 
@@ -179,13 +174,13 @@ namespace QtOgre
 		mStyleSettingsWidget = new StyleSettingsWidget;
 		mApplication->addSettingsWidget("Style", mStyleSettingsWidget);
 
-		cameraPositionScriptValue = scriptEngine->toScriptValue(mCamera->getPosition());
+		/*cameraPositionScriptValue = scriptEngine->toScriptValue(mCamera->getPosition());
 		cameraDirectionScriptValue = scriptEngine->toScriptValue(mCamera->getDirection());
 		cameraRightScriptValue = scriptEngine->toScriptValue(mCamera->getRight());
 
 		scriptEngine->globalObject().setProperty("cameraPosition", cameraPositionScriptValue);
 		scriptEngine->globalObject().setProperty("cameraDirection", cameraDirectionScriptValue);
-		scriptEngine->globalObject().setProperty("cameraRight", cameraRightScriptValue);
+		scriptEngine->globalObject().setProperty("cameraRight", cameraRightScriptValue);*/
 	}
 
 	void DemoGameLogic::update(void)
@@ -271,8 +266,8 @@ namespace QtOgre
 			qCritical() << "uncaught exception at line" << line << ":" << result.toString();
 		}
 
-		mCamera->setPosition(scriptEngine->fromScriptValue<Ogre::Vector3>(cameraPositionScriptValue));
-		mCamera->setDirection(scriptEngine->fromScriptValue<Ogre::Vector3>(cameraDirectionScriptValue));
+		//mCamera->setPosition(scriptEngine->fromScriptValue<Ogre::Vector3>(cameraPositionScriptValue));
+		//mCamera->setDirection(scriptEngine->fromScriptValue<Ogre::Vector3>(cameraDirectionScriptValue));
 
 		//mCamera->setPosition(cameraPositionScriptValue.property("x").toNumber(), cameraPositionScriptValue.property("y").toNumber(), cameraPositionScriptValue.property("z").toNumber());
 		//mCamera->setDirection(cameraDirectionScriptValue.property("x").toNumber(), cameraDirectionScriptValue.property("y").toNumber(), cameraDirectionScriptValue.property("z").toNumber());

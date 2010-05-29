@@ -1,23 +1,23 @@
-#ifndef OGRECAMERACLASS_H
-#define OGRECAMERACLASS_H
+#ifndef OGRERADIANCLASS_H
+#define OGRERADIANCLASS_H
 
 #include <QtCore/QObject>
 #include <QtScript/QScriptClass>
 #include <QtScript/QScriptContext>
 #include <QtScript/QScriptString>
 
-#include <OgreCamera.h>
+#include <OgreMath.h>
 
-class OgreCameraClass : public QObject, public QScriptClass
+class OgreRadianClass : public QObject, public QScriptClass
 {
 public:
-    OgreCameraClass(QScriptEngine *engine);
-    ~OgreCameraClass();
+    OgreRadianClass(QScriptEngine *engine);
+    ~OgreRadianClass();
 
-    //QScriptValue constructor();
+    QScriptValue constructor();
 
-    //QScriptValue newInstance(int size = 0);
-	//QScriptValue newInstance(const Ogre::Camera &ba);
+    QScriptValue newInstance(qreal value = 0.0);
+	QScriptValue newInstance(const Ogre::Radian &ba);
 
     QueryFlags queryProperty(const QScriptValue &object,
                              const QScriptString &name,
@@ -37,13 +37,20 @@ public:
     QScriptValue prototype() const;
 
 private:
-    //static QScriptValue construct(QScriptContext *ctx, QScriptEngine *eng);
+    static QScriptValue construct(QScriptContext *ctx, QScriptEngine *eng);
 
-	//static QScriptValue toScriptValue(QScriptEngine *eng, const Ogre::Camera &ba);
-    //static void fromScriptValue(const QScriptValue &obj, Ogre::Camera &ba);
+	static QScriptValue toScriptValue(QScriptEngine *eng, const Ogre::Radian &ba);
+    static void fromScriptValue(const QScriptValue &obj, Ogre::Radian &ba);
 
+    //QScriptString x;
+	//QScriptString y;
+	//QScriptString z;
     QScriptValue proto;
-    //QScriptValue ctor;
+    QScriptValue ctor;
 };
 
-#endif //OGRECAMERACLASS_H
+Q_DECLARE_METATYPE(Ogre::Radian*)
+Q_DECLARE_METATYPE(Ogre::Radian)
+Q_DECLARE_METATYPE(OgreRadianClass*)
+
+#endif //OGRERADIANCLASS_H
