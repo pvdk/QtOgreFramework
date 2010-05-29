@@ -61,17 +61,17 @@ namespace QtOgre
 		Qt.setProperty("App", scriptEngine->newQObject(qApp));
 		scriptEngine->globalObject().setProperty("Qt", Qt);
 
-		OgreVector3Class* cameraPosition = new OgreVector3Class(scriptEngine);
-		cameraPositionScriptValue = scriptEngine->newObject(cameraPosition);
-		scriptEngine->globalObject().setProperty("cameraPosition", cameraPositionScriptValue);
+		//OgreVector3Class* cameraPosition = new OgreVector3Class(scriptEngine);
+		/*cameraPositionScriptValue = scriptEngine->newObject(cameraPosition);
+		scriptEngine->globalObject().setProperty("cameraPosition", cameraPositionScriptValue);*/
 
-		OgreVector3Class* cameraDirection = new OgreVector3Class(scriptEngine);
-		cameraDirectionScriptValue = scriptEngine->newObject(cameraDirection);
-		scriptEngine->globalObject().setProperty("cameraDirection", cameraDirectionScriptValue);
+		//OgreVector3Class* cameraDirection = new OgreVector3Class(scriptEngine);
+		/*cameraDirectionScriptValue = scriptEngine->newObject(cameraDirection);
+		scriptEngine->globalObject().setProperty("cameraDirection", cameraDirectionScriptValue);*/
 
-		OgreVector3Class* cameraRight = new OgreVector3Class(scriptEngine);
-		cameraRightScriptValue = scriptEngine->newObject(cameraRight);
-		scriptEngine->globalObject().setProperty("cameraRight", cameraRightScriptValue);
+		//OgreVector3Class* cameraRight = new OgreVector3Class(scriptEngine);
+		/*cameraRightScriptValue = scriptEngine->newObject(cameraRight);
+		scriptEngine->globalObject().setProperty("cameraRight", cameraRightScriptValue);*/
 
 		myStruct.x = 10;
 		qScriptRegisterMetaType(scriptEngine, toScriptValue, fromScriptValue);
@@ -178,6 +178,14 @@ namespace QtOgre
 		
 		mStyleSettingsWidget = new StyleSettingsWidget;
 		mApplication->addSettingsWidget("Style", mStyleSettingsWidget);
+
+		cameraPositionScriptValue = scriptEngine->toScriptValue(mCamera->getPosition());
+		cameraDirectionScriptValue = scriptEngine->toScriptValue(mCamera->getDirection());
+		cameraRightScriptValue = scriptEngine->toScriptValue(mCamera->getRight());
+
+		scriptEngine->globalObject().setProperty("cameraPosition", cameraPositionScriptValue);
+		scriptEngine->globalObject().setProperty("cameraDirection", cameraDirectionScriptValue);
+		scriptEngine->globalObject().setProperty("cameraRight", cameraRightScriptValue);
 	}
 
 	void DemoGameLogic::update(void)
@@ -248,13 +256,13 @@ namespace QtOgre
 		cameraRightScriptValue.setProperty("y", mCamera->getRight().y);
 		cameraRightScriptValue.setProperty("z", mCamera->getRight().z);*/
 
-		cameraPositionScriptValue = scriptEngine->toScriptValue(mCamera->getPosition());
+		/*cameraPositionScriptValue = scriptEngine->toScriptValue(mCamera->getPosition());
 		cameraDirectionScriptValue = scriptEngine->toScriptValue(mCamera->getDirection());
 		cameraRightScriptValue = scriptEngine->toScriptValue(mCamera->getRight());
 
 		scriptEngine->globalObject().setProperty("cameraPosition", cameraPositionScriptValue);
 		scriptEngine->globalObject().setProperty("cameraDirection", cameraDirectionScriptValue);
-		scriptEngine->globalObject().setProperty("cameraRight", cameraRightScriptValue);
+		scriptEngine->globalObject().setProperty("cameraRight", cameraRightScriptValue);*/
 
 		QScriptValue result = scriptEngine->evaluate(updateScript);
 		if (scriptEngine->hasUncaughtException())
@@ -263,11 +271,11 @@ namespace QtOgre
 			qCritical() << "uncaught exception at line" << line << ":" << result.toString();
 		}
 
-		//mCamera->setPosition(scriptEngine->fromScriptValue<Ogre::Vector3>(cameraPositionScriptValue));
-		//mCamera->setDirection(scriptEngine->fromScriptValue<Ogre::Vector3>(cameraDirectionScriptValue));
+		mCamera->setPosition(scriptEngine->fromScriptValue<Ogre::Vector3>(cameraPositionScriptValue));
+		mCamera->setDirection(scriptEngine->fromScriptValue<Ogre::Vector3>(cameraDirectionScriptValue));
 
-		mCamera->setPosition(cameraPositionScriptValue.property("x").toNumber(), cameraPositionScriptValue.property("y").toNumber(), cameraPositionScriptValue.property("z").toNumber());
-		mCamera->setDirection(cameraDirectionScriptValue.property("x").toNumber(), cameraDirectionScriptValue.property("y").toNumber(), cameraDirectionScriptValue.property("z").toNumber());
+		//mCamera->setPosition(cameraPositionScriptValue.property("x").toNumber(), cameraPositionScriptValue.property("y").toNumber(), cameraPositionScriptValue.property("z").toNumber());
+		//mCamera->setDirection(cameraDirectionScriptValue.property("x").toNumber(), cameraDirectionScriptValue.property("y").toNumber(), cameraDirectionScriptValue.property("z").toNumber());
 		//mCamera->setRight(cameraRightScriptValue.property("x").toNumber(), cameraRightScriptValue.property("y").toNumber(), cameraRightScriptValue.property("z").toNumber());
 
 

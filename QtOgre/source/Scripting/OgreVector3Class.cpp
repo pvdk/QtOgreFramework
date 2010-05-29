@@ -162,5 +162,5 @@ QScriptValue OgreVector3Class::toScriptValue(QScriptEngine *eng, const Ogre::Vec
 
 void OgreVector3Class::fromScriptValue(const QScriptValue &obj, Ogre::Vector3 &ba)
 {
-    ba = qscriptvalue_cast<Ogre::Vector3>(obj.data());
+	ba = qvariant_cast<Ogre::Vector3>(obj.data().toVariant());
 }
