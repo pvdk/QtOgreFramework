@@ -45,6 +45,88 @@ namespace QtOgre
 
 	private:
 		QHash<int, KeyStates> mKeyStates;
+	};	
+
+	class Mouse : public QObject
+	{
+		Q_OBJECT
+	public slots:
+		bool isPressed(int mouseButton)
+		{
+			//Note - I'd rather pass a Qt::MouseButton in a parameter to this 
+			//function and avoid the class, but I had problems registering it
+			//with qScriptRegisterMetaType().
+			Qt::MouseButton mb = static_cast<Qt::MouseButton>(mouseButton);
+
+			return mMouseButtons & mb;
+		}
+
+		void press(int mouseButton)
+		{
+			//Note - I'd rather pass a Qt::MouseButton in a parameter to this 
+			//function and avoid the class, but I had problems registering it
+			//with qScriptRegisterMetaType().
+			Qt::MouseButton mb = static_cast<Qt::MouseButton>(mouseButton);
+
+			mMouseButtons |= mb;
+		}
+
+		void release(int mouseButton)
+		{
+			//Note - I'd rather pass a Qt::MouseButton in a parameter to this 
+			//function and avoid the class, but I had problems registering it
+			//with qScriptRegisterMetaType().
+			Qt::MouseButton mb = static_cast<Qt::MouseButton>(mouseButton);
+
+			mMouseButtons &= ~mb;
+		}
+
+		const QPoint& pos(void)
+		{
+			return mPos;
+		}
+
+		void setPos(const QPoint& pos)
+		{
+			mPos = pos;
+		}
+
+		QPoint computeDelta(void)
+		{
+			return mPos - mOldPos;
+		}
+
+		void resetDelta(void)
+		{
+			mOldPos = mPos;
+		}
+
+		const int wheelPos(void)
+		{
+			return mWheelPos;
+		}
+
+		void setWheelPos(int wheelPos)
+		{
+			mWheelPos = wheelPos;
+		}
+
+		int computeWheelDelta(void)
+		{
+			return mWheelPos - mOldWheelPos;
+		}
+
+		void resetWheelDelta(void)
+		{
+			mOldWheelPos = mWheelPos;
+		}
+
+	private:
+		Qt::MouseButtons mMouseButtons;
+		QPoint mPos;
+		QPoint mOldPos;
+		int mWheelPos;
+		int mOldWheelPos;
 	};
 
 	class CameraWrapper : public QObject
@@ -66,6 +148,11 @@ namespace QtOgre
 		void yaw (const Ogre::Radian &angle)
 		{
 			m_pOgreCamera->yaw(angle);
+		}
+
+		void pitch (const Ogre::Radian &angle)
+		{
+			m_pOgreCamera->pitch(angle);
 		}
 
 	private:
@@ -92,6 +179,7 @@ namespace QtOgre
 
 		void onMouseMove(QMouseEvent* event);
 		void onMousePress(QMouseEvent* event);
+		void onMouseRelease(QMouseEvent* event);
 
 		void onWheel(QWheelEvent* event);
 
@@ -101,11 +189,12 @@ namespace QtOgre
 
 	private:
 		Keyboard keyboard;
-		QPoint mLastFrameMousePos;
-		QPoint mCurrentMousePos;
+		Mouse mouse;
+		/*QPoint mLastFrameMousePos;
+		QPoint mCurrentMousePos;*/
 
-		int mLastFrameWheelPos;
-		int mCurrentWheelPos;
+		/*int mLastFrameWheelPos;
+		int mCurrentWheelPos;*/
 		QTime* mTime;
 
 		int mLastFrameTime;

@@ -36,6 +36,20 @@ namespace QtOgre
 		s.y = obj.property("y").toInt32();
 	}
 
+	QScriptValue toScriptValueQPoint(QScriptEngine *engine, const QPoint &s)
+	{
+		QScriptValue obj = engine->newObject();
+		obj.setProperty("x", s.x());
+		obj.setProperty("y", s.y());
+		return obj;
+	}
+
+	void fromScriptValueQPoint(const QScriptValue &obj, QPoint &s)
+	{
+		s.setX(obj.property("x").toInt32());
+		s.setY(obj.property("y").toInt32());
+	}
+
 	struct QtMetaObject : private QObject
 	{
 	public:
@@ -52,8 +66,15 @@ namespace QtOgre
 	{
 		scriptEngine = new QScriptEngine;
 
+		scriptEngine->importExtension("qt.core");
+		scriptEngine->importExtension("qt.gui");
+
+
 		QScriptValue keyboardScriptValue = scriptEngine->newQObject(&keyboard);
 		scriptEngine->globalObject().setProperty("keyboard", keyboardScriptValue);
+
+		QScriptValue mouseScriptValue = scriptEngine->newQObject(&mouse);
+		scriptEngine->globalObject().setProperty("mouse", mouseScriptValue);
 
 		QScriptValue cameraScriptValue = scriptEngine->newQObject(&cameraWrapper);
 		scriptEngine->globalObject().setProperty("camera", cameraScriptValue);
@@ -62,30 +83,18 @@ namespace QtOgre
 		Qt.setProperty("App", scriptEngine->newQObject(qApp));
 		scriptEngine->globalObject().setProperty("Qt", Qt);
 
-		//OgreVector3Class* cameraPosition = new OgreVector3Class(scriptEngine);
-		/*cameraPositionScriptValue = scriptEngine->newObject(cameraPosition);
-		scriptEngine->globalObject().setProperty("cameraPosition", cameraPositionScriptValue);*/
-
-		//OgreVector3Class* cameraDirection = new OgreVector3Class(scriptEngine);
-		/*cameraDirectionScriptValue = scriptEngine->newObject(cameraDirection);
-		scriptEngine->globalObject().setProperty("cameraDirection", cameraDirectionScriptValue);*/
-
-		//OgreVector3Class* cameraRight = new OgreVector3Class(scriptEngine);
-		/*cameraRightScriptValue = scriptEngine->newObject(cameraRight);
-		scriptEngine->globalObject().setProperty("cameraRight", cameraRightScriptValue);*/
-
 		myStruct.x = 10;
 		qScriptRegisterMetaType(scriptEngine, toScriptValue, fromScriptValue);
 		QScriptValue myStructValue = scriptEngine->toScriptValue(myStruct);
 		scriptEngine->globalObject().setProperty("myStruct", myStructValue);
+
+		qScriptRegisterMetaType(scriptEngine, toScriptValueQPoint, fromScriptValueQPoint);
 
 		OgreVector3Class *vecClass = new OgreVector3Class(scriptEngine);
 		scriptEngine->globalObject().setProperty("OgreVector3", vecClass->constructor());
 
 		OgreRadianClass *radianClass = new OgreRadianClass(scriptEngine);
 		scriptEngine->globalObject().setProperty("OgreRadian", radianClass->constructor());
-
-		//updateScript = "print('w pressed = ', keyboard.isPressed(Qt.Key_W));";
 
 		updateScript =
 			"vec = new OgreVector3;"
@@ -109,8 +118,16 @@ namespace QtOgre
 			"	vec.x = 1.0;"
 			"}"
 			"camera.moveRelative(vec);"
-			/*"rad = new OgreRadian(0.1);"
-			"camera.yaw(rad);"*/
+			"if(mouse.isPressed(Qt.RightButton))"
+			"{"
+			"	mouseDelta = mouse.computeDelta();"
+			"	camera.yaw(new OgreRadian(-mouseDelta.x * 0.01));"
+			"}"
+			"if(mouse.isPressed(Qt.RightButton))"
+			"{"
+			"	mouseDelta = mouse.computeDelta();"
+			"	camera.pitch(new OgreRadian(-mouseDelta.y * 0.01));"
+			"}"
 			;
 
 
@@ -204,60 +221,21 @@ namespace QtOgre
 
 		float distance = mCameraSpeed * timeElapsedInSeconds;
 
-		/*if(keyboard.isPressed(Qt::Key_W))
+		/*if(mouse.isPressed(Qt::LeftButton))
 		{
-			mCamera->setPosition(mCamera->getPosition() + mCamera->getDirection() * distance);
-		}
-		if(keyboard.isPressed(Qt::Key_S))
-		{
-			mCamera->setPosition(mCamera->getPosition() - mCamera->getDirection() * distance);
-		}
-		if(keyboard.isPressed(Qt::Key_A))
-		{
-			mCamera->setPosition(mCamera->getPosition() - mCamera->getRight() * distance);
-		}
-		if(keyboard.isPressed(Qt::Key_D))
-		{
-			mCamera->setPosition(mCamera->getPosition() + mCamera->getRight() * distance);
-		}*/
-
-		if(!mIsFirstFrame)
-		{
-			QPoint mouseDelta = mCurrentMousePos - mLastFrameMousePos;
+			QPoint mouseDelta = mouse.computeDelta();
 			mCamera->yaw(Ogre::Radian(-mouseDelta.x() * timeElapsedInSeconds));
 			mCamera->pitch(Ogre::Radian(-mouseDelta.y() * timeElapsedInSeconds));
 
-			int wheelDelta = mCurrentWheelPos - mLastFrameWheelPos;
+			int wheelDelta = mouse.computeWheelDelta();
 			Ogre::Radian fov = mCamera->getFOVy();
 			fov += Ogre::Radian(-wheelDelta * 0.001);
 			fov = (std::min)(fov, Ogre::Radian(2.0f));
 			fov = (std::max)(fov, Ogre::Radian(0.5f));
 			mCamera->setFOVy(fov);
-		}
-		mLastFrameMousePos = mCurrentMousePos;
-		mLastFrameWheelPos = mCurrentWheelPos;
+		}*/
 
 		mIsFirstFrame = false;
-
-		/*cameraPositionScriptValue.setProperty("x", mCamera->getPosition().x);
-		cameraPositionScriptValue.setProperty("y", mCamera->getPosition().y);
-		cameraPositionScriptValue.setProperty("z", mCamera->getPosition().z);*/
-
-		/*cameraDirectionScriptValue.setProperty("x", mCamera->getDirection().x);
-		cameraDirectionScriptValue.setProperty("y", mCamera->getDirection().y);
-		cameraDirectionScriptValue.setProperty("z", mCamera->getDirection().z);
-
-		cameraRightScriptValue.setProperty("x", mCamera->getRight().x);
-		cameraRightScriptValue.setProperty("y", mCamera->getRight().y);
-		cameraRightScriptValue.setProperty("z", mCamera->getRight().z);*/
-
-		/*cameraPositionScriptValue = scriptEngine->toScriptValue(mCamera->getPosition());
-		cameraDirectionScriptValue = scriptEngine->toScriptValue(mCamera->getDirection());
-		cameraRightScriptValue = scriptEngine->toScriptValue(mCamera->getRight());
-
-		scriptEngine->globalObject().setProperty("cameraPosition", cameraPositionScriptValue);
-		scriptEngine->globalObject().setProperty("cameraDirection", cameraDirectionScriptValue);
-		scriptEngine->globalObject().setProperty("cameraRight", cameraRightScriptValue);*/
 
 		QScriptValue result = scriptEngine->evaluate(updateScript);
 		if (scriptEngine->hasUncaughtException())
@@ -266,17 +244,8 @@ namespace QtOgre
 			qCritical() << "uncaught exception at line" << line << ":" << result.toString();
 		}
 
-		//mCamera->setPosition(scriptEngine->fromScriptValue<Ogre::Vector3>(cameraPositionScriptValue));
-		//mCamera->setDirection(scriptEngine->fromScriptValue<Ogre::Vector3>(cameraDirectionScriptValue));
-
-		//mCamera->setPosition(cameraPositionScriptValue.property("x").toNumber(), cameraPositionScriptValue.property("y").toNumber(), cameraPositionScriptValue.property("z").toNumber());
-		//mCamera->setDirection(cameraDirectionScriptValue.property("x").toNumber(), cameraDirectionScriptValue.property("y").toNumber(), cameraDirectionScriptValue.property("z").toNumber());
-		//mCamera->setRight(cameraRightScriptValue.property("x").toNumber(), cameraRightScriptValue.property("y").toNumber(), cameraRightScriptValue.property("z").toNumber());
-
-
-		//cameraWrapper.moveForward();
-
-		//std::cout << "From C++: myStruct.x = " << myStruct.x << std::endl;
+		mouse.resetDelta();
+		mouse.resetWheelDelta();
 	}
 
 	void DemoGameLogic::shutdown(void)
@@ -303,18 +272,28 @@ namespace QtOgre
 
 	void DemoGameLogic::onMousePress(QMouseEvent* event)
 	{
-		mCurrentMousePos = event->pos();
-		mLastFrameMousePos = mCurrentMousePos;
+		mouse.press(event->button());
+
+		//Update the mouse position as well or we get 'jumps'
+		mouse.setPos(event->pos());
+		mouse.resetDelta();
+	}
+
+	void DemoGameLogic::onMouseRelease(QMouseEvent* event)
+	{
+		mouse.release(event->button());
 	}
 
 	void DemoGameLogic::onMouseMove(QMouseEvent* event)
 	{
-		mCurrentMousePos = event->pos();
+		//mCurrentMousePos = event->pos();
+		mouse.setPos(event->pos());
 	}
 
 	void DemoGameLogic::onWheel(QWheelEvent* event)
 	{
-		mCurrentWheelPos += event->delta();
+		//mCurrentWheelPos += event->delta();
+		mouse.setWheelPos(mouse.wheelPos() + event->delta());
 	}
 
 	Log* DemoGameLogic::demoLog(void)
