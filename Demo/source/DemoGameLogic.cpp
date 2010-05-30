@@ -20,21 +20,7 @@
 
 #include <QMetaObject>
 
-namespace QtOgre
-{
-	QScriptValue toScriptValue(QScriptEngine *engine, const MyStruct &s)
-	{
-		QScriptValue obj = engine->newObject();
-		obj.setProperty("x", s.x);
-		obj.setProperty("y", s.y);
-		return obj;
-	}
-
-	void fromScriptValue(const QScriptValue &obj, MyStruct &s)
-	{
-		s.x = obj.property("x").toInt32();
-		s.y = obj.property("y").toInt32();
-	}
+using namespace QtOgre;
 
 	QScriptValue toScriptValueQPoint(QScriptEngine *engine, const QPoint &s)
 	{
@@ -83,11 +69,6 @@ namespace QtOgre
 		Qt.setProperty("App", scriptEngine->newQObject(qApp));
 		scriptEngine->globalObject().setProperty("Qt", Qt);
 
-		myStruct.x = 10;
-		qScriptRegisterMetaType(scriptEngine, toScriptValue, fromScriptValue);
-		QScriptValue myStructValue = scriptEngine->toScriptValue(myStruct);
-		scriptEngine->globalObject().setProperty("myStruct", myStructValue);
-
 		qScriptRegisterMetaType(scriptEngine, toScriptValueQPoint, fromScriptValueQPoint);
 
 		OgreVector3Class *vecClass = new OgreVector3Class(scriptEngine);
@@ -128,6 +109,14 @@ namespace QtOgre
 			"	mouseDelta = mouse.computeDelta();"
 			"	camera.pitch(new OgreRadian(-mouseDelta.y * 0.01));"
 			"}"
+			"wheelDelta = mouse.getWheelDelta();"
+			"print('wheelDelta = ', wheelDelta);"
+			"fov = camera.getFOVy();"
+			"print('old fov = ', fov.valueRadians);"
+			"tempFOV = new OgreRadian(-wheelDelta * 0.001);"
+			"fov.valueRadians = fov.valueRadians + tempFOV.valueRadians;"
+			"print('new fov = ', fov.valueRadians);"
+			"camera.setFOVy(fov);"
 			;
 
 
@@ -221,20 +210,6 @@ namespace QtOgre
 
 		float distance = mCameraSpeed * timeElapsedInSeconds;
 
-		/*if(mouse.isPressed(Qt::LeftButton))
-		{
-			QPoint mouseDelta = mouse.computeDelta();
-			mCamera->yaw(Ogre::Radian(-mouseDelta.x() * timeElapsedInSeconds));
-			mCamera->pitch(Ogre::Radian(-mouseDelta.y() * timeElapsedInSeconds));
-
-			int wheelDelta = mouse.computeWheelDelta();
-			Ogre::Radian fov = mCamera->getFOVy();
-			fov += Ogre::Radian(-wheelDelta * 0.001);
-			fov = (std::min)(fov, Ogre::Radian(2.0f));
-			fov = (std::max)(fov, Ogre::Radian(0.5f));
-			mCamera->setFOVy(fov);
-		}*/
-
 		mIsFirstFrame = false;
 
 		QScriptValue result = scriptEngine->evaluate(updateScript);
@@ -293,7 +268,7 @@ namespace QtOgre
 	void DemoGameLogic::onWheel(QWheelEvent* event)
 	{
 		//mCurrentWheelPos += event->delta();
-		mouse.setWheelPos(mouse.wheelPos() + event->delta());
+		mouse.modifyWheelDelta(event->delta());
 	}
 
 	Log* DemoGameLogic::demoLog(void)
@@ -334,4 +309,3 @@ namespace QtOgre
 
 		cameraWrapper.setOgreCamera(mCamera);
 	}
-}

@@ -42,7 +42,7 @@ private:
 	static QScriptValue toScriptValue(QScriptEngine *eng, const Ogre::Radian &ba);
     static void fromScriptValue(const QScriptValue &obj, Ogre::Radian &ba);
 
-    //QScriptString x;
+    QScriptString valueRadians;
 	//QScriptString y;
 	//QScriptString z;
     QScriptValue proto;

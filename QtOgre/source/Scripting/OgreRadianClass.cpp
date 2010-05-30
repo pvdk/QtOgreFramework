@@ -11,7 +11,7 @@ OgreRadianClass::OgreRadianClass(QScriptEngine *engine)
 {
     qScriptRegisterMetaType<Ogre::Radian>(engine, toScriptValue, fromScriptValue);
 
-    //x = engine->toStringHandle(QLatin1String("x"));
+    valueRadians = engine->toStringHandle(QLatin1String("valueRadians"));
 	//y = engine->toStringHandle(QLatin1String("y"));
 	//z = engine->toStringHandle(QLatin1String("z"));
 
@@ -38,11 +38,11 @@ QScriptClass::QueryFlags OgreRadianClass::queryProperty(const QScriptValue &obje
     Ogre::Radian *ba = qscriptvalue_cast<Ogre::Radian*>(object.data());
     if (!ba)
         return 0;
-    /*if (name == x)
+    if (name == valueRadians)
 	{
         return flags;
     }
-	if (name == y)
+	/*if (name == y)
 	{
         return flags;
     }
@@ -59,11 +59,11 @@ QScriptValue OgreRadianClass::property(const QScriptValue &object,
     Ogre::Radian *ba = qscriptvalue_cast<Ogre::Radian*>(object.data());
     if (!ba)
         return QScriptValue();
-    /*if (name == x)
+    if (name == valueRadians)
 	{
-        return ba->x;
+        return ba->valueRadians();
     }
-	if (name == y)
+	/*if (name == y)
 	{
         return ba->y;
     }
@@ -81,11 +81,11 @@ void OgreRadianClass::setProperty(QScriptValue &object,
     Ogre::Radian *ba = qscriptvalue_cast<Ogre::Radian*>(object.data());
     if (!ba)
         return;
-   /* if (name == x)
+    if (name == valueRadians)
 	{
-        ba->x = value.toNumber();
+        *ba = value.toNumber();
     }
-	if (name == y)
+	/*if (name == y)
 	{
         ba->y = value.toNumber();
     }
@@ -98,12 +98,12 @@ void OgreRadianClass::setProperty(QScriptValue &object,
 QScriptValue::PropertyFlags OgreRadianClass::propertyFlags(
     const QScriptValue &/*object*/, const QScriptString &name, uint /*id*/)
 {
-   /* if (name == x)
+    if (name == valueRadians)
 	{
         return QScriptValue::Undeletable
             | QScriptValue::SkipInEnumeration;
     }
-	if (name == y)
+	/*if (name == y)
 	{
         return QScriptValue::Undeletable
             | QScriptValue::SkipInEnumeration;
