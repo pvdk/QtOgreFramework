@@ -119,6 +119,10 @@ using namespace QtOgre;
 			"camera.setFOVy(fov);"
 			;
 
+		debugger.attachTo(scriptEngine);
+		debugger.action(QScriptEngineDebugger::InterruptAction)->trigger();
+
+
 
 
 		//qApp->setStyleSheet(qApp->settings()->value("UI/StyleFile").toString());

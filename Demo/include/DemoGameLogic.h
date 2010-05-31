@@ -16,6 +16,7 @@
 #include <QTime>
 
 #include <QtScript>
+#include <QScriptEngineDebugger>
 
 
 class StyleSettingsWidget;
@@ -76,6 +77,8 @@ private:
 	QScriptValue cameraPositionScriptValue;
 	QScriptValue cameraDirectionScriptValue;
 	QScriptValue cameraRightScriptValue;
+
+	QScriptEngineDebugger debugger;
 };
 
 #endif /*DEMOGAMELOGIC_H_*/
