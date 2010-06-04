@@ -120,7 +120,7 @@ using namespace QtOgre;
 			;
 
 		debugger.attachTo(scriptEngine);
-		debugger.action(QScriptEngineDebugger::InterruptAction)->trigger();
+		//debugger.action(QScriptEngineDebugger::InterruptAction)->trigger();
 
 
 
