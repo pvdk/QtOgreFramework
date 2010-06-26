@@ -7,3 +7,4 @@ FIND_PACKAGE(OGRE 1.6 REQUIRED) #Ogre is needed by almost everything
 
 ADD_SUBDIRECTORY(QtOgre)
 ADD_SUBDIRECTORY(Demo)
+ADD_SUBDIRECTORY(EngineTest)
