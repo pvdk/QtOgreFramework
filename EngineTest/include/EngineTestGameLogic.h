@@ -1,5 +1,5 @@
-#ifndef DEMOGAMELOGIC_H_
-#define DEMOGAMELOGIC_H_
+#ifndef ENGINETESTGAMELOGIC_H_
+#define ENGINETESTGAMELOGIC_H_
 
 #include "CameraWrapper.h"
 #include "ChooseMeshWidget.h"
@@ -21,10 +21,10 @@
 
 class StyleSettingsWidget;
 	
-class DemoGameLogic : public QtOgre::GameLogic
+class EngineTestGameLogic : public QtOgre::GameLogic
 {
 public:
-	DemoGameLogic(void);
+	EngineTestGameLogic(void);
 
 	void initialise(void);
 	void update(void);
@@ -81,4 +81,4 @@ private:
 	QScriptEngineDebugger debugger;
 };
 
-#endif /*DEMOGAMELOGIC_H_*/
+#endif /*ENGINETESTGAMELOGIC_H_*/

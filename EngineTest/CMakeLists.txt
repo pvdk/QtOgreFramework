@@ -7,7 +7,7 @@ SET(SRC_FILES
 	source/main.cpp
 	source/Mouse.cpp
 	source/ChooseMeshWidget.cpp
-	source/DemoGameLogic.cpp
+	source/EngineTestGameLogic.cpp
 	source/Keyboard.cpp
 	source/MainMenu.cpp
 	source/StyleSettingsWidget.cpp
@@ -16,7 +16,7 @@ SET(SRC_FILES
 SET(INC_FILES
 	include/CameraWrapper.h
 	include/ChooseMeshWidget.h
-	include/DemoGameLogic.h
+	include/EngineTestGameLogic.h
 	include/Keyboard.h
 	include/MainMenu.h
 	include/Mouse.h
