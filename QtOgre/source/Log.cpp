@@ -6,6 +6,7 @@
 #include <QHeaderView>
 #include <QTime>
 #include <QFile>
+#include <QScrollBar>
 #include <QSortFilterProxyModel>
 
 namespace QtOgre
@@ -16,6 +17,7 @@ namespace QtOgre
 	,mName(name)
 	,mLogModel(new LogModel(this, this))
 	,mProxyModel(new LogModelSortFilterProxy(this))
+	,m_bSliderPressed(false)
 	{
 		setupUi(this);
 		
@@ -28,6 +30,9 @@ namespace QtOgre
 		connect(clearFilterButton, SIGNAL(pressed()), filterLineEdit, SLOT(clear()));
 		connect(mLogModel, SIGNAL(entry_added(LogEntry*)), this, SLOT(writeMessageToHTML(LogEntry*)));
 
+		connect(m_pLogTable->verticalScrollBar(), SIGNAL(sliderPressed(void)), this, SLOT(onSliderPressed(void)));
+		connect(m_pLogTable->verticalScrollBar(), SIGNAL(sliderReleased(void)), this, SLOT(onSliderReleased(void)));
+
 		// We need to make sure that log messages are only written from the main thread. In order to do this we make use of the Qt signal slot mechanism.
 		// The log message function simply emits a signal, an Qt will ensure that this is delivered to the main thread in a safe manner. There may be better
 		// or faster ways of achiving this behaviour but it seems to work for now.
@@ -37,28 +42,28 @@ namespace QtOgre
 		//Create a sort/filter proxy of our log entries model so we can sort and filter it :)
 		mProxyModel->setSourceModel(mLogModel); // the proxy should point to the real model
 		mProxyModel->setFilterKeyColumn(3); // the message column (for filtering by regex) TODO: nuke the MAGIC NUMBER!
-		mProxyModel->setDynamicSortFilter(true); // keep sort order updated when data changes
-		logTable->setModel(mProxyModel); // the view points to our proxy
-		logTable->setSortingEnabled(true); // let the view use the sorting of the proxy
+		mProxyModel->setDynamicSortFilter(true); // keep filtering updated when data changes
+		m_pLogTable->setModel(mProxyModel); // the view points to our proxy
+		m_pLogTable->setSortingEnabled(false); // no need for sorting and it seems to get slow
 
 		//Using this approach of resizing to contents seems to have
 		//noticeable performance penalties when adding rows to the log.
-		//logTable->horizontalHeader()->setResizeMode(0, QHeaderView::ResizeToContents);
-		//logTable->horizontalHeader()->setResizeMode(1, QHeaderView::ResizeToContents);
-		//logTable->horizontalHeader()->setResizeMode(2, QHeaderView::ResizeToContents);
-		//logTable->verticalHeader()->setResizeMode(QHeaderView::ResizeToContents);
+		//m_pLogTable->horizontalHeader()->setResizeMode(0, QHeaderView::ResizeToContents);
+		//m_pLogTable->horizontalHeader()->setResizeMode(1, QHeaderView::ResizeToContents);
+		//m_pLogTable->horizontalHeader()->setResizeMode(2, QHeaderView::ResizeToContents);
+		//m_pLogTable->verticalHeader()->setResizeMode(QHeaderView::ResizeToContents);
 
 		//So instead we hard code the sizes
-		logTable->horizontalHeader()->setResizeMode(0, QHeaderView::Fixed);
-		logTable->horizontalHeader()->resizeSection(0, 100);
-		logTable->horizontalHeader()->setResizeMode(1, QHeaderView::Fixed);
-		logTable->horizontalHeader()->resizeSection(1, 30);
-		logTable->horizontalHeader()->resizeSection(2, 120);
-		logTable->horizontalHeader()->resizeSection(3, 800);
+		m_pLogTable->horizontalHeader()->setResizeMode(0, QHeaderView::Fixed);
+		m_pLogTable->horizontalHeader()->resizeSection(0, 100);
+		m_pLogTable->horizontalHeader()->setResizeMode(1, QHeaderView::Fixed);
+		m_pLogTable->horizontalHeader()->resizeSection(1, 30);
+		m_pLogTable->horizontalHeader()->resizeSection(2, 120);
+		m_pLogTable->horizontalHeader()->resizeSection(3, 800);
 
-		logTable->verticalHeader()->hide();
-		//logTable->verticalHeader()->setResizeMode(QHeaderView::Fixed);
-		//logTable->verticalHeader()->resizeSections(20);
+		m_pLogTable->verticalHeader()->hide();
+		//m_pLogTable->verticalHeader()->setResizeMode(QHeaderView::Fixed);
+		//m_pLogTable->verticalHeader()->resizeSections(20);
 
 
 		//We use .png images here, rather than .svg. They are frequently being created on-the-fly
@@ -78,10 +83,10 @@ namespace QtOgre
 		errorColor.setRgb(255,64,64);
 
 		//Set the widgets background to the colour we chose above.
-		QPalette palette = logTable->palette();
+		QPalette palette = m_pLogTable->palette();
 		palette.setColor(QPalette::Active, QPalette::Base, bgColor);
 		palette.setColor(QPalette::Inactive, QPalette::Base, bgColor);
-		logTable->setPalette(palette);
+		m_pLogTable->setPalette(palette);
 
 		//Initial set up of which log levels are displayed
 		computeVisibleMessageTypes(true);
@@ -142,8 +147,8 @@ namespace QtOgre
 	void Log::logMessage(const QString& message, LogLevel logLevel)
 	{
 		/*mLogModel->append(0, "file", message, logLevel);
-		logTable->verticalHeader()->resizeSection(mLogModel->rowCount() - 1, 14);
-		logTable->scrollToBottom();
+		m_pLogTable->verticalHeader()->resizeSection(mLogModel->rowCount() - 1, 14);
+		m_pLogTable->scrollToBottom();
 		if(mForceProcessEvents)	{
 			qApp->processEvents();
 		}*/
@@ -154,9 +159,13 @@ namespace QtOgre
 	void Log::logMessageImpl(const QString& message, LogLevel logLevel)
 	{
 		mLogModel->append(0, "file", message, logLevel);
-		logTable->verticalHeader()->resizeSection(mLogModel->rowCount() - 1, 14);
-		logTable->scrollToBottom();
-		if(mForceProcessEvents)	{
+		m_pLogTable->verticalHeader()->resizeSection(mLogModel->rowCount() - 1, 14);
+		if(!m_bSliderPressed)
+		{
+			m_pLogTable->scrollToBottom();
+		}
+		if(mForceProcessEvents)
+		{
 			qApp->processEvents();
 		}
 	}
@@ -237,10 +246,13 @@ namespace QtOgre
 			<< "</html>" << endl;
 	}
 
-	/*
-	//Set the size of the row
-	//logTable->setRowHeight(row, 20); is an alternative to the following
-	logTable->verticalHeader()->setResizeMode(row, QHeaderView::Fixed);
-	logTable->verticalHeader()->resizeSection(row, 20); 
-	*/
+	void Log::onSliderPressed(void)
+	{
+		m_bSliderPressed = true;
+	}
+
+	void Log::onSliderReleased(void)
+	{
+		m_bSliderPressed = false;
+	}
 }

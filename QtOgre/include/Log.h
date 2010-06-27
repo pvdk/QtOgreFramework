@@ -76,6 +76,9 @@ namespace QtOgre
 		//New Models
 		LogModel* mLogModel; //holds all log data
 		LogModelSortFilterProxy *mProxyModel; //proxy for sorting/filtering the mLogModel
+
+		//Used to disable autoscrolling when user grabs scrollbar
+		bool m_bSliderPressed;
 		
 	private slots:
 		void writeMessageToHTML(LogEntry *entry);
@@ -84,6 +87,9 @@ namespace QtOgre
 		// Logging is implemented as a slot so that the Qt signal-slot
 		// mechanism can ensure it is always called on the main thread.
 		void logMessageImpl(const QString& message, LogLevel logLevel);
+
+		void onSliderPressed(void);
+		void onSliderReleased(void);
 	};
 }
 

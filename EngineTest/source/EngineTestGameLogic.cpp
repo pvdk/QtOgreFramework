@@ -1,4 +1,4 @@
-#include "DemoGameLogic.h"
+#include "EngineTestGameLogic.h"
 
 #include "DotSceneHandler.h"
 #include "MainMenu.h"
@@ -43,17 +43,36 @@ using namespace QtOgre;
 		{ return &static_cast<QtMetaObject*>(0)->staticQtMetaObject; }
 	};
 
-	DemoGameLogic::DemoGameLogic(void)
+	EngineTestGameLogic::EngineTestGameLogic(void)
 		:GameLogic()
 	{
 	}
 
-	void DemoGameLogic::initialise(void)
+	void EngineTestGameLogic::initialise(void)
 	{
 		scriptEngine = new QScriptEngine;
 
-		scriptEngine->importExtension("qt.core");
-		scriptEngine->importExtension("qt.gui");
+		QDir dir("C:\\qt\\qt-labs-qtscriptgenerator\\plugins");
+		QStringList paths = qApp->libraryPaths();
+		paths <<  dir.absolutePath();
+		qApp->setLibraryPaths(paths);
+
+		QString temp;
+		foreach(temp, paths)
+		{
+			qCritical() << temp;
+		}
+
+		QScriptValue retCore = scriptEngine->importExtension("qt.core");
+		QScriptValue retGui = scriptEngine->importExtension("qt.gui");
+		if(retCore.isError())
+		{
+			qCritical() << "Failed to load core plugin";
+		}
+		if(retGui.isError())
+		{
+			qCritical() << "Failed to load gui plugin";
+		}
 
 
 		QScriptValue keyboardScriptValue = scriptEngine->newQObject(&keyboard);
@@ -81,10 +100,13 @@ using namespace QtOgre;
 			"vec = new OgreVector3;"
 			"vec.x = 0.0;"
 			"vec.y = 0.0;"
-			"vec.z = 0.0;"
+			"vec.z = 0.0;"			
+			"var vector = new QVector3D();"
+			"vector.setX(-1.0);"
+			"print('vector = ', vector);"
 			"if(keyboard.isPressed(Qt.Key_W))"
 			"{"			
-			"	vec.z = -1.0;"
+			"	vec.z = vector.x();"
 			"}"
 			"if(keyboard.isPressed(Qt.Key_S))"
 			"{"			
@@ -127,7 +149,7 @@ using namespace QtOgre;
 
 		//qApp->setStyleSheet(qApp->settings()->value("UI/StyleFile").toString());
 		
-		mDemoLog = mApplication->createLog("Demo");
+		mDemoLog = mApplication->createLog("EngineTest");
 
 		mApplication->showLogManager();
 
@@ -193,7 +215,7 @@ using namespace QtOgre;
 		scriptEngine->globalObject().setProperty("cameraRight", cameraRightScriptValue);*/
 	}
 
-	void DemoGameLogic::update(void)
+	void EngineTestGameLogic::update(void)
 	{
 		mLastFrameTime = mCurrentTime;
 		mCurrentTime = mTime->elapsed();
@@ -227,13 +249,13 @@ using namespace QtOgre;
 		mouse.resetWheelDelta();
 	}
 
-	void DemoGameLogic::shutdown(void)
+	void EngineTestGameLogic::shutdown(void)
 	{
 		mSceneManager->clearScene();
 		Ogre::Root::getSingleton().destroySceneManager(mSceneManager);
 	}
 
-	void DemoGameLogic::onKeyPress(QKeyEvent* event)
+	void EngineTestGameLogic::onKeyPress(QKeyEvent* event)
 	{
 		keyboard.press(event->key());
 
@@ -244,12 +266,12 @@ using namespace QtOgre;
 		}
 	}
 
-	void DemoGameLogic::onKeyRelease(QKeyEvent* event)
+	void EngineTestGameLogic::onKeyRelease(QKeyEvent* event)
 	{
 		keyboard.release(event->key());
 	}
 
-	void DemoGameLogic::onMousePress(QMouseEvent* event)
+	void EngineTestGameLogic::onMousePress(QMouseEvent* event)
 	{
 		mouse.press(event->button());
 
@@ -258,29 +280,29 @@ using namespace QtOgre;
 		mouse.resetDelta();
 	}
 
-	void DemoGameLogic::onMouseRelease(QMouseEvent* event)
+	void EngineTestGameLogic::onMouseRelease(QMouseEvent* event)
 	{
 		mouse.release(event->button());
 	}
 
-	void DemoGameLogic::onMouseMove(QMouseEvent* event)
+	void EngineTestGameLogic::onMouseMove(QMouseEvent* event)
 	{
 		//mCurrentMousePos = event->pos();
 		mouse.setPos(event->pos());
 	}
 
-	void DemoGameLogic::onWheel(QWheelEvent* event)
+	void EngineTestGameLogic::onWheel(QWheelEvent* event)
 	{
 		//mCurrentWheelPos += event->delta();
 		mouse.modifyWheelDelta(event->delta());
 	}
 
-	Log* DemoGameLogic::demoLog(void)
+	Log* EngineTestGameLogic::demoLog(void)
 	{
 		return mDemoLog;
 	}
 
-	void DemoGameLogic::loadScene(QString filename)
+	void EngineTestGameLogic::loadScene(QString filename)
 	{
 		//The QtOgre DotScene loading code will clear the existing scene except for cameras, as these
 		//could be used by existing viewports. Therefore we clear and viewports and cameras before
