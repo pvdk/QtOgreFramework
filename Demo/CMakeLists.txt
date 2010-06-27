@@ -3,23 +3,17 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 PROJECT(Demo)
 
 SET(SRC_FILES
-	source/CameraWrapper.cpp
 	source/main.cpp
-	source/Mouse.cpp
 	source/ChooseMeshWidget.cpp
 	source/DemoGameLogic.cpp
-	source/Keyboard.cpp
 	source/MainMenu.cpp
 	source/StyleSettingsWidget.cpp
 )
 
 SET(INC_FILES
-	include/CameraWrapper.h
 	include/ChooseMeshWidget.h
 	include/DemoGameLogic.h
-	include/Keyboard.h
 	include/MainMenu.h
-	include/Mouse.h
 	include/StyleSettingsWidget.h
 )
 
@@ -39,8 +33,6 @@ SOURCE_GROUP("Headers" FILES ${INC_FILES})
 
 FIND_PACKAGE(Qt4)
 SET(QT_USE_QTGUI 1)
-SET(QT_USE_QTSCRIPT 1)
-SET(QT_USE_QTSCRIPTTOOLS 1)
 SET(QT_USE_QTXML 1)
 INCLUDE(${QT_USE_FILE})
 

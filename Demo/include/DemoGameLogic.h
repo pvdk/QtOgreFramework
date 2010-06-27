@@ -1,84 +1,73 @@
 #ifndef DEMOGAMELOGIC_H_
 #define DEMOGAMELOGIC_H_
 
-#include "CameraWrapper.h"
 #include "ChooseMeshWidget.h"
 #include "GameLogic.h"
-#include "Keyboard.h"
-#include "Mouse.h"
 #include "MainMenu.h"
 
-#include <OgreCamera.h>
 #include <OgrePrerequisites.h>
 
 #include <QHash>
 
 #include <QTime>
 
-#include <QtScript>
-#include <QScriptEngineDebugger>
-
-
-class StyleSettingsWidget;
-	
-class DemoGameLogic : public QtOgre::GameLogic
+namespace QtOgre
 {
-public:
-	DemoGameLogic(void);
+	enum KeyStates
+	{
+		KS_RELEASED,
+		KS_PRESSED
+	};
+	
+	class StyleSettingsWidget;
+	
+	class DemoGameLogic : public GameLogic
+	{
+	public:
+		DemoGameLogic(void);
 
-	void initialise(void);
-	void update(void);
-	void shutdown(void);
+		void initialise(void);
+		void update(void);
+		void shutdown(void);
 
-	void onKeyPress(QKeyEvent* event);
-	void onKeyRelease(QKeyEvent* event);
+		void onKeyPress(QKeyEvent* event);
+		void onKeyRelease(QKeyEvent* event);
 
-	void onMouseMove(QMouseEvent* event);
-	void onMousePress(QMouseEvent* event);
-	void onMouseRelease(QMouseEvent* event);
+		void onMouseMove(QMouseEvent* event);
+		void onMousePress(QMouseEvent* event);
 
-	void onWheel(QWheelEvent* event);
+		void onWheel(QWheelEvent* event);
 
-	QtOgre::Log* demoLog(void);
+		QtOgre::Log* demoLog(void);
 
-	void loadScene(QString filename);
+		void loadScene(QString filename);
 
-private:
-	Keyboard keyboard;
-	Mouse mouse;
-	/*QPoint mLastFrameMousePos;
-	QPoint mCurrentMousePos;*/
+	private:
+		QHash<int, KeyStates> mKeyStates;
+		QPoint mLastFrameMousePos;
+		QPoint mCurrentMousePos;
 
-	/*int mLastFrameWheelPos;
-	int mCurrentWheelPos;*/
-	QTime* mTime;
+		int mLastFrameWheelPos;
+		int mCurrentWheelPos;
+		QTime* mTime;
 
-	int mLastFrameTime;
-	int mCurrentTime;
+		int mLastFrameTime;
+		int mCurrentTime;
 
-	bool mIsFirstFrame;
+		bool mIsFirstFrame;
 
-	float mCameraSpeed;
+		float mCameraSpeed;
 
-	ChooseMeshWidget* mChooseMeshWidget;
+		ChooseMeshWidget* mChooseMeshWidget;
 
-	MainMenu* mMainMenu;
+		MainMenu* mMainMenu;
 		
-	StyleSettingsWidget* mStyleSettingsWidget;
+		StyleSettingsWidget* mStyleSettingsWidget;
 
-	Ogre::Camera* mCamera;
-	Ogre::SceneManager* mSceneManager;
-	QtOgre::Log* mDemoLog;
-
-	//Scripting
-	QScriptEngine* scriptEngine;
-	QString updateScript;
-	CameraWrapper cameraWrapper;
-	QScriptValue cameraPositionScriptValue;
-	QScriptValue cameraDirectionScriptValue;
-	QScriptValue cameraRightScriptValue;
-
-	QScriptEngineDebugger debugger;
-};
+		Ogre::Camera* mCamera;
+		Ogre::SceneManager* mSceneManager;
+		QtOgre::Log* mDemoLog;
+	};
+}
 
 #endif /*DEMOGAMELOGIC_H_*/

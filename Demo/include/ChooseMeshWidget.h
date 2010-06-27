@@ -5,22 +5,25 @@
 
 #include "OgrePrerequisites.h"
 
-class DemoGameLogic;
-
-class ChooseMeshWidget : public QWidget, private Ui::ChooseMeshWidget
+namespace QtOgre
 {
-	Q_OBJECT
+	class DemoGameLogic;
 
-public:
-	ChooseMeshWidget(Ogre::Entity* jaiquaEntity, Ogre::Entity* robotEntity, QWidget *parent = 0);
+	class ChooseMeshWidget : public QWidget, private Ui::ChooseMeshWidget
+	{
+		Q_OBJECT
 
-public slots:
-	void on_mJaiquaRadioButton_toggled(bool checked);
-	void on_mRobotRadioButton_toggled(bool checked);
+	public:
+		ChooseMeshWidget(Ogre::Entity* jaiquaEntity, Ogre::Entity* robotEntity, QWidget *parent = 0);
 
-private:
-	Ogre::Entity* mJaiquaEntity;
-	Ogre::Entity* mRobotEntity;
-};
+	public slots:
+		void on_mJaiquaRadioButton_toggled(bool checked);
+		void on_mRobotRadioButton_toggled(bool checked);
+
+	private:
+		Ogre::Entity* mJaiquaEntity;
+		Ogre::Entity* mRobotEntity;
+	};
+}
 
 #endif /*CHOOSEMESHWIDGET_H_*/

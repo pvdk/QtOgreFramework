@@ -5,23 +5,27 @@
 
 #include "Application.h"
 
-class MainMenu : public QDialog, private Ui::MainMenu
+namespace QtOgre
 {
-	Q_OBJECT
 
-public:
-	MainMenu(QtOgre::Application* application, QWidget* mainWidget, QWidget *parent = 0);
+	class MainMenu : public QDialog, private Ui::MainMenu
+	{
+		Q_OBJECT
 
-public slots:
-	void on_mQuitButton_clicked(void);
-	void on_mResumeButton_clicked(void);
-	void on_mSettingsButton_clicked(void);
-	void on_mViewLogsButton_clicked(void);
+	public:
+		MainMenu(Application* application, QWidget* mainWidget, QWidget *parent = 0);
 
-private:
-	QtOgre::Application *mApplication;
-	QWidget* mMainWidget;
+	public slots:
+		void on_mQuitButton_clicked(void);
+		void on_mResumeButton_clicked(void);
+		void on_mSettingsButton_clicked(void);
+		void on_mViewLogsButton_clicked(void);
 
-};
+	private:
+		Application *mApplication;
+		QWidget* mMainWidget;
+
+	};
+}
 
 #endif /*MAINMENU_H_*/

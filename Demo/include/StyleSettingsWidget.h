@@ -5,21 +5,25 @@
 
 #include <AbstractSettingsWidget.h>
 
-class StyleSettingsWidget : public QtOgre::AbstractSettingsWidget, private Ui::StyleSettingsWidget
+namespace QtOgre
 {
-	Q_OBJECT
 
-public:
-	StyleSettingsWidget(QWidget *parent = 0);
+	class StyleSettingsWidget : public AbstractSettingsWidget, private Ui::StyleSettingsWidget
+	{
+		Q_OBJECT
 
-	void disableFirstTimeOnlySettings(void);
+	public:
+		StyleSettingsWidget(QWidget *parent = 0);
 
-public slots:
-	void readFromSettings(void);
-	void writeToSettings(void);
+		void disableFirstTimeOnlySettings(void);
+
+	public slots:
+		void readFromSettings(void);
+		void writeToSettings(void);
 		
-private slots:
-	void chooseStyleFile(bool);
-};
+	private slots:
+		void chooseStyleFile(bool);
+	};
+}
 
 #endif /*QTOGRE_STYLESETTINGSWIDGET_H_*/
