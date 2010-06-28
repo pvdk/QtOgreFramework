@@ -29,15 +29,10 @@ namespace QtOgre
 
 	public slots:
 		//TODO: make slots for debug, warning, etc...
-		void append(int line, const QString &file, const QString &msg, LogLevel level);
-	
-	signals:
-		// slots can't return values, so we'll fire this signal 
-	    // when items are added and let Qt handle dispatching
-		void entry_added(LogEntry*);
+		void append(const LogEntry& logEntry);
 
 	private:
-		QList<LogEntry*> mEntries;
+		QList<LogEntry> mEntries;
 		Log *mLog;
 	};
 }

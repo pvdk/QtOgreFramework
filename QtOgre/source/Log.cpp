@@ -28,7 +28,6 @@ namespace QtOgre
 		connect(showErrorsButton, SIGNAL(toggled(bool)), this, SLOT(computeVisibleMessageTypes(bool)));
 		connect(filterLineEdit, SIGNAL(textChanged(const QString&)), mProxyModel, SLOT(setFilterFixedString(const QString&)));
 		connect(clearFilterButton, SIGNAL(pressed()), filterLineEdit, SLOT(clear()));
-		connect(mLogModel, SIGNAL(entry_added(LogEntry*)), this, SLOT(writeMessageToHTML(LogEntry*)));
 
 		connect(m_pLogTable->verticalScrollBar(), SIGNAL(sliderPressed(void)), this, SLOT(onSliderPressed(void)));
 		connect(m_pLogTable->verticalScrollBar(), SIGNAL(sliderReleased(void)), this, SLOT(onSliderReleased(void)));
@@ -146,19 +145,15 @@ namespace QtOgre
 
 	void Log::logMessage(const QString& message, LogLevel logLevel)
 	{
-		/*mLogModel->append(0, "file", message, logLevel);
-		m_pLogTable->verticalHeader()->resizeSection(mLogModel->rowCount() - 1, 14);
-		m_pLogTable->scrollToBottom();
-		if(mForceProcessEvents)	{
-			qApp->processEvents();
-		}*/
-
 		emit _logMessageReceived(message, logLevel);
 	}
 
 	void Log::logMessageImpl(const QString& message, LogLevel logLevel)
 	{
-		mLogModel->append(0, "file", message, logLevel);
+		LogEntry logEntry(message, logLevel);
+		writeMessageToHTML(logEntry);
+
+		mLogModel->append(logEntry);
 		m_pLogTable->verticalHeader()->resizeSection(mLogModel->rowCount() - 1, 14);
 		if(!m_bSliderPressed)
 		{
@@ -199,11 +194,11 @@ namespace QtOgre
 			<< "<tbody>" << endl;
 	}
 
-	void Log::writeMessageToHTML(LogEntry *entry) 
+	void Log::writeMessageToHTML(LogEntry entry) 
 	{
 		QString colour;
 		QString icon;
-		switch(entry->getLevel())
+		switch(entry.getLevel())
 		{
 		case LL_DEBUG:
 			colour = "white";
@@ -229,10 +224,10 @@ namespace QtOgre
 			<< "<img src=\"images/" << icon << "\">"
 			<< "</td>"
 			<< "<td style=\"width: 90px;\"><span style=\"color: " << colour << ";\">"
-			<< entry->getData(0).toTime().toString("hh:mm:ss a") << " - "
+			<< entry.getTimestamp().toString("hh:mm:ss a") << " - "
 			<< "</span></td>"
 			<< "<td><span style=\"color: " << colour << ";\">"
-			<< entry->getData(3).toString()
+			<< entry.getMessage()
 			<< "</span></td></tr>" << endl;
 
 	}

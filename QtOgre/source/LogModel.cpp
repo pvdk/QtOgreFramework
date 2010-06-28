@@ -7,7 +7,7 @@ namespace QtOgre
 {
 	LogModel::LogModel(Log *log, QObject *parent)
 		:QAbstractTableModel(parent)
-		,mEntries(QList<LogEntry*>())
+		,mEntries(QList<LogEntry>())
 		,mLog(log)
 	{
 	}
@@ -25,7 +25,7 @@ namespace QtOgre
 		}
 
 		// valid index, so go fetch the entry object
-		LogEntry *entry = mEntries.at(index.row());
+		LogEntry entry = mEntries.at(index.row());
 		switch (role)
 		{
 			case Qt::DecorationRole: // called to show icons
@@ -33,20 +33,27 @@ namespace QtOgre
 				if (index.column() == 0)
 				{ 
 					// re-use the same QIcons that the Log owner created
-					return mLog->getIcon(entry->getLevel());
+					return mLog->getIcon(entry.getLevel());
 				}
 				else
 				{
 					return QVariant();
 				}
 			case Qt::DisplayRole:
-				return entry->getData(index.column());
+				if(index.column() == 0)
+				{
+					return QVariant(entry.getTimestamp());
+				}
+				else if(index.column() == 3)
+				{
+					return QVariant(entry.getMessage());
+				}
 			case Qt::ForegroundRole:
-				return mLog->getForegroundColour(entry->getLevel());
+				return mLog->getForegroundColour(entry.getLevel());
 			case Qt::UserRole:
-				return entry->getLevel();
+				return entry.getLevel();
 			case Qt::ToolTipRole:
-				return entry->getData(3);
+				return QVariant(entry.getMessage());
 			default: //some other role we don't really care about
 				return QVariant();
 		}
@@ -84,17 +91,14 @@ namespace QtOgre
 		}
 	}
 
-	void LogModel::append(int line, const QString &file, const QString &msg, LogLevel level)
+	void LogModel::append(const LogEntry& logEntry)
 	{		
 		//TODO: we could buffer appends up and only emit the change signals every 
 		//Nth entry or every few secondsthis would probably be more efficient
-
-		LogEntry *entry = new LogEntry(line, file, msg, level, this);
-		mEntries.append(entry);
+		mEntries.append(logEntry);
 
 		// if we don't emit these signals, the view never knows to update
 		emit layoutAboutToBeChanged(); 
 		emit layoutChanged(); // causes a redraw
-		emit entry_added(entry);
 	}
 }

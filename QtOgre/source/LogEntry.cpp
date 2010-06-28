@@ -2,35 +2,25 @@
 
 namespace QtOgre
 {
-	LogEntry::LogEntry(int line, const QString &file, const QString &msg, LogLevel level, QObject *parent)
-		:QObject(parent)
-		,mLine(line)
-		,mFile(file)
-		,mMsg(msg)
+	LogEntry::LogEntry(const QString &msg, LogLevel level)
+		:mMsg(msg)
 		,mLevel(level)
 		,mTimestamp(QTime::currentTime())
 	{
 	}
 
-	LogLevel LogEntry::getLevel()
+	LogLevel LogEntry::getLevel(void)
 	{
 		return mLevel;
 	}
 
-	QVariant LogEntry::getData(int column) 
+	const QString& LogEntry::getMessage(void)
 	{
-		switch(column)
-		{
-			case 0:
-				return QVariant(mTimestamp);
-			case 1:
-				return QVariant(mLine);
-			case 2:
-				return QVariant(mFile);
-			case 3:
-				return QVariant(mMsg);
-			default:
-				return QVariant();
-		}
+		return mMsg;
+	}
+
+	const QTime& LogEntry::getTimestamp(void)
+	{
+		return mTimestamp;
 	}
 }

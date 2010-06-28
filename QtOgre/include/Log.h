@@ -48,6 +48,7 @@ namespace QtOgre
 		//Private methods for writing HTML
 		void writeHTMLHeader(void);
 		void writeHTMLTail(void);
+		void writeMessageToHTML(LogEntry entry);
 
 		//This is used as a bitfield to determine what message types are enabled
 		int mVisibleMessageTypes;
@@ -81,7 +82,6 @@ namespace QtOgre
 		bool m_bSliderPressed;
 		
 	private slots:
-		void writeMessageToHTML(LogEntry *entry);
 		void computeVisibleMessageTypes(bool ignored);
 
 		// Logging is implemented as a slot so that the Qt signal-slot
