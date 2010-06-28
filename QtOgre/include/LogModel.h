@@ -11,6 +11,7 @@ namespace QtOgre
 	class LogEntry;
 
 	const int LOG_COLUMN_COUNT = 4; //Do we really need this?
+	const int LOG_FILTER_COLUMN = 3; //Do we really need this?
 
 	// A simple model that will let us customize display, sorting, and filtering of log messages
 	class LogModel : public QAbstractTableModel

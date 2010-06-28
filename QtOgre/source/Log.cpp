@@ -40,7 +40,7 @@ namespace QtOgre
 		
 		//Create a sort/filter proxy of our log entries model so we can sort and filter it :)
 		mProxyModel->setSourceModel(mLogModel); // the proxy should point to the real model
-		mProxyModel->setFilterKeyColumn(3); // the message column (for filtering by regex) TODO: nuke the MAGIC NUMBER!
+		mProxyModel->setFilterKeyColumn(LOG_FILTER_COLUMN); // the message column (for filtering by regex) TODO: nuke the MAGIC NUMBER!
 		mProxyModel->setDynamicSortFilter(true); // keep filtering updated when data changes
 		m_pLogTable->setModel(mProxyModel); // the view points to our proxy
 		m_pLogTable->setSortingEnabled(false); // no need for sorting and it seems to get slow
