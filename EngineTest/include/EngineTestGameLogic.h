@@ -44,6 +44,8 @@ public:
 	void loadScene(QString filename);
 
 private:
+	void initScriptEngine(void);
+
 	Keyboard keyboard;
 	Mouse mouse;
 	/*QPoint mLastFrameMousePos;
