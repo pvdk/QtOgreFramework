@@ -1,13 +1,12 @@
 #include "EngineTestGameLogic.h"
 
+#include "Application.h"
 #include "DotSceneHandler.h"
-#include "MainMenu.h"
 #include "Scripting/OgreRadianClass.h"
 #include "Scripting/OgreVector3Class.h"
 
 #include "LogManager.h"
 #include "OgreWidget.h"
-#include "StyleSettingsWidget.h"
 
 #include <OgreEntity.h>
 #include <OgreRenderWindow.h>
@@ -147,15 +146,6 @@ void EngineTestGameLogic::initialise(void)
 
 	mSceneManager->setAmbientLight( Ogre::ColourValue( 1, 1, 1 ) );
 
-	//Create the MainMenu
-	mMainMenu = new MainMenu(qApp, qApp->mainWidget());
-
-	//Create widget to choose between models
-	//mChooseMeshWidget = new ChooseMeshWidget(mJaiquaEntity, mRobotEntity, qApp->mainWidget());
-	//mChooseMeshWidget->setWindowOpacity(qApp->settings()->value("System/DefaultWindowOpacity", 1.0).toDouble());
-	//mChooseMeshWidget->move(qApp->mainWidget()->geometry().left() + qApp->mainWidget()->geometry().width() - mChooseMeshWidget->frameGeometry().width() - 10, qApp->mainWidget()->geometry().top() + 10);
-	//mChooseMeshWidget->show();
-
 	mTime = new QTime;
 	mTime->start();
 
@@ -180,8 +170,6 @@ void EngineTestGameLogic::initialise(void)
 
 	mApplication->showFPSCounter();
 		
-	mStyleSettingsWidget = new StyleSettingsWidget;
-	mApplication->addSettingsWidget("Style", mStyleSettingsWidget);
 
 	/*cameraPositionScriptValue = scriptEngine->toScriptValue(mCamera->getPosition());
 	cameraDirectionScriptValue = scriptEngine->toScriptValue(mCamera->getDirection());
@@ -235,12 +223,6 @@ void EngineTestGameLogic::shutdown(void)
 void EngineTestGameLogic::onKeyPress(QKeyEvent* event)
 {
 	keyboard.press(event->key());
-
-	if(event->key() == Qt::Key_Escape)
-	{
-		//qApp->centerWidget(mMainMenu, qApp->mMainWindow);
-		mMainMenu->exec();
-	}
 }
 
 void EngineTestGameLogic::onKeyRelease(QKeyEvent* event)

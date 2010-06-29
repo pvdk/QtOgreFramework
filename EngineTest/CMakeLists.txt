@@ -6,31 +6,22 @@ SET(SRC_FILES
 	source/CameraWrapper.cpp
 	source/main.cpp
 	source/Mouse.cpp
-	source/ChooseMeshWidget.cpp
 	source/EngineTestGameLogic.cpp
 	source/Keyboard.cpp
-	source/MainMenu.cpp
-	source/StyleSettingsWidget.cpp
 )
 
 SET(INC_FILES
 	include/CameraWrapper.h
-	include/ChooseMeshWidget.h
 	include/EngineTestGameLogic.h
 	include/Keyboard.h
-	include/MainMenu.h
 	include/Mouse.h
-	include/StyleSettingsWidget.h
 )
 
 SET(UI_FILES
-	ui/ChooseMeshWidget.ui
-	ui/MainMenu.ui
-	ui/StyleSettingsWidget.ui
 )
 
 SET(RESOURCE_FILES
-	resources/DemoResources.qrc
+	resources/EngineTestResources.qrc
 )
 
 #"Sources" and "Headers" are the group names in Visual Studio.

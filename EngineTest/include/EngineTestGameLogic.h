@@ -2,11 +2,10 @@
 #define ENGINETESTGAMELOGIC_H_
 
 #include "CameraWrapper.h"
-#include "ChooseMeshWidget.h"
 #include "GameLogic.h"
+#include "Log.h"
 #include "Keyboard.h"
 #include "Mouse.h"
-#include "MainMenu.h"
 
 #include <OgreCamera.h>
 #include <OgrePrerequisites.h>
@@ -61,10 +60,6 @@ private:
 	bool mIsFirstFrame;
 
 	float mCameraSpeed;
-
-	ChooseMeshWidget* mChooseMeshWidget;
-
-	MainMenu* mMainMenu;
 		
 	StyleSettingsWidget* mStyleSettingsWidget;
 
