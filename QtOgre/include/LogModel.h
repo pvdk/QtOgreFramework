@@ -2,6 +2,7 @@
 #define QTOGRE_LOGMODEL_H_
 
 #include "LogLevel.h"
+#include "LogEntry.h"
 
 #include <QAbstractTableModel>
 

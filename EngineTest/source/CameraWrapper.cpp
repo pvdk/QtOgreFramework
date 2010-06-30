@@ -32,3 +32,25 @@ void CameraWrapper::setFOVy (const Ogre::Radian& fovy)
 {
 	m_pOgreCamera->setFOVy(fovy);
 }
+
+QVector3D CameraWrapper::getPosition(void)
+{
+	Ogre::Vector3 pos = m_pOgreCamera->getPosition();
+	return QVector3D(pos.x, pos.y, pos.z);
+}
+
+void CameraWrapper::setPosition(const QVector3D& pos)
+{
+	m_pOgreCamera->setPosition(pos.x(), pos.y(), pos.z());
+}
+
+QVector3D CameraWrapper::getDirection(void)
+{
+	Ogre::Vector3 dir = m_pOgreCamera->getDirection();
+	return QVector3D(dir.x, dir.y, dir.z);
+}
+
+void CameraWrapper::setDirection(const QVector3D& dir)
+{
+	m_pOgreCamera->setDirection(dir.x(), dir.y(), dir.z());
+}

@@ -5,6 +5,7 @@
 #include <OgreMath.h>
 
 #include <QObject>
+#include <QVector3D>
 
 class CameraWrapper : public QObject
 {
@@ -23,6 +24,12 @@ public slots:
 	Ogre::Radian getFOVy  (void) const;
 
 	void setFOVy (const Ogre::Radian& fovy);
+
+	QVector3D getPosition(void);
+	void setPosition(const QVector3D& pos);
+
+	QVector3D getDirection(void);
+	void setDirection(const QVector3D& pos);
 
 private:
 	Ogre::Camera* m_pOgreCamera;

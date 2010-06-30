@@ -16,7 +16,7 @@
 #include <QKeyEvent>
 #include <QMouseEvent>
 #include <QSettings>
-#include <QStringList.h>
+#include <QStringList>
 #include <QMetaObject>
 
 using namespace QtOgre;
@@ -72,31 +72,32 @@ void EngineTestGameLogic::initialise(void)
 	OgreRadianClass *radianClass = new OgreRadianClass(scriptEngine);
 	scriptEngine->globalObject().setProperty("OgreRadian", radianClass->constructor());
 
-	updateScript =
-		"vec = new OgreVector3;"
-		"vec.x = 0.0;"
-		"vec.y = 0.0;"
-		"vec.z = 0.0;"			
-		"var vector = new QVector3D();"
-		"vector.setX(-1.0);"
-		"print('vector = ', vector);"
+	updateScript =		
+		"var pos = camera.getPosition();"
+		"var dir = camera.getDirection();"		
 		"if(keyboard.isPressed(Qt.Key_W))"
 		"{"			
-		"	vec.z = vector.x();"
+		//"	pos.setZ(pos.z() - 1.0);"
+		"	print('pos before = ', pos);"
+		//"	pos += dir;"
+		"	pos.setX(pos.x() + dir.x());"
+		"	pos.setY(pos.y() + dir.y());"
+		"	pos.setZ(pos.z() + dir.z());"
+		"	print('pos after  = ', pos);"
 		"}"
 		"if(keyboard.isPressed(Qt.Key_S))"
 		"{"			
-		"	vec.z = 1.0;"
+		"	pos.setZ(pos.z() + 1.0);"
 		"}"
 		"if(keyboard.isPressed(Qt.Key_A))"
 		"{"			
-		"	vec.x = -1.0;"
+		"	pos.setX(pos.x() - 1.0);"
 		"}"
 		"if(keyboard.isPressed(Qt.Key_D))"
 		"{"			
-		"	vec.x = 1.0;"
-		"}"
-		"camera.moveRelative(vec);"
+		"	pos.setX(pos.x() + 1.0);"
+		"}"		
+		"camera.setPosition(pos);"
 		"if(mouse.isPressed(Qt.RightButton))"
 		"{"
 		"	mouseDelta = mouse.computeDelta();"
@@ -108,12 +109,12 @@ void EngineTestGameLogic::initialise(void)
 		"	camera.pitch(new OgreRadian(-mouseDelta.y * 0.01));"
 		"}"
 		"wheelDelta = mouse.getWheelDelta();"
-		"print('wheelDelta = ', wheelDelta);"
+		//"print('wheelDelta = ', wheelDelta);"
 		"fov = camera.getFOVy();"
-		"print('old fov = ', fov.valueRadians);"
+		//"print('old fov = ', fov.valueRadians);"
 		"tempFOV = new OgreRadian(-wheelDelta * 0.001);"
 		"fov.valueRadians = fov.valueRadians + tempFOV.valueRadians;"
-		"print('new fov = ', fov.valueRadians);"
+		//"print('new fov = ', fov.valueRadians);"
 		"camera.setFOVy(fov);"
 		;
 
