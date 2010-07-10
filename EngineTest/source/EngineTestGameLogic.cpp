@@ -73,31 +73,35 @@ void EngineTestGameLogic::initialise(void)
 	scriptEngine->globalObject().setProperty("OgreRadian", radianClass->constructor());
 
 	updateScript =		
-		"var pos = camera.getPosition();"
-		"var dir = camera.getDirection();"		
+		"var pos = camera.position;"
+		"var dir = camera.direction;"		
+		"var right = camera.right;"
 		"if(keyboard.isPressed(Qt.Key_W))"
 		"{"			
-		//"	pos.setZ(pos.z() - 1.0);"
-		"	print('pos before = ', pos);"
 		//"	pos += dir;"
 		"	pos.setX(pos.x() + dir.x());"
 		"	pos.setY(pos.y() + dir.y());"
 		"	pos.setZ(pos.z() + dir.z());"
-		"	print('pos after  = ', pos);"
 		"}"
 		"if(keyboard.isPressed(Qt.Key_S))"
 		"{"			
-		"	pos.setZ(pos.z() + 1.0);"
+		"	pos.setX(pos.x() - dir.x());"
+		"	pos.setY(pos.y() - dir.y());"
+		"	pos.setZ(pos.z() - dir.z());"
 		"}"
 		"if(keyboard.isPressed(Qt.Key_A))"
 		"{"			
-		"	pos.setX(pos.x() - 1.0);"
+		"	pos.setX(pos.x() - right.x());"
+		"	pos.setY(pos.y() - right.y());"
+		"	pos.setZ(pos.z() - right.z());"
 		"}"
 		"if(keyboard.isPressed(Qt.Key_D))"
 		"{"			
-		"	pos.setX(pos.x() + 1.0);"
+		"	pos.setX(pos.x() + right.x());"
+		"	pos.setY(pos.y() + right.y());"
+		"	pos.setZ(pos.z() + right.z());"
 		"}"		
-		"camera.setPosition(pos);"
+		"camera.position = pos;"
 		"if(mouse.isPressed(Qt.RightButton))"
 		"{"
 		"	mouseDelta = mouse.computeDelta();"
@@ -170,6 +174,9 @@ void EngineTestGameLogic::initialise(void)
 	}
 
 	mApplication->showFPSCounter();
+
+	m_pScriptEditorWidget = new ScriptEditorWidget(qApp->mainWidget());
+	m_pScriptEditorWidget->show();
 		
 
 	/*cameraPositionScriptValue = scriptEngine->toScriptValue(mCamera->getPosition());

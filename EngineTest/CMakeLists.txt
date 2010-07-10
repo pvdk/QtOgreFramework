@@ -8,6 +8,7 @@ SET(SRC_FILES
 	source/Mouse.cpp
 	source/EngineTestGameLogic.cpp
 	source/Keyboard.cpp
+	source/ScriptEditorWidget.cpp
 )
 
 SET(INC_FILES
@@ -15,9 +16,11 @@ SET(INC_FILES
 	include/EngineTestGameLogic.h
 	include/Keyboard.h
 	include/Mouse.h
+	include/ScriptEditorWidget.h
 )
 
 SET(UI_FILES
+	ui/ScriptEditorWidget.ui
 )
 
 SET(RESOURCE_FILES

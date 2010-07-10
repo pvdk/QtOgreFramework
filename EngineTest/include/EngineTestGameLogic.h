@@ -6,6 +6,7 @@
 #include "Log.h"
 #include "Keyboard.h"
 #include "Mouse.h"
+#include "ScriptEditorWidget.h"
 
 #include <OgreCamera.h>
 #include <OgrePrerequisites.h>
@@ -76,6 +77,8 @@ private:
 	QScriptValue cameraRightScriptValue;
 
 	QScriptEngineDebugger debugger;
+
+	ScriptEditorWidget* m_pScriptEditorWidget;
 };
 
 #endif /*ENGINETESTGAMELOGIC_H_*/
