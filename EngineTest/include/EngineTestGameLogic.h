@@ -70,7 +70,6 @@ private:
 
 	//Scripting
 	QScriptEngine* scriptEngine;
-	QString updateScript;
 	CameraWrapper cameraWrapper;
 	QScriptValue cameraPositionScriptValue;
 	QScriptValue cameraDirectionScriptValue;
