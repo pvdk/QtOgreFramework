@@ -44,7 +44,9 @@ public:
 
 EngineTestGameLogic::EngineTestGameLogic(void)
 	:GameLogic()
+	,m_bRunScript(true)
 {
+	
 }
 
 void EngineTestGameLogic::initialise(void)
@@ -127,6 +129,9 @@ void EngineTestGameLogic::initialise(void)
 
 	m_pScriptEditorWidget = new ScriptEditorWidget(qApp->mainWidget());
 	m_pScriptEditorWidget->show();
+
+	connect(m_pScriptEditorWidget, SIGNAL(play(void)), this, SLOT(startScriptingEngine(void)));
+	connect(m_pScriptEditorWidget, SIGNAL(stop(void)), this, SLOT(stopScriptingEngine(void)));
 		
 
 	/*cameraPositionScriptValue = scriptEngine->toScriptValue(mCamera->getPosition());
@@ -161,11 +166,15 @@ void EngineTestGameLogic::update(void)
 
 	mIsFirstFrame = false;
 
-	QScriptValue result = scriptEngine->evaluate(m_pScriptEditorWidget->getScriptCode());
-	if (scriptEngine->hasUncaughtException())
+
+	if(m_bRunScript)
 	{
-		int line = scriptEngine->uncaughtExceptionLineNumber();
-		qCritical() << "uncaught exception at line" << line << ":" << result.toString();
+		QScriptValue result = scriptEngine->evaluate(m_pScriptEditorWidget->getScriptCode());
+		if (scriptEngine->hasUncaughtException())
+		{
+			int line = scriptEngine->uncaughtExceptionLineNumber();
+			qCritical() << "uncaught exception at line" << line << ":" << result.toString();
+		}
 	}
 
 	mouse.resetDelta();
@@ -297,4 +306,14 @@ void EngineTestGameLogic::initScriptEngine(void)
                      qPrintable(failExtensions.join(", ")), qPrintable(qApp->libraryPaths().join(", ")));
         }
     }
+}
+
+void EngineTestGameLogic::startScriptingEngine(void)
+{
+	m_bRunScript = true;
+}
+
+void EngineTestGameLogic::stopScriptingEngine(void)
+{
+	m_bRunScript = false;
 }

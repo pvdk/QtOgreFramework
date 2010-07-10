@@ -9,6 +9,7 @@ ScriptEditorWidget::ScriptEditorWidget(QWidget *parent)
 	setupUi(this);
 
 	connect(m_pPlayButton, SIGNAL(clicked(void)), this, SIGNAL(play(void)));
+	connect(m_pStopButton, SIGNAL(clicked(void)), this, SIGNAL(stop(void)));
 
 	/*QString updateScript =		
 		"var pos = camera.position;\n"

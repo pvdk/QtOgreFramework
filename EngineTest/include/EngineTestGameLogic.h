@@ -21,8 +21,9 @@
 
 class StyleSettingsWidget;
 	
-class EngineTestGameLogic : public QtOgre::GameLogic
+class EngineTestGameLogic : public QObject, public QtOgre::GameLogic
 {
+	Q_OBJECT
 public:
 	EngineTestGameLogic(void);
 
@@ -42,6 +43,10 @@ public:
 	QtOgre::Log* demoLog(void);
 
 	void loadScene(QString filename);
+
+private slots:
+	void startScriptingEngine(void);
+	void stopScriptingEngine(void);
 
 private:
 	void initScriptEngine(void);
@@ -78,6 +83,8 @@ private:
 	QScriptEngineDebugger debugger;
 
 	ScriptEditorWidget* m_pScriptEditorWidget;
+
+	bool m_bRunScript;
 };
 
 #endif /*ENGINETESTGAMELOGIC_H_*/
