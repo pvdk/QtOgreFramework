@@ -45,3 +45,5 @@ tempFOV = new OgreRadian(-wheelDelta * 0.001);
 fov.valueRadians = fov.valueRadians + tempFOV.valueRadians;
 //print('new fov = ', fov.valueRadians);
 camera.setFOVy(fov);
+
+print('Colour = ', objectStore.getObject('BlueLight').Colour);

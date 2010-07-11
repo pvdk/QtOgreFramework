@@ -66,6 +66,9 @@ void EngineTestGameLogic::initialise(void)
 	Qt.setProperty("App", scriptEngine->newQObject(qApp));
 	scriptEngine->globalObject().setProperty("Qt", Qt);
 
+	QScriptValue objectStoreScriptValue = scriptEngine->newQObject(&mObjectStore);
+	scriptEngine->globalObject().setProperty("objectStore", objectStoreScriptValue);
+
 	qScriptRegisterMetaType(scriptEngine, toScriptValueQPoint, fromScriptValueQPoint);
 
 	OgreVector3Class *vecClass = new OgreVector3Class(scriptEngine);
@@ -143,6 +146,12 @@ void EngineTestGameLogic::initialise(void)
 	light->setColour(QColor(0, 255, 0));
 	m_Lights["GreenLight"] = light;
 
+	Light* blueLight = new Light();
+	blueLight->setPosition(QVector3D(0.0,0.0,0.0));
+	blueLight->setColour(QColor(0, 0, 255));
+	//m_Lights["GreenLight"] = blueLight;
+	mObjectStore.setObject("BlueLight", blueLight);
+
 }
 
 void EngineTestGameLogic::update(void)
@@ -182,28 +191,24 @@ void EngineTestGameLogic::update(void)
 	mouse.resetDelta();
 	mouse.resetWheelDelta();
 
-	//Update the lights
 	mSceneManager->destroyAllLights();
-	/*foreach(Light* light, m_Lights)
-	{
-		Ogre::Light* ogreLight = mSceneManager->createLight("pointLight");
-		pointLight->setType(Ogre::Light::LT_POINT);
-		pointLight->setPosition(Ogre::Vector3(0, 0, 0));
-		pointLight->setDiffuseColour(1.0, 0.0, 0.0);
-	}*/
-	QHashIterator<QString, Light*> lightIter(m_Lights);
+	QHashIterator<QString, QObject*> lightIter(mObjectStore);
 	while(lightIter.hasNext())
 	{
 		lightIter.next();
 
-		Ogre::Light* ogreLight = mSceneManager->createLight(lightIter.key().toStdString());
-		ogreLight->setType(Ogre::Light::LT_POINT);
+		Light* light = dynamic_cast<Light*>(lightIter.value());
+		if(light)
+		{
+			Ogre::Light* ogreLight = mSceneManager->createLight(lightIter.key().toStdString());
+			ogreLight->setType(Ogre::Light::LT_POINT);
 
-		QVector3D pos = lightIter.value()->getPosition();
-		ogreLight->setPosition(Ogre::Vector3(pos.x(), pos.y(), pos.z()));
+			QVector3D pos = light->getPosition();
+			ogreLight->setPosition(Ogre::Vector3(pos.x(), pos.y(), pos.z()));
 
-		QColor col = lightIter.value()->getColour();
-		ogreLight->setDiffuseColour(col.redF(), col.greenF(), col.blueF());
+			QColor col = light->getColour();
+			ogreLight->setDiffuseColour(col.redF(), col.greenF(), col.blueF());
+		}
 	}
 }
 

@@ -3,10 +3,11 @@
 
 #include "CameraWrapper.h"
 #include "GameLogic.h"
+#include "Keyboard.h"
 #include "Light.h"
 #include "Log.h"
-#include "Keyboard.h"
 #include "Mouse.h"
+#include "ObjectStore.h"
 #include "ScriptEditorWidget.h"
 
 #include <OgreCamera.h>
@@ -88,6 +89,8 @@ private:
 	bool m_bRunScript;
 
 	QHash<QString, Light*> m_Lights;
+
+	ObjectStore mObjectStore;
 };
 
 #endif /*ENGINETESTGAMELOGIC_H_*/
