@@ -4,6 +4,7 @@ PROJECT(EngineTest)
 
 SET(SRC_FILES
 	source/CameraWrapper.cpp
+	source/Light.cpp
 	source/main.cpp
 	source/Mouse.cpp
 	source/EngineTestGameLogic.cpp
@@ -15,6 +16,7 @@ SET(INC_FILES
 	include/CameraWrapper.h
 	include/EngineTestGameLogic.h
 	include/Keyboard.h
+	include/Light.h
 	include/Mouse.h
 	include/ScriptEditorWidget.h
 )

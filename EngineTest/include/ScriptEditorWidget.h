@@ -13,11 +13,8 @@ public:
 	QString getScriptCode(void);
 
 signals:
-	void play(void);
+	void start(void);
 	void stop(void);
-
-private slots:
-	//void on_m_pPlayButton_Clicked(void);
 
 };
 

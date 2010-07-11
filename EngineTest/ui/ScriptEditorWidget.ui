@@ -15,9 +15,9 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
-    <widget class="QPushButton" name="m_pPlayButton">
+    <widget class="QPushButton" name="m_pStartButton">
      <property name="text">
-      <string>Play</string>
+      <string>Start</string>
      </property>
     </widget>
    </item>

@@ -101,7 +101,7 @@ void EngineTestGameLogic::initialise(void)
 
 	//mApplication->ogreRenderWindow()->addViewport(mCamera)->setBackgroundColour(Ogre::ColourValue::Black);
 
-	mSceneManager->setAmbientLight( Ogre::ColourValue( 1, 1, 1 ) );
+	mSceneManager->setAmbientLight( Ogre::ColourValue( 0.3, 0.3, 0.3 ) );
 
 	mTime = new QTime;
 	mTime->start();
@@ -130,17 +130,19 @@ void EngineTestGameLogic::initialise(void)
 	m_pScriptEditorWidget = new ScriptEditorWidget(qApp->mainWidget());
 	m_pScriptEditorWidget->show();
 
-	connect(m_pScriptEditorWidget, SIGNAL(play(void)), this, SLOT(startScriptingEngine(void)));
+	connect(m_pScriptEditorWidget, SIGNAL(start(void)), this, SLOT(startScriptingEngine(void)));
 	connect(m_pScriptEditorWidget, SIGNAL(stop(void)), this, SLOT(stopScriptingEngine(void)));
 		
+	/*Ogre::Light* pointLight = mSceneManager->createLight("pointLight");
+    pointLight->setType(Ogre::Light::LT_POINT);
+    pointLight->setPosition(Ogre::Vector3(0, 0, 0));
+	pointLight->setDiffuseColour(1.0, 0.0, 0.0);*/
 
-	/*cameraPositionScriptValue = scriptEngine->toScriptValue(mCamera->getPosition());
-	cameraDirectionScriptValue = scriptEngine->toScriptValue(mCamera->getDirection());
-	cameraRightScriptValue = scriptEngine->toScriptValue(mCamera->getRight());
+	Light* light = new Light();
+	light->setPosition(QVector3D(0.0,0.0,0.0));
+	light->setColour(QColor(0, 255, 0));
+	m_Lights["GreenLight"] = light;
 
-	scriptEngine->globalObject().setProperty("cameraPosition", cameraPositionScriptValue);
-	scriptEngine->globalObject().setProperty("cameraDirection", cameraDirectionScriptValue);
-	scriptEngine->globalObject().setProperty("cameraRight", cameraRightScriptValue);*/
 }
 
 void EngineTestGameLogic::update(void)
@@ -179,6 +181,30 @@ void EngineTestGameLogic::update(void)
 
 	mouse.resetDelta();
 	mouse.resetWheelDelta();
+
+	//Update the lights
+	mSceneManager->destroyAllLights();
+	/*foreach(Light* light, m_Lights)
+	{
+		Ogre::Light* ogreLight = mSceneManager->createLight("pointLight");
+		pointLight->setType(Ogre::Light::LT_POINT);
+		pointLight->setPosition(Ogre::Vector3(0, 0, 0));
+		pointLight->setDiffuseColour(1.0, 0.0, 0.0);
+	}*/
+	QHashIterator<QString, Light*> lightIter(m_Lights);
+	while(lightIter.hasNext())
+	{
+		lightIter.next();
+
+		Ogre::Light* ogreLight = mSceneManager->createLight(lightIter.key().toStdString());
+		ogreLight->setType(Ogre::Light::LT_POINT);
+
+		QVector3D pos = lightIter.value()->getPosition();
+		ogreLight->setPosition(Ogre::Vector3(pos.x(), pos.y(), pos.z()));
+
+		QColor col = lightIter.value()->getColour();
+		ogreLight->setDiffuseColour(col.redF(), col.greenF(), col.blueF());
+	}
 }
 
 void EngineTestGameLogic::shutdown(void)

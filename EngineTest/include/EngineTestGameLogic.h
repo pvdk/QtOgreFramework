@@ -3,6 +3,7 @@
 
 #include "CameraWrapper.h"
 #include "GameLogic.h"
+#include "Light.h"
 #include "Log.h"
 #include "Keyboard.h"
 #include "Mouse.h"
@@ -85,6 +86,8 @@ private:
 	ScriptEditorWidget* m_pScriptEditorWidget;
 
 	bool m_bRunScript;
+
+	QHash<QString, Light*> m_Lights;
 };
 
 #endif /*ENGINETESTGAMELOGIC_H_*/
