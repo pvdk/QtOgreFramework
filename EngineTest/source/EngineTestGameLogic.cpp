@@ -53,6 +53,9 @@ void EngineTestGameLogic::initialise(void)
 {
 	initScriptEngine();
 
+	/*QScriptValue currentTimeScriptValue = scriptEngine->newVariant(mCurrentTimeVariant);
+	scriptEngine->globalObject().setProperty("currentTime", currentTimeScriptValue);*/
+
 	QScriptValue keyboardScriptValue = scriptEngine->newQObject(&keyboard);
 	scriptEngine->globalObject().setProperty("keyboard", keyboardScriptValue);
 
@@ -158,6 +161,11 @@ void EngineTestGameLogic::update(void)
 {
 	mLastFrameTime = mCurrentTime;
 	mCurrentTime = mTime->elapsed();
+
+	mCurrentTimeVariant = mCurrentTime;
+
+	QScriptValue currentTimeScriptValue = scriptEngine->newVariant(mCurrentTimeVariant);
+	scriptEngine->globalObject().setProperty("currentTime", currentTimeScriptValue);
 
 	float timeElapsedInSeconds = (mCurrentTime - mLastFrameTime) / 1000.0f;
 

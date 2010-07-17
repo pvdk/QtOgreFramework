@@ -64,8 +64,11 @@ private:
 
 	int mLastFrameTime;
 	int mCurrentTime;
+	QVariant mCurrentTimeVariant;
 
 	bool mIsFirstFrame;
+
+	quint32 m_uTimeSinceStart;
 
 	float mCameraSpeed;
 		

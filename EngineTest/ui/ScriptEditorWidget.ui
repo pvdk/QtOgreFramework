@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>508</width>
+    <width>714</width>
     <height>425</height>
    </rect>
   </property>
@@ -50,7 +50,14 @@
     </widget>
    </item>
    <item row="1" column="0" colspan="5">
-    <widget class="QPlainTextEdit" name="m_pTextEdit"/>
+    <widget class="QPlainTextEdit" name="m_pTextEdit">
+     <property name="font">
+      <font>
+       <family>Courier New</family>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>
