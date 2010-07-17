@@ -14,9 +14,9 @@ function torusKnotValue(q, p, theta)
 
 function updateLights()
 {
-	objectStore.getObject('RedLight').position = torusKnotValue(2.0, 5.0, currentTime / 500);
-	objectStore.getObject('GreenLight').position = torusKnotValue(3.0, 7.0, currentTime / 420);
-	objectStore.getObject('BlueLight').position = torusKnotValue(3.5, 4.4, currentTime / 830);
+	objectStore.getObject('RedLight').position = torusKnotValue(2.0, 5.0, globals.currentFrameTime / 500);
+	objectStore.getObject('GreenLight').position = torusKnotValue(3.0, 7.0, globals.currentFrameTime / 420);
+	objectStore.getObject('BlueLight').position = torusKnotValue(3.5, 4.4, globals.currentFrameTime / 830);
 }
 
 function processInput()

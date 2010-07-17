@@ -3,6 +3,7 @@
 
 #include "CameraWrapper.h"
 #include "GameLogic.h"
+#include "Globals.h"
 #include "Keyboard.h"
 #include "Light.h"
 #include "Log.h"
@@ -62,8 +63,8 @@ private:
 	int mCurrentWheelPos;*/
 	QTime* mTime;
 
-	int mLastFrameTime;
-	int mCurrentTime;
+	//int mLastFrameTime;
+	//int mCurrentTime;
 	QVariant mCurrentTimeVariant;
 
 	bool mIsFirstFrame;
@@ -96,6 +97,8 @@ private:
 	ObjectStore mObjectStore;
 
 	QString mInitialiseScript;
+
+	Globals* mGlobals;
 };
 
 #endif /*ENGINETESTGAMELOGIC_H_*/

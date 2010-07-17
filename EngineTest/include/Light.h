@@ -3,6 +3,7 @@
 
 #include <QColor>
 #include <QObject>
+#include <QScriptEngine>
 #include <QVector3D>
 
 class Light : public QObject
@@ -25,6 +26,8 @@ private:
 	QVector3D m_vecPosition;
 	QColor m_colColour;
 };
+
+Q_SCRIPT_DECLARE_QMETAOBJECT(Light, QObject*)
 
 
 #endif //LIGHT_H_

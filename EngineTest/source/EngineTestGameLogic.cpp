@@ -49,17 +49,17 @@ EngineTestGameLogic::EngineTestGameLogic(void)
 	
 }
 
-Q_SCRIPT_DECLARE_QMETAOBJECT(Light, QObject*)
-
 void EngineTestGameLogic::initialise(void)
 {
 	initScriptEngine();	 
 
+	mGlobals = new Globals(this);
+
 	QScriptValue lightClass = scriptEngine->scriptValueFromQMetaObject<Light>();
 	scriptEngine->globalObject().setProperty("Light", lightClass);
 
-	/*QScriptValue currentTimeScriptValue = scriptEngine->newVariant(mCurrentTimeVariant);
-	scriptEngine->globalObject().setProperty("currentTime", currentTimeScriptValue);*/
+	QScriptValue globalsScriptValue = scriptEngine->newQObject(mGlobals);
+	scriptEngine->globalObject().setProperty("globals", globalsScriptValue);
 
 	QScriptValue keyboardScriptValue = scriptEngine->newQObject(&keyboard);
 	scriptEngine->globalObject().setProperty("keyboard", keyboardScriptValue);
@@ -143,26 +143,6 @@ void EngineTestGameLogic::initialise(void)
 
 	connect(m_pScriptEditorWidget, SIGNAL(start(void)), this, SLOT(startScriptingEngine(void)));
 	connect(m_pScriptEditorWidget, SIGNAL(stop(void)), this, SLOT(stopScriptingEngine(void)));
-		
-	/*Ogre::Light* pointLight = mSceneManager->createLight("pointLight");
-    pointLight->setType(Ogre::Light::LT_POINT);
-    pointLight->setPosition(Ogre::Vector3(0, 0, 0));
-	pointLight->setDiffuseColour(1.0, 0.0, 0.0);*/
-
-	/*Light* redLight = new Light();
-	redLight->setPosition(QVector3D(0.0,0.0,0.0));
-	redLight->setColour(QColor(255, 0, 0));
-	mObjectStore.setObject("RedLight", redLight);
-
-	Light* greenLight = new Light();
-	greenLight->setPosition(QVector3D(0.0,0.0,0.0));
-	greenLight->setColour(QColor(0, 255, 0));
-	mObjectStore.setObject("GreenLight", greenLight);
-
-	Light* blueLight = new Light();
-	blueLight->setPosition(QVector3D(0.0,0.0,0.0));
-	blueLight->setColour(QColor(0, 0, 255));
-	mObjectStore.setObject("BlueLight", blueLight);*/
 
 	mInitialiseScript =
 		"print('QtScript Initialisation Begin');"
@@ -195,15 +175,10 @@ void EngineTestGameLogic::initialise(void)
 
 void EngineTestGameLogic::update(void)
 {
-	mLastFrameTime = mCurrentTime;
-	mCurrentTime = mTime->elapsed();
+	mGlobals->setPreviousFrameTime(mGlobals->getCurrentFrameTime());
+	mGlobals->setCurrentFrameTime(mTime->elapsed());
 
-	mCurrentTimeVariant = mCurrentTime;
-
-	QScriptValue currentTimeScriptValue = scriptEngine->newVariant(mCurrentTimeVariant);
-	scriptEngine->globalObject().setProperty("currentTime", currentTimeScriptValue);
-
-	float timeElapsedInSeconds = (mCurrentTime - mLastFrameTime) / 1000.0f;
+	float timeElapsedInSeconds = (mGlobals->getCurrentFrameTime() - mGlobals->getPreviousFrameTime()) / 1000.0f;
 
 	for (Ogre::SceneManager::MovableObjectIterator moi = mSceneManager->getMovableObjectIterator("Entity"); moi.hasMoreElements(); moi.moveNext())
 	{
