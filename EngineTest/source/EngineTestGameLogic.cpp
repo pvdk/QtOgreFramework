@@ -49,9 +49,14 @@ EngineTestGameLogic::EngineTestGameLogic(void)
 	
 }
 
+Q_SCRIPT_DECLARE_QMETAOBJECT(Light, QObject*)
+
 void EngineTestGameLogic::initialise(void)
 {
-	initScriptEngine();
+	initScriptEngine();	 
+
+	QScriptValue lightClass = scriptEngine->scriptValueFromQMetaObject<Light>();
+	scriptEngine->globalObject().setProperty("Light", lightClass);
 
 	/*QScriptValue currentTimeScriptValue = scriptEngine->newVariant(mCurrentTimeVariant);
 	scriptEngine->globalObject().setProperty("currentTime", currentTimeScriptValue);*/
@@ -144,7 +149,7 @@ void EngineTestGameLogic::initialise(void)
     pointLight->setPosition(Ogre::Vector3(0, 0, 0));
 	pointLight->setDiffuseColour(1.0, 0.0, 0.0);*/
 
-	Light* redLight = new Light();
+	/*Light* redLight = new Light();
 	redLight->setPosition(QVector3D(0.0,0.0,0.0));
 	redLight->setColour(QColor(255, 0, 0));
 	mObjectStore.setObject("RedLight", redLight);
@@ -157,7 +162,34 @@ void EngineTestGameLogic::initialise(void)
 	Light* blueLight = new Light();
 	blueLight->setPosition(QVector3D(0.0,0.0,0.0));
 	blueLight->setColour(QColor(0, 0, 255));
-	mObjectStore.setObject("BlueLight", blueLight);
+	mObjectStore.setObject("BlueLight", blueLight);*/
+
+	mInitialiseScript =
+		"print('QtScript Initialisation Begin');"
+
+		"var redLight = new Light();"
+		"redLight.position = new QVector3D(100,100,100);"
+		"redLight.colour = new QColor(255,0,0);"
+		"objectStore.setObject('RedLight', redLight);"
+
+		"var greenLight = new Light();"
+		"greenLight.position = new QVector3D(100,100,100);"
+		"greenLight.colour = new QColor(0,255,0);"
+		"objectStore.setObject('GreenLight', greenLight);"
+
+		"var blueLight = new Light();"
+		"blueLight.position = new QVector3D(100,100,100);"
+		"blueLight.colour = new QColor(0,0,255);"
+		"objectStore.setObject('BlueLight', blueLight);"
+
+		"print('QtScript Initialisation End');";
+
+	QScriptValue result = scriptEngine->evaluate(mInitialiseScript);
+		if (scriptEngine->hasUncaughtException())
+		{
+			int line = scriptEngine->uncaughtExceptionLineNumber();
+			qCritical() << "uncaught exception at line" << line << ":" << result.toString();
+		}
 
 }
 
@@ -209,7 +241,9 @@ void EngineTestGameLogic::update(void)
 	{
 		lightIter.next();
 
-		Light* light = dynamic_cast<Light*>(lightIter.value());
+		QObject* pObj = lightIter.value();
+		//qCritical() << pObj->objectName();
+		Light* light = dynamic_cast<Light*>(pObj);
 		if(light)
 		{
 			Ogre::Light* ogreLight = mSceneManager->createLight(lightIter.key().toStdString());

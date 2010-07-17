@@ -26,4 +26,5 @@ private:
 	QColor m_colColour;
 };
 
+
 #endif //LIGHT_H_

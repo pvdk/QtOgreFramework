@@ -94,6 +94,8 @@ private:
 	QHash<QString, Light*> m_Lights;
 
 	ObjectStore mObjectStore;
+
+	QString mInitialiseScript;
 };
 
 #endif /*ENGINETESTGAMELOGIC_H_*/
