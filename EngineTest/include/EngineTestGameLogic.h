@@ -53,6 +53,7 @@ private slots:
 
 private:
 	void initScriptEngine(void);
+	void initScriptEnvironment(void);
 
 	Keyboard keyboard;
 	Mouse mouse;

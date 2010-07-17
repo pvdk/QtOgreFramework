@@ -21,27 +21,6 @@
 
 using namespace QtOgre;
 
-QScriptValue toScriptValueQPoint(QScriptEngine *engine, const QPoint &s)
-{
-	QScriptValue obj = engine->newObject();
-	obj.setProperty("x", s.x());
-	obj.setProperty("y", s.y());
-	return obj;
-}
-
-void fromScriptValueQPoint(const QScriptValue &obj, QPoint &s)
-{
-	s.setX(obj.property("x").toInt32());
-	s.setY(obj.property("y").toInt32());
-}
-
-struct QtMetaObject : private QObject
-{
-public:
-	static const QMetaObject *get()
-	{ return &static_cast<QtMetaObject*>(0)->staticQtMetaObject; }
-};
-
 EngineTestGameLogic::EngineTestGameLogic(void)
 	:GameLogic()
 	,m_bRunScript(true)
@@ -53,45 +32,10 @@ void EngineTestGameLogic::initialise(void)
 {
 	initScriptEngine();	 
 
-	mGlobals = new Globals(this);
-
-	QScriptValue lightClass = scriptEngine->scriptValueFromQMetaObject<Light>();
-	scriptEngine->globalObject().setProperty("Light", lightClass);
-
-	QScriptValue globalsScriptValue = scriptEngine->newQObject(mGlobals);
-	scriptEngine->globalObject().setProperty("globals", globalsScriptValue);
-
-	QScriptValue keyboardScriptValue = scriptEngine->newQObject(&keyboard);
-	scriptEngine->globalObject().setProperty("keyboard", keyboardScriptValue);
-
-	QScriptValue mouseScriptValue = scriptEngine->newQObject(&mouse);
-	scriptEngine->globalObject().setProperty("mouse", mouseScriptValue);
-
-	QScriptValue cameraScriptValue = scriptEngine->newQObject(&cameraWrapper);
-	scriptEngine->globalObject().setProperty("camera", cameraScriptValue);
-
-	QScriptValue Qt = scriptEngine->newQMetaObject(QtMetaObject::get());
-	Qt.setProperty("App", scriptEngine->newQObject(qApp));
-	scriptEngine->globalObject().setProperty("Qt", Qt);
-
-	QScriptValue objectStoreScriptValue = scriptEngine->newQObject(&mObjectStore);
-	scriptEngine->globalObject().setProperty("objectStore", objectStoreScriptValue);
-
-	qScriptRegisterMetaType(scriptEngine, toScriptValueQPoint, fromScriptValueQPoint);
-
-	OgreVector3Class *vecClass = new OgreVector3Class(scriptEngine);
-	scriptEngine->globalObject().setProperty("OgreVector3", vecClass->constructor());
-
-	OgreRadianClass *radianClass = new OgreRadianClass(scriptEngine);
-	scriptEngine->globalObject().setProperty("OgreRadian", radianClass->constructor());
+	initScriptEnvironment();
 
 	//debugger.attachTo(scriptEngine);
 	//debugger.action(QScriptEngineDebugger::InterruptAction)->trigger();
-
-
-
-
-	//qApp->setStyleSheet(qApp->settings()->value("UI/StyleFile").toString());
 		
 	mDemoLog = mApplication->createLog("EngineTest");
 
@@ -215,9 +159,8 @@ void EngineTestGameLogic::update(void)
 	while(lightIter.hasNext())
 	{
 		lightIter.next();
-
 		QObject* pObj = lightIter.value();
-		//qCritical() << pObj->objectName();
+
 		Light* light = dynamic_cast<Light*>(pObj);
 		if(light)
 		{
@@ -358,6 +301,39 @@ void EngineTestGameLogic::initScriptEngine(void)
                      qPrintable(failExtensions.join(", ")), qPrintable(qApp->libraryPaths().join(", ")));
         }
     }
+}
+
+void EngineTestGameLogic::initScriptEnvironment(void)
+{
+	mGlobals = new Globals(this);
+
+	QScriptValue lightClass = scriptEngine->scriptValueFromQMetaObject<Light>();
+	scriptEngine->globalObject().setProperty("Light", lightClass);
+
+	QScriptValue globalsScriptValue = scriptEngine->newQObject(mGlobals);
+	scriptEngine->globalObject().setProperty("globals", globalsScriptValue);
+
+	QScriptValue keyboardScriptValue = scriptEngine->newQObject(&keyboard);
+	scriptEngine->globalObject().setProperty("keyboard", keyboardScriptValue);
+
+	QScriptValue mouseScriptValue = scriptEngine->newQObject(&mouse);
+	scriptEngine->globalObject().setProperty("mouse", mouseScriptValue);
+
+	QScriptValue cameraScriptValue = scriptEngine->newQObject(&cameraWrapper);
+	scriptEngine->globalObject().setProperty("camera", cameraScriptValue);
+
+	QScriptValue Qt = scriptEngine->newQMetaObject(&staticQtMetaObject);
+	Qt.setProperty("App", scriptEngine->newQObject(qApp));
+	scriptEngine->globalObject().setProperty("Qt", Qt);
+
+	QScriptValue objectStoreScriptValue = scriptEngine->newQObject(&mObjectStore);
+	scriptEngine->globalObject().setProperty("objectStore", objectStoreScriptValue);
+
+	OgreVector3Class *vecClass = new OgreVector3Class(scriptEngine);
+	scriptEngine->globalObject().setProperty("OgreVector3", vecClass->constructor());
+
+	OgreRadianClass *radianClass = new OgreRadianClass(scriptEngine);
+	scriptEngine->globalObject().setProperty("OgreRadian", radianClass->constructor());
 }
 
 void EngineTestGameLogic::startScriptingEngine(void)
