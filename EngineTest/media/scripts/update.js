@@ -1,12 +1,22 @@
 processInput();
 updateLights();
 
+function torusKnotValue(q, p, theta)
+{
+	var partial = ((2 + Math.cos((q * theta) / p)));
+
+	var x = partial * Math.cos(theta);
+	var y = partial * Math.sin(theta);
+	var z = Math.sin((q * theta) / p);
+
+	return new QVector3D(x * 1000, y * 1000, z * 1000);
+}
+
 function updateLights()
 {
-	var x = Math.sin(currentTime / 1000);
-	var y = Math.cos(currentTime / 1000);
-
-	objectStore.getObject('BlueLight').position = new QVector3D(x * 100,y * 100, 0);
+	objectStore.getObject('RedLight').position = torusKnotValue(2.0, 5.0, currentTime / 500);
+	objectStore.getObject('GreenLight').position = torusKnotValue(3.0, 7.0, currentTime / 420);
+	objectStore.getObject('BlueLight').position = torusKnotValue(3.5, 4.4, currentTime / 830);
 }
 
 function processInput()

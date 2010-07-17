@@ -144,15 +144,19 @@ void EngineTestGameLogic::initialise(void)
     pointLight->setPosition(Ogre::Vector3(0, 0, 0));
 	pointLight->setDiffuseColour(1.0, 0.0, 0.0);*/
 
-	Light* light = new Light();
-	light->setPosition(QVector3D(0.0,0.0,0.0));
-	light->setColour(QColor(0, 255, 0));
-	m_Lights["GreenLight"] = light;
+	Light* redLight = new Light();
+	redLight->setPosition(QVector3D(0.0,0.0,0.0));
+	redLight->setColour(QColor(255, 0, 0));
+	mObjectStore.setObject("RedLight", redLight);
+
+	Light* greenLight = new Light();
+	greenLight->setPosition(QVector3D(0.0,0.0,0.0));
+	greenLight->setColour(QColor(0, 255, 0));
+	mObjectStore.setObject("GreenLight", greenLight);
 
 	Light* blueLight = new Light();
 	blueLight->setPosition(QVector3D(0.0,0.0,0.0));
 	blueLight->setColour(QColor(0, 0, 255));
-	//m_Lights["GreenLight"] = blueLight;
 	mObjectStore.setObject("BlueLight", blueLight);
 
 }
