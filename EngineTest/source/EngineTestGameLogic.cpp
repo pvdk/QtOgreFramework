@@ -31,6 +31,7 @@ EngineTestGameLogic::EngineTestGameLogic(void)
 void EngineTestGameLogic::initialise(void)
 {
 	mouse = new Mouse(this);
+	camera = new Camera(this);
 
 	initScriptEngine();	 
 
@@ -108,6 +109,8 @@ void EngineTestGameLogic::initialise(void)
 		"blueLight.colour = new QColor(0,0,255);"
 		"objectStore.setObject('BlueLight', blueLight);"
 
+		"camera.position = new QVector3D(0,0,20);"
+
 		"print('QtScript Initialisation End');";
 
 	QScriptValue result = scriptEngine->evaluate(mInitialiseScript);
@@ -177,6 +180,10 @@ void EngineTestGameLogic::update(void)
 			ogreLight->setDiffuseColour(col.redF(), col.greenF(), col.blueF());
 		}
 	}
+	
+	mCamera->setPosition(Ogre::Vector3(camera->position().x(), camera->position().y(), camera->position().z()));
+	mCamera->setDirection(Ogre::Vector3(camera->direction().x(), camera->direction().y(), camera->direction().z()));
+	mCamera->setFOVy(Ogre::Radian(camera->fieldOfView()));
 }
 
 void EngineTestGameLogic::shutdown(void)
@@ -256,8 +263,6 @@ void EngineTestGameLogic::loadScene(QString filename)
 
 	Ogre::Viewport* viewport = mApplication->ogreRenderWindow()->addViewport(mCamera);
 	viewport->setBackgroundColour(Ogre::ColourValue::Black);
-
-	cameraWrapper.setOgreCamera(mCamera);
 }
 
 void EngineTestGameLogic::initScriptEngine(void)
@@ -322,7 +327,7 @@ void EngineTestGameLogic::initScriptEnvironment(void)
 	QScriptValue mouseScriptValue = scriptEngine->newQObject(mouse);
 	scriptEngine->globalObject().setProperty("mouse", mouseScriptValue);
 
-	QScriptValue cameraScriptValue = scriptEngine->newQObject(&cameraWrapper);
+	QScriptValue cameraScriptValue = scriptEngine->newQObject(camera);
 	scriptEngine->globalObject().setProperty("camera", cameraScriptValue);
 
 	QScriptValue Qt = scriptEngine->newQMetaObject(&staticQtMetaObject);

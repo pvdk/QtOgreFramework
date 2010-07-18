@@ -1,7 +1,7 @@
 #ifndef ENGINETESTGAMELOGIC_H_
 #define ENGINETESTGAMELOGIC_H_
 
-#include "CameraWrapper.h"
+#include "Camera.h"
 #include "GameLogic.h"
 #include "Globals.h"
 #include "Keyboard.h"
@@ -57,16 +57,9 @@ private:
 
 	Keyboard keyboard;
 	Mouse* mouse;
-	/*QPoint mLastFrameMousePos;
-	QPoint mCurrentMousePos;*/
 
-	/*int mLastFrameWheelPos;
-	int mCurrentWheelPos;*/
 	QTime* mTime;
 
-	//int mLastFrameTime;
-	//int mCurrentTime;
-	QVariant mCurrentTimeVariant;
 
 	bool mIsFirstFrame;
 
@@ -82,10 +75,8 @@ private:
 
 	//Scripting
 	QScriptEngine* scriptEngine;
-	CameraWrapper cameraWrapper;
-	QScriptValue cameraPositionScriptValue;
-	QScriptValue cameraDirectionScriptValue;
-	QScriptValue cameraRightScriptValue;
+
+	Camera* camera;
 
 	QScriptEngineDebugger debugger;
 

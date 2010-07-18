@@ -54,22 +54,20 @@ function processInput()
 	var milliSecondsElapsed = globals.currentFrameTime - globals.previousFrameTime;
 	var secondsElapsed = milliSecondsElapsed / 1000;
 
-	if(mouse.isPressed(Qt.RightButton))
+	/*if(mouse.isPressed(Qt.RightButton))
 	{
 		mouseDeltaX = mouse.position.x() - mouse.previousPosition.x();
-		camera.yaw(new OgreRadian(-mouseDeltaX * secondsElapsed));
-	}
+		camera.yaw(1);
+		//camera.yaw(new OgreRadian(-mouseDeltaX * secondsElapsed));
+	}*/
 	if(mouse.isPressed(Qt.RightButton))
 	{
 		mouseDeltaY = mouse.position.y() - mouse.previousPosition.y();
-		camera.pitch(new OgreRadian(-mouseDeltaY * secondsElapsed));
+		camera.pitch(-mouseDeltaY * secondsElapsed);
 	}
 	wheelDelta = mouse.getWheelDelta();
-	//print('wheelDelta = ', wheelDelta);
-	fov = camera.getFOVy();
-	//print('old fov = ', fov.valueRadians);
-	tempFOV = new OgreRadian(-wheelDelta * 0.001);
-	fov.valueRadians = fov.valueRadians + tempFOV.valueRadians;
-	//print('new fov = ', fov.valueRadians);
-	camera.setFOVy(fov);
+	fov = camera.fieldOfView;
+	tempFOV = -wheelDelta * 0.001;
+	fov = fov + tempFOV;
+	camera.fieldOfView = fov;
 }

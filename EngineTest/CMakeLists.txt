@@ -3,7 +3,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 PROJECT(EngineTest)
 
 SET(SRC_FILES
-	source/CameraWrapper.cpp
+	source/Camera.cpp
 	source/Globals.cpp
 	source/Light.cpp
 	source/main.cpp
@@ -15,7 +15,7 @@ SET(SRC_FILES
 )
 
 SET(INC_FILES
-	include/CameraWrapper.h
+	include/Camera.h
 	include/EngineTestGameLogic.h
 	include/Globals.h
 	include/Keyboard.h
