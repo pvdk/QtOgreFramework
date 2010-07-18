@@ -153,7 +153,8 @@ void EngineTestGameLogic::update(void)
 		}
 	}
 
-	mouse->resetDelta();
+	//mouse->resetDelta();
+	mouse->setPreviousPosition(mouse->position());
 	mouse->resetWheelDelta();
 
 	mSceneManager->destroyAllLights();
@@ -197,10 +198,10 @@ void EngineTestGameLogic::onKeyRelease(QKeyEvent* event)
 void EngineTestGameLogic::onMousePress(QMouseEvent* event)
 {
 	mouse->press(event->button());
-
+	
 	//Update the mouse position as well or we get 'jumps'
 	mouse->setPosition(event->pos());
-	mouse->resetDelta();
+	mouse->setPreviousPosition(mouse->position());
 }
 
 void EngineTestGameLogic::onMouseRelease(QMouseEvent* event)

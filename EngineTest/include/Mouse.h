@@ -11,28 +11,22 @@ class Mouse : public QObject
 public:
 	Mouse(QObject * parent = 0);
 
-	Q_PROPERTY(QPoint position READ position WRITE setPosition)
+	Q_PROPERTY(QPoint position READ position)
 	Q_PROPERTY(QPoint previousPosition READ previousPosition)
 
 public slots:
 	bool isPressed(int mouseButton);
-
 	void press(int mouseButton);
-
 	void release(int mouseButton);
 
 	const QPoint& position(void);
-
 	void setPosition(const QPoint& pos);
 
 	const QPoint& previousPosition(void);
-
-	void resetDelta(void);
+	void setPreviousPosition(const QPoint& pos);
 
 	void modifyWheelDelta(int wheelDelta);
-
 	int getWheelDelta(void);
-
 	void resetWheelDelta(void);
 
 private:

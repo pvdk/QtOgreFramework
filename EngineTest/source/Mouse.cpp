@@ -51,9 +51,9 @@ const QPoint& Mouse::previousPosition(void)
 	return mPreviousPosition;
 }
 
-void Mouse::resetDelta(void)
+void Mouse::setPreviousPosition(const QPoint& pos)
 {
-	mPreviousPosition = mPosition;
+	mPreviousPosition = pos;
 }
 
 void Mouse::modifyWheelDelta(int wheelDelta)
