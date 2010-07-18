@@ -53,12 +53,12 @@ function processInput()
 	if(mouse.isPressed(Qt.RightButton))
 	{
 		mouseDelta = mouse.computeDelta();
-		camera.yaw(new OgreRadian(-mouseDelta.x * 0.01));
+		camera.yaw(new OgreRadian(-mouseDelta.x() * 0.01));
 	}
 	if(mouse.isPressed(Qt.RightButton))
 	{
 		mouseDelta = mouse.computeDelta();
-		camera.pitch(new OgreRadian(-mouseDelta.y * 0.01));
+		camera.pitch(new OgreRadian(-mouseDelta.y() * 0.01));
 	}
 	wheelDelta = mouse.getWheelDelta();
 	//print('wheelDelta = ', wheelDelta);

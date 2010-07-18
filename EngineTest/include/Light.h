@@ -17,10 +17,10 @@ public:
 	Q_PROPERTY(QColor colour READ getColour WRITE setColour)
 
 public slots:
-	QVector3D getPosition(void) const;
+	const QVector3D& getPosition(void) const;
 	void setPosition(const QVector3D& pos);
 
-	QColor getColour(void) const;
+	const QColor& getColour(void) const;
 	void setColour(const QColor& col);
 private:
 	QVector3D m_vecPosition;

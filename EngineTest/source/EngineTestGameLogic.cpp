@@ -21,20 +21,6 @@
 
 using namespace QtOgre;
 
-QScriptValue toScriptValueQPoint(QScriptEngine *engine, const QPoint &s)
-{
-	QScriptValue obj = engine->newObject();
-	obj.setProperty("x", s.x());
-	obj.setProperty("y", s.y());
-	return obj;
-}
-
-void fromScriptValueQPoint(const QScriptValue &obj, QPoint &s)
-{
-	s.setX(obj.property("x").toInt32());
-	s.setY(obj.property("y").toInt32());
-}
-
 EngineTestGameLogic::EngineTestGameLogic(void)
 	:GameLogic()
 	,m_bRunScript(true)
@@ -342,8 +328,6 @@ void EngineTestGameLogic::initScriptEnvironment(void)
 
 	QScriptValue objectStoreScriptValue = scriptEngine->newQObject(&mObjectStore);
 	scriptEngine->globalObject().setProperty("objectStore", objectStoreScriptValue);
-
-	qScriptRegisterMetaType(scriptEngine, toScriptValueQPoint, fromScriptValueQPoint);
 
 	OgreVector3Class *vecClass = new OgreVector3Class(scriptEngine);
 	scriptEngine->globalObject().setProperty("OgreVector3", vecClass->constructor());

@@ -5,7 +5,7 @@ Light::Light(QObject * parent)
 {
 }
 
-QVector3D Light::getPosition(void) const
+const QVector3D& Light::getPosition(void) const
 {
 	return m_vecPosition;
 }
@@ -15,7 +15,7 @@ void Light::setPosition(const QVector3D& pos)
 	m_vecPosition = pos;
 }
 
-QColor Light::getColour(void) const
+const QColor& Light::getColour(void) const
 {
 	return m_colColour;
 }
