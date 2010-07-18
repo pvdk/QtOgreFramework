@@ -56,7 +56,7 @@ private:
 	void initScriptEnvironment(void);
 
 	Keyboard keyboard;
-	Mouse mouse;
+	Mouse* mouse;
 	/*QPoint mLastFrameMousePos;
 	QPoint mCurrentMousePos;*/
 

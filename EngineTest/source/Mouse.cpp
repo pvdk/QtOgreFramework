@@ -1,7 +1,8 @@
 #include "Mouse.h"
 
-Mouse::Mouse(void)
-	:mWheelDelta(0)
+Mouse::Mouse(QObject * parent)
+	:QObject(parent)
+	,mWheelDelta(0)
 {
 }
 
@@ -35,24 +36,24 @@ void Mouse::release(int mouseButton)
 	mMouseButtons &= ~mb;
 }
 
-const QPoint& Mouse::pos(void)
+const QPoint& Mouse::position(void)
 {
-	return mPos;
+	return mPosition;
 }
 
-void Mouse::setPos(const QPoint& pos)
+void Mouse::setPosition(const QPoint& pos)
 {
-	mPos = pos;
+	mPosition = pos;
 }
 
-QPoint Mouse::computeDelta(void)
+const QPoint& Mouse::previousPosition(void)
 {
-	return mPos - mOldPos;
+	return mPreviousPosition;
 }
 
 void Mouse::resetDelta(void)
 {
-	mOldPos = mPos;
+	mPreviousPosition = mPosition;
 }
 
 void Mouse::modifyWheelDelta(int wheelDelta)

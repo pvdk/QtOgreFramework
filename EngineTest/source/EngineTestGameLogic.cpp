@@ -30,6 +30,8 @@ EngineTestGameLogic::EngineTestGameLogic(void)
 
 void EngineTestGameLogic::initialise(void)
 {
+	mouse = new Mouse(this);
+
 	initScriptEngine();	 
 
 	initScriptEnvironment();
@@ -151,8 +153,8 @@ void EngineTestGameLogic::update(void)
 		}
 	}
 
-	mouse.resetDelta();
-	mouse.resetWheelDelta();
+	mouse->resetDelta();
+	mouse->resetWheelDelta();
 
 	mSceneManager->destroyAllLights();
 	QHashIterator<QString, QObject*> lightIter(mObjectStore);
@@ -194,28 +196,28 @@ void EngineTestGameLogic::onKeyRelease(QKeyEvent* event)
 
 void EngineTestGameLogic::onMousePress(QMouseEvent* event)
 {
-	mouse.press(event->button());
+	mouse->press(event->button());
 
 	//Update the mouse position as well or we get 'jumps'
-	mouse.setPos(event->pos());
-	mouse.resetDelta();
+	mouse->setPosition(event->pos());
+	mouse->resetDelta();
 }
 
 void EngineTestGameLogic::onMouseRelease(QMouseEvent* event)
 {
-	mouse.release(event->button());
+	mouse->release(event->button());
 }
 
 void EngineTestGameLogic::onMouseMove(QMouseEvent* event)
 {
 	//mCurrentMousePos = event->pos();
-	mouse.setPos(event->pos());
+	mouse->setPosition(event->pos());
 }
 
 void EngineTestGameLogic::onWheel(QWheelEvent* event)
 {
 	//mCurrentWheelPos += event->delta();
-	mouse.modifyWheelDelta(event->delta());
+	mouse->modifyWheelDelta(event->delta());
 }
 
 Log* EngineTestGameLogic::demoLog(void)
@@ -316,7 +318,7 @@ void EngineTestGameLogic::initScriptEnvironment(void)
 	QScriptValue keyboardScriptValue = scriptEngine->newQObject(&keyboard);
 	scriptEngine->globalObject().setProperty("keyboard", keyboardScriptValue);
 
-	QScriptValue mouseScriptValue = scriptEngine->newQObject(&mouse);
+	QScriptValue mouseScriptValue = scriptEngine->newQObject(mouse);
 	scriptEngine->globalObject().setProperty("mouse", mouseScriptValue);
 
 	QScriptValue cameraScriptValue = scriptEngine->newQObject(&cameraWrapper);

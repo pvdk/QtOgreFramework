@@ -50,15 +50,19 @@ function processInput()
 		pos.setZ(pos.z() + right.z());
 	}
 	camera.position = pos;
+
+	var milliSecondsElapsed = globals.currentFrameTime - globals.previousFrameTime;
+	var secondsElapsed = milliSecondsElapsed / 1000;
+
 	if(mouse.isPressed(Qt.RightButton))
 	{
-		mouseDelta = mouse.computeDelta();
-		camera.yaw(new OgreRadian(-mouseDelta.x() * 0.01));
+		mouseDeltaX = mouse.position.x() - mouse.previousPosition.x();
+		camera.yaw(new OgreRadian(-mouseDeltaX * secondsElapsed));
 	}
 	if(mouse.isPressed(Qt.RightButton))
 	{
-		mouseDelta = mouse.computeDelta();
-		camera.pitch(new OgreRadian(-mouseDelta.y() * 0.01));
+		mouseDeltaY = mouse.position.y() - mouse.previousPosition.y();
+		camera.pitch(new OgreRadian(-mouseDeltaY * secondsElapsed));
 	}
 	wheelDelta = mouse.getWheelDelta();
 	//print('wheelDelta = ', wheelDelta);
