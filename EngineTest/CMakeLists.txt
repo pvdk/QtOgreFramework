@@ -4,12 +4,13 @@ PROJECT(EngineTest)
 
 SET(SRC_FILES
 	source/Camera.cpp
+	source/EngineTestGameLogic.cpp
 	source/Globals.cpp
+	source/Keyboard.cpp
 	source/Light.cpp
 	source/main.cpp
 	source/Mouse.cpp
-	source/EngineTestGameLogic.cpp
-	source/Keyboard.cpp
+	source/Object.cpp
 	source/ObjectStore.cpp
 	source/ScriptEditorWidget.cpp
 )
@@ -21,6 +22,7 @@ SET(INC_FILES
 	include/Keyboard.h
 	include/Light.h
 	include/Mouse.h
+	include/Object.h
 	include/ObjectStore.h
 	include/ScriptEditorWidget.h
 )

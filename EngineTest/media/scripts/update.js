@@ -62,9 +62,15 @@ function processInput()
 	}*/
 	if(mouse.isPressed(Qt.RightButton))
 	{
-		mouseDeltaY = mouse.position.y() - mouse.previousPosition.y();
-		camera.pitch(-mouseDeltaY * secondsElapsed);
+		mouseDeltaX = mouse.position.x() - mouse.previousPosition.x();
+		camera.yaw(-mouseDeltaX * secondsElapsed * 10);
 	}
+	if(mouse.isPressed(Qt.RightButton))
+	{
+		mouseDeltaY = mouse.position.y() - mouse.previousPosition.y();
+		camera.pitch(-mouseDeltaY * secondsElapsed * 10);
+	}
+	
 	wheelDelta = mouse.getWheelDelta();
 	fov = camera.fieldOfView;
 	tempFOV = -wheelDelta * 0.001;

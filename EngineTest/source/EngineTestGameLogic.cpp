@@ -59,7 +59,7 @@ void EngineTestGameLogic::initialise(void)
 
 	//mApplication->ogreRenderWindow()->addViewport(mCamera)->setBackgroundColour(Ogre::ColourValue::Black);
 
-	mSceneManager->setAmbientLight( Ogre::ColourValue( 0.3, 0.3, 0.3 ) );
+	mSceneManager->setAmbientLight( Ogre::ColourValue( 0.3f, 0.3f, 0.3f ) );
 
 	mTime = new QTime;
 	mTime->start();
