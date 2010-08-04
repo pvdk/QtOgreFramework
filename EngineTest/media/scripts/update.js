@@ -22,23 +22,23 @@ function updateLights()
 function processInput()
 {
 	var pos = camera.position;
-	var dir = -camera.zAxis;
+	var dir = camera.zAxis;
 	var right = camera.xAxis;
 	if(keyboard.isPressed(Qt.Key_W))
 	{
-		camera.translate(dir);
+		camera.translate(-dir.x(), -dir.y(), -dir.z());
 	}
 	if(keyboard.isPressed(Qt.Key_S))
 	{
-		camera.translate(-dir.x(), -dir.y(), -dir.z());
+		camera.translate(dir.x(), dir.y(), dir.z());
 	}
 	if(keyboard.isPressed(Qt.Key_A))
 	{
-		camera.translate(right);
+		camera.translate(-right.x(), -right.y(), -right.z());
 	}
 	if(keyboard.isPressed(Qt.Key_D))
 	{		
-		camera.translate(-right.x(), -right.y(), -right.z());
+		camera.translate(right);
 	}
 
 	var milliSecondsElapsed = globals.currentFrameTime - globals.previousFrameTime;

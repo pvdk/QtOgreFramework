@@ -15,10 +15,14 @@ public:
 	Object(QObject* parent = 0);
 
 	Q_PROPERTY(QVector3D position READ position WRITE setPosition)
+	Q_PROPERTY(QQuaternion orientation READ orientation WRITE setOrientation)
 
 	Q_PROPERTY(QVector3D xAxis READ xAxis)
 	Q_PROPERTY(QVector3D yAxis READ yAxis)
 	Q_PROPERTY(QVector3D zAxis READ zAxis)
+
+	const QQuaternion& orientation(void) const;
+	void setOrientation(const QQuaternion& orientation);
 
 	const QVector3D& position(void) const;
 	void setPosition(const QVector3D& position);
@@ -35,7 +39,7 @@ public slots:
 	void yaw(qreal angleInDegrees);
 	void roll(qreal angleInDegrees);
 
-public:
+private:
 	QVector3D mPosition;
 	QQuaternion mOrientation;
 };

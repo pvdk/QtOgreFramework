@@ -187,7 +187,7 @@ void EngineTestGameLogic::update(void)
 	//QVector3D target = camera->position() - camera->zAxis();	
 	//mCamera->lookAt(target.x(), target.y(), target.z());
 
-	mCamera->setOrientation(Ogre::Quaternion(camera->mOrientation.scalar(), camera->mOrientation.x(), camera->mOrientation.y(), camera->mOrientation.z()));
+	mCamera->setOrientation(Ogre::Quaternion(camera->orientation().scalar(), camera->orientation().x(), camera->orientation().y(), camera->orientation().z()));
 
 	mCamera->setFOVy(Ogre::Radian(camera->fieldOfView()));
 }
