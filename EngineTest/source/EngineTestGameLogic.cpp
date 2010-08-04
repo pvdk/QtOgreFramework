@@ -173,7 +173,7 @@ void EngineTestGameLogic::update(void)
 			Ogre::Light* ogreLight = mSceneManager->createLight(lightIter.key().toStdString());
 			ogreLight->setType(Ogre::Light::LT_POINT);
 
-			QVector3D pos = light->getPosition();
+			QVector3D pos = light->position();
 			ogreLight->setPosition(Ogre::Vector3(pos.x(), pos.y(), pos.z()));
 
 			QColor col = light->getColour();

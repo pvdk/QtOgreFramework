@@ -1,18 +1,8 @@
 #include "Light.h"
 
-Light::Light(QObject * parent)
-	:QObject(parent)
+Light::Light(QObject* parent)
+	:Object(parent)
 {
-}
-
-const QVector3D& Light::getPosition(void) const
-{
-	return m_vecPosition;
-}
-
-void Light::setPosition(const QVector3D& pos)
-{
-	m_vecPosition = pos;
 }
 
 const QColor& Light::getColour(void) const
