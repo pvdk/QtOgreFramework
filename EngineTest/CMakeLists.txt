@@ -5,6 +5,7 @@ PROJECT(EngineTest)
 SET(SRC_FILES
 	source/Camera.cpp
 	source/EngineTestGameLogic.cpp
+	source/Entity.cpp
 	source/Globals.cpp
 	source/Keyboard.cpp
 	source/Light.cpp
@@ -18,6 +19,7 @@ SET(SRC_FILES
 SET(INC_FILES
 	include/Camera.h
 	include/EngineTestGameLogic.h
+	include/Entity.h
 	include/Globals.h
 	include/Keyboard.h
 	include/Light.h
