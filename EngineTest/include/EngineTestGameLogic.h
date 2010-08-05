@@ -2,6 +2,7 @@
 #define ENGINETESTGAMELOGIC_H_
 
 #include "Camera.h"
+#include "Entity.h"
 #include "GameLogic.h"
 #include "Globals.h"
 #include "Keyboard.h"

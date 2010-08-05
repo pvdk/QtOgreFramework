@@ -109,6 +109,10 @@ void EngineTestGameLogic::initialise(void)
 		"blueLight.colour = new QColor(0,0,255);"
 		"objectStore.setObject('BlueLight', blueLight);"
 
+		"var robot = new Entity();"
+		"robot.meshName = 'robot.mesh';"
+		"objectStore.setObject('Robot', robot);"
+
 		"camera.position = new QVector3D(0,0,20);"
 
 		"print('QtScript Initialisation End');";
@@ -161,16 +165,16 @@ void EngineTestGameLogic::update(void)
 	mouse->resetWheelDelta();
 
 	mSceneManager->destroyAllLights();
-	QHashIterator<QString, QObject*> lightIter(mObjectStore);
-	while(lightIter.hasNext())
+	QHashIterator<QString, QObject*> objectIter(mObjectStore);
+	while(objectIter.hasNext())
 	{
-		lightIter.next();
-		QObject* pObj = lightIter.value();
+		objectIter.next();
+		QObject* pObj = objectIter.value();
 
 		Light* light = dynamic_cast<Light*>(pObj);
 		if(light)
 		{
-			Ogre::Light* ogreLight = mSceneManager->createLight(lightIter.key().toStdString());
+			Ogre::Light* ogreLight = mSceneManager->createLight(objectIter.key().toStdString());
 			ogreLight->setType(Ogre::Light::LT_POINT);
 
 			QVector3D pos = light->position();
@@ -178,6 +182,16 @@ void EngineTestGameLogic::update(void)
 
 			QColor col = light->getColour();
 			ogreLight->setDiffuseColour(col.redF(), col.greenF(), col.blueF());
+		}
+
+		Entity* entity = dynamic_cast<Entity*>(pObj);
+		if(entity)
+		{
+			if(mSceneManager->hasEntity(objectIter.key().toStdString()) == false)
+			{
+				Ogre::Entity* ogreEntity = mSceneManager->createEntity(objectIter.key().toStdString(), entity->meshName().toStdString());
+				mSceneManager->getRootSceneNode()->attachObject(ogreEntity);
+			}
 		}
 	}
 	
@@ -323,6 +337,9 @@ void EngineTestGameLogic::initScriptEnvironment(void)
 
 	QScriptValue lightClass = scriptEngine->scriptValueFromQMetaObject<Light>();
 	scriptEngine->globalObject().setProperty("Light", lightClass);
+
+	QScriptValue entityClass = scriptEngine->scriptValueFromQMetaObject<Entity>();
+	scriptEngine->globalObject().setProperty("Entity", entityClass);
 
 	QScriptValue globalsScriptValue = scriptEngine->newQObject(mGlobals);
 	scriptEngine->globalObject().setProperty("globals", globalsScriptValue);
