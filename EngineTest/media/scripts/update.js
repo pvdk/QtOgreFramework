@@ -66,4 +66,6 @@ function processInput()
 	tempFOV = -wheelDelta * 0.001;
 	fov = fov + tempFOV;
 	camera.fieldOfView = fov;
+	
+	objectStore.getObject('Robot').yaw(1);
 }

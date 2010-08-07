@@ -187,11 +187,29 @@ void EngineTestGameLogic::update(void)
 		Entity* entity = dynamic_cast<Entity*>(pObj);
 		if(entity)
 		{
-			if(mSceneManager->hasEntity(objectIter.key().toStdString()) == false)
+			Ogre::Entity* ogreEntity;
+			Ogre::SceneNode* sceneNode;
+
+			if(mSceneManager->hasEntity(objectIter.key().toStdString()))
 			{
-				Ogre::Entity* ogreEntity = mSceneManager->createEntity(objectIter.key().toStdString(), entity->meshName().toStdString());
-				mSceneManager->getRootSceneNode()->attachObject(ogreEntity);
+				ogreEntity = mSceneManager->getEntity(objectIter.key().toStdString());
+				sceneNode = dynamic_cast<Ogre::SceneNode*>(ogreEntity->getParentNode());
 			}
+			else
+			{
+				sceneNode = mSceneManager->getRootSceneNode()->createChildSceneNode();
+				ogreEntity = mSceneManager->createEntity(objectIter.key().toStdString(), entity->meshName().toStdString());
+				sceneNode->attachObject(ogreEntity);
+			}
+
+			QVector3D pos = entity->position();
+			sceneNode->setPosition(Ogre::Vector3(pos.x(), pos.y(), pos.z()));
+
+			QQuaternion orientation = entity->orientation();
+			sceneNode->setOrientation(Ogre::Quaternion(orientation.scalar(), orientation.x(), orientation.y(), orientation.z()));
+
+			QVector3D scale = entity->size();
+			sceneNode->setScale(Ogre::Vector3(scale.x(), scale.y(), scale.z()));
 		}
 	}
 	

@@ -3,6 +3,17 @@
 Object::Object(QObject * parent)
 	:QObject(parent)
 {
+	mScale = QVector3D(1,1,1);
+}
+
+const QVector3D& Object::position(void) const
+{
+	return mPosition;
+}
+
+void Object::setPosition(const QVector3D& position)
+{
+	mPosition = position;
 }
 
 const QQuaternion& Object::orientation(void) const
@@ -15,14 +26,14 @@ void Object::setOrientation(const QQuaternion& orientation)
 	mOrientation = orientation;
 }
 
-const QVector3D& Object::position(void) const
+const QVector3D& Object::size(void) const
 {
-	return mPosition;
+	return mScale;
 }
 
-void Object::setPosition(const QVector3D& position)
+void Object::setSize(const QVector3D& scale)
 {
-	mPosition = position;
+	mScale = scale;
 }
 
 const QVector3D Object::xAxis(void) const
@@ -70,4 +81,19 @@ void Object::roll(qreal angleInDegrees)
 {
 	QQuaternion rotation = QQuaternion::fromAxisAndAngle(QVector3D(0,0,1), angleInDegrees);
 	mOrientation *= rotation;
+}
+
+void Object::scale(qreal factor)
+{
+	mScale *= QVector3D(factor,factor,factor);
+}
+
+void Object::scale(const QVector3D & vector)
+{
+	mScale *= vector;
+}
+
+void Object::scale(qreal x, qreal y, qreal z)
+{
+	mScale *= QVector3D(x,y,z);
 }
