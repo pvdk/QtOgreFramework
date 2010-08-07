@@ -110,10 +110,29 @@ void EngineTestGameLogic::initialise(void)
 		"objectStore.setObject('BlueLight', blueLight);"
 
 		"var robot = new Entity();"
+		"robot.position = new QVector3D(3,-1,0);"
+		"robot.size = new QVector3D(0.05, 0.05, 0.05);"
 		"robot.meshName = 'robot.mesh';"
+		"robot.animated = true;"
+		"robot.loopAnimation = true;"
+		"robot.animationName = 'Walk';"
 		"objectStore.setObject('Robot', robot);"
 
-		"camera.position = new QVector3D(0,0,20);"
+		"var jaiqua = new Entity();"
+		"jaiqua.position = new QVector3D(-3,-1,0);"
+		"jaiqua.size = new QVector3D(0.2, 0.2, 0.2);"
+		"jaiqua.meshName = 'jaiqua.mesh';"
+		"jaiqua.animated = true;"
+		"jaiqua.loopAnimation = true;"
+		"jaiqua.animationName = 'Walk';"
+		"objectStore.setObject('Jaiqua', jaiqua);"
+
+		"var sphere = new Entity();"
+		"sphere.size = new QVector3D(0.03, 0.03, 0.03);"
+		"sphere.meshName = 'sphere.mesh';"
+		"objectStore.setObject('Sphere', sphere);"
+
+		"camera.position = new QVector3D(0,0,10);"
 
 		"print('QtScript Initialisation End');";
 
@@ -210,6 +229,15 @@ void EngineTestGameLogic::update(void)
 
 			QVector3D scale = entity->size();
 			sceneNode->setScale(Ogre::Vector3(scale.x(), scale.y(), scale.z()));
+
+			//Animation
+			Ogre::AnimationStateSet* animationStateSet = ogreEntity->getAllAnimationStates();		
+			if(animationStateSet && animationStateSet->hasAnimationState(entity->animationName().toStdString()))
+			{
+				Ogre::AnimationState* animationState = animationStateSet->getAnimationState(entity->animationName().toStdString());
+				animationState->setEnabled(entity->animated());
+				animationState->setLoop(entity->loopAnimation());
+			}
 		}
 	}
 	
