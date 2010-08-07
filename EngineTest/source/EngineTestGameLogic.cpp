@@ -54,8 +54,13 @@ void EngineTestGameLogic::initialise(void)
 	// Create the generic scene manager
 	mSceneManager = Ogre::Root::getSingleton().createSceneManager(Ogre::ST_GENERIC, "GenericSceneManager");
 
-	//Set up scene
-	loadScene("media/scenes/test.scene");
+	mCamera = mSceneManager->createCamera("camera");
+	mSceneManager->getRootSceneNode()->attachObject(mCamera);
+	mCamera->setNearClipDistance(1.0);
+	mCamera->setFarClipDistance(1000.0);
+
+	Ogre::Viewport* viewport = mApplication->ogreRenderWindow()->addViewport(mCamera);
+	viewport->setBackgroundColour(Ogre::ColourValue::Black);
 
 	//mApplication->ogreRenderWindow()->addViewport(mCamera)->setBackgroundColour(Ogre::ColourValue::Black);
 
@@ -70,7 +75,7 @@ void EngineTestGameLogic::initialise(void)
 
 		
 
-	for (Ogre::SceneManager::MovableObjectIterator moi = mSceneManager->getMovableObjectIterator("Entity"); moi.hasMoreElements(); moi.moveNext())
+	/*for (Ogre::SceneManager::MovableObjectIterator moi = mSceneManager->getMovableObjectIterator("Entity"); moi.hasMoreElements(); moi.moveNext())
 	{
 		Ogre::Entity *entity = static_cast<Ogre::Entity*>(moi.peekNextValue());
 
@@ -81,7 +86,7 @@ void EngineTestGameLogic::initialise(void)
 			walkAnimationState->setLoop(true);
 			walkAnimationState->setEnabled(true);
 		}
-	}
+	}*/
 
 	mApplication->showFPSCounter();
 
@@ -155,12 +160,15 @@ void EngineTestGameLogic::update(void)
 	for (Ogre::SceneManager::MovableObjectIterator moi = mSceneManager->getMovableObjectIterator("Entity"); moi.hasMoreElements(); moi.moveNext())
 	{
 		Ogre::Entity *entity = static_cast<Ogre::Entity*>(moi.peekNextValue());
+		Ogre::AnimationStateSet* animationStateSet = entity->getAllAnimationStates();	
 
-		Ogre::AnimationStateSet* animationStateSet = entity->getAllAnimationStates();		
-		if(animationStateSet && animationStateSet->hasAnimationState("Walk"))
+		if(animationStateSet)
 		{
-			Ogre::AnimationState* walkAnimationState = animationStateSet->getAnimationState("Walk");
-			walkAnimationState->addTime(timeElapsedInSeconds);
+			for (Ogre::AnimationStateIterator assi = animationStateSet->getAnimationStateIterator(); assi.hasMoreElements(); assi.moveNext())
+			{
+				Ogre::AnimationState* walkAnimationState = assi.peekNextValue();
+				walkAnimationState->addTime(timeElapsedInSeconds);
+			}	
 		}
 	}
 
@@ -242,13 +250,7 @@ void EngineTestGameLogic::update(void)
 	}
 	
 	mCamera->setPosition(Ogre::Vector3(camera->position().x(), camera->position().y(), camera->position().z()));
-	//mCamera->setDirection(Ogre::Vector3(camera->direction().x(), camera->direction().y(), camera->direction().z()));
-
-	//QVector3D target = camera->position() - camera->zAxis();	
-	//mCamera->lookAt(target.x(), target.y(), target.z());
-
 	mCamera->setOrientation(Ogre::Quaternion(camera->orientation().scalar(), camera->orientation().x(), camera->orientation().y(), camera->orientation().z()));
-
 	mCamera->setFOVy(Ogre::Radian(camera->fieldOfView()));
 }
 
@@ -297,38 +299,6 @@ void EngineTestGameLogic::onWheel(QWheelEvent* event)
 Log* EngineTestGameLogic::demoLog(void)
 {
 	return mDemoLog;
-}
-
-void EngineTestGameLogic::loadScene(QString filename)
-{
-	//The QtOgre DotScene loading code will clear the existing scene except for cameras, as these
-	//could be used by existing viewports. Therefore we clear and viewports and cameras before
-	//calling the loading code.
-	mApplication->ogreRenderWindow()->removeAllViewports();
-	mSceneManager->destroyAllCameras();
-
-	//Now load the scene.
-	DotSceneHandler handler(mSceneManager);
-	QXmlSimpleReader reader;
-	reader.setContentHandler(&handler);
-	reader.setErrorHandler(&handler);
-
-	QFile file(filename);
-	file.open(QFile::ReadOnly | QFile::Text);
-	QXmlInputSource xmlInputSource(&file);
-	reader.parse(xmlInputSource);
-
-	//Now create a viewport, using the first camera in the scene.
-	mCamera = mSceneManager->getCameraIterator().peekNextValue();
-
-	//mCamera->setPosition(0, 0, 20);
-	//mCamera->lookAt(0, 0, 0);
-	mCamera->setNearClipDistance(1.0);
-	mCamera->setFarClipDistance(1000.0);
-	//mCamera->setFOVy(Ogre::Radian(1.0f));
-
-	Ogre::Viewport* viewport = mApplication->ogreRenderWindow()->addViewport(mCamera);
-	viewport->setBackgroundColour(Ogre::ColourValue::Black);
 }
 
 void EngineTestGameLogic::initScriptEngine(void)
