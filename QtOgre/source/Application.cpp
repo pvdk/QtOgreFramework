@@ -240,7 +240,7 @@ namespace QtOgre
 			Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 		}
 
-		mFPSDialog = new FPSDialog(mOgreWidget, Qt::FramelessWindowHint);
+		mFPSDialog = new FPSDialog(mOgreWidget, Qt::ToolTip);
 		mFPSDialog->setWindowOpacity(settings()->value("System/DefaultWindowOpacity", 1.0).toDouble());
 		mFPSDialog->move(mainWidget()->geometry().topLeft() + QPoint(10,10));
 
