@@ -55,7 +55,7 @@ namespace QtOgre
 		//Accept input focus
 		setFocusPolicy(Qt::StrongFocus);
 
-	#if defined(Q_WS_WIN)
+	#if defined(Q_WS_WIN) || defined(Q_WS_MAC)
 		//positive integer for W32 (HWND handle) - According to Ogre Docs
 		externalWindowHandleParams = Ogre::StringConverter::toString((unsigned int)(winId()));
 	#endif
@@ -73,13 +73,18 @@ namespace QtOgre
 	#endif
 
 		//Add the external window handle parameters to the existing params set.
-	#if defined(Q_WS_WIN)		
+	#if defined(Q_WS_WIN) || defined(Q_WS_MAC)		
 		params["externalWindowHandle"] = externalWindowHandleParams;
 	#endif
 
 	#if defined(Q_WS_X11)
 		params["parentWindowHandle"] = externalWindowHandleParams;
 	#endif
+
+	#if defined(Q_WS_MAC)
+		params["macAPI"] = "cocoa";
+		params["macAPICocoaUseNSView"] = "true";
+	#endif 
 
 		//Finally create our window.
 		m_pOgreRenderWindow = Ogre::Root::getSingletonPtr()->createRenderWindow("OgreWindow", width(), height(), false, &params);
