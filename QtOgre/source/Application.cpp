@@ -428,7 +428,14 @@ namespace QtOgre
 	////////////////////////////////////////////////////////////////////////////////
 	Log* Application::createLog(const QString& name)
 	{
+		//Forward the request to the LogManager.
 		return mLogManager->createLog(name);
+	}
+
+	Log* Application::getLogByName(const QString& name)
+	{
+		//Forward the request to the LogManager.
+		return mLogManager->getLogByName(name);
 	}
 
 	void Application::hideLogManager(void)
