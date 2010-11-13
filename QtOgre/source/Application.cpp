@@ -48,14 +48,27 @@ namespace QtOgre
 
 	Application::Application(int& argc, char** argv, GameLogic* gameLogic, IgnoredConfigWarningMode ignoredConfigWarningMode)
 	:QApplication(argc, argv)
+	,mFPSDialog(0)
+	,mGraphicsSettingsWidget(0)
+	,mOgreWidget(0)
+	,mSettingsDialog(0)
+	,mInternalOgreLog(0)
+	,mInternalOgreLogManager(0)
+	,mLogManager(0)
+	,mOgreLog(0)
+	,mSystemLog(0)
+	,mActiveRenderSystem(0)
 	,mOpenGLRenderSystem(0)
 	,mDirect3D9RenderSystem(0)
+	,mRoot(0)
 	,mFrameCounter(0)
+	,mGameLogic(gameLogic)
+	,mAutoUpdateTimer(0)
+	,mSettings(0)
 	,mAutoUpdateEnabled(true)
 	,mIsInitialised(false)
 	,mIgnoredConfigWarningMode(ignoredConfigWarningMode)
 	{
-		mGameLogic = gameLogic;
 		if(mGameLogic != 0)
 		{
 			mGameLogic->mApplication = this;
