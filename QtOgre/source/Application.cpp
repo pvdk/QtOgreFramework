@@ -101,7 +101,7 @@ namespace QtOgre
 		mAutoUpdateTimer = new QTimer;
 		QObject::connect(mAutoUpdateTimer, SIGNAL(timeout()), this, SLOT(update()));
 		//On the test system, a value of one here gives a high frame rate and still allows
-		//event prcessing to take place. A value of 0 doubles the frame rate but the mouse
+		//event processing to take place. A value of 0 doubles the frame rate but the mouse
 		//becomes jumpy. This property is configerable via setAutoUpdateInterval().
 		mAutoUpdateTimer->setInterval(1);
 
@@ -113,14 +113,40 @@ namespace QtOgre
 		//Logging should be initialised ASAP, and before Ogre::Root is created.
 		initialiseLogging();
 
-		//Create the root and load render system plugins. We do that here so that we know
-		//what render systems are available by the time we show the settings dialog.
-		//Note that the render system is not initialised until the user selects one.
+		//Create the Ogre::Root object.
+		qDebug("Creating Ogre::Root object...");
+		try
+		{
 #ifdef QT_DEBUG
-		mRoot = new Ogre::Root("plugins_d.cfg");
+			mRoot = new Ogre::Root("plugins_d.cfg");
 #else
-		mRoot = new Ogre::Root("plugins.cfg");
+			mRoot = new Ogre::Root("plugins.cfg");
 #endif
+			qDebug("Ogre::Root created successfully.");
+		}
+		catch(Ogre::Exception& e)
+		{
+			QString error
+				(
+				"Failed to create the Ogre::Root object. This is a fatal error and the "
+				"application will now exit. There are a few known reasons why this can occur:\n\n"
+				"    1) Ensure your plugins.cfg has the correct path to the plugins.\n"
+				"    2) In plugins.cfg, use unix style directorary serperators. I.e '/' rather than '\\'.\n"
+				"    3) If your plugins.cfg is trying to load the Direct3D plugin, make sure you have DirectX installed on your machine.\n\n"
+				"The message returned by Ogre was:\n\n"
+				);
+			error += QString::fromStdString(e.getFullDescription().c_str());
+
+			qCritical(error.toAscii());
+			showErrorMessageBox(error);
+
+			//Not much else we can do here...
+			std::exit(1);
+		}
+
+		//Load the render system plugins. We do that here so that we know what
+		//render systems are available by the time we show the settings dialog.
+		//Note that the render system is not initialised until the user selects one.
 		mOpenGLRenderSystem = mRoot->getRenderSystemByName("OpenGL Rendering Subsystem");
 		mDirect3D9RenderSystem = mRoot->getRenderSystemByName("Direct3D9 Rendering Subsystem");
 		if(!(mOpenGLRenderSystem || mDirect3D9RenderSystem))
@@ -294,9 +320,7 @@ namespace QtOgre
 		//Redirect Qt's logging system to our own
 		mSystemLog = mLogManager->createLog("System");
 		qInstallMsgHandler(&qtMessageHandler);
-		qDebug("Debug test");
-		qWarning("Warning test");
-		qCritical("Critical test");
+		qDebug("***System log initialised***");
 
 		//Redirect Ogre's logging system to our own
 		//This has to all be done before creating the Root object.
@@ -305,6 +329,8 @@ namespace QtOgre
 		mInternalOgreLogManager = new Ogre::LogManager();
 		mInternalOgreLog = mInternalOgreLogManager->createLog("Ogre.log", false, true, true);
 		mInternalOgreLog->addListener(this);
+		mOgreLog->logMessage("***Ogre log initialised and redirected by QtOgre framework.***", LL_DEBUG);
+		mOgreLog->logMessage("***Any further messages in this log come directly from Ogre.***", LL_DEBUG);
 	}
 
 	void Application::initialiseOgre(void)
